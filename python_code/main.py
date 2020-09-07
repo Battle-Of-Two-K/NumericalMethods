@@ -1,5 +1,6 @@
 import random as rnd
 import python_code.methods.matrix.determinant as determinant
+import pickle
 
 
 def det(matrix):
@@ -17,7 +18,7 @@ class Matrix:
                 raise TypeError("Неизвестный тип данных, используйте list")
         elif len(args) == 2:
             if isinstance(args[0], int) and isinstance(args[1], int):
-                self.matrix = [[0 for j in range(args[0])] for i in range(args[1])]
+                self.matrix = [[0 for j in range(args[1])] for i in range(args[0])]
         else:
             raise LookupError("Слишком много аргументов")
         if not self.check_for_equal_len():
@@ -61,7 +62,17 @@ class Matrix:
                     matrix[_][__] *= other
             return Matrix(matrix)
         else:
-            raise ArithmeticError("Функция умножения матриц пока в разработке")
+            if self.columns != other.rows:
+                raise IndexError("Количество столбцов первой матрицы не совпадает с количеством строк второй")
+            matrix = Matrix(self.rows, other.columns).matrix
+            for i in range(self.rows):
+                for j in range(other.columns):
+                    for s in range(self.columns):
+                        if self.rows > 1:
+                            matrix[i][j] += self.matrix[i][s] * other.matrix[s][j]
+                        else:
+                            matrix[i][j] += self.matrix[s] * other.matrix[s][j]
+            return Matrix(matrix)
 
     def __neg__(self):
         """Перегрузка унарного минуса"""
@@ -77,9 +88,8 @@ class Matrix:
 
     def console_display(self):
         """Красиво печатет матрицу в консоль"""
-        print(f'Матрица {self.size}')
-        for row in self.matrix:
-            print(*row)
+        print(f'Матрица {self.size}'.center(self.columns * (self.max_len_num + 3) - 1))
+        print(self.to_pretty_string())
 
     def check_for_equal_len(self):
         """Провряет равны ли длины строк в матрице"""
@@ -106,7 +116,7 @@ class Matrix:
             else:
                 val1, val2 = -10, 10
             if isinstance(val1, float) or isinstance(val2, float):
-                pass
+                self.matrix = [[rnd.uniform(val1, val2) for __ in range(self.columns)] for _ in range(self.rows)]
             else:
                 self.matrix = [[rnd.randint(val1, val2) for __ in range(self.columns)] for _ in range(self.rows)]
         elif mode == 'ones':
@@ -189,6 +199,55 @@ class Matrix:
                 row.append(new_val)
             return matrix
 
+    def dump_to_file(self, filename: str):
+        """Записывает матрицу в файл без потери точности"""
+        with open(filename + '.matrix', 'wb') as file:
+            pickle.dump(self.matrix, file)
+
+    def load_from_file(self, filename: str):
+        """Восстанавливает матрицу из файла"""
+        with open(filename + '.matrix', 'rb') as file:
+            self.matrix = pickle.load(file)
+
+    def write_to_file(self, filename: str):
+        """Записывает матрицу в файл (с потерей точности) в виде таблицы"""
+        with open(filename + '.txt', 'w') as file:
+            file.write(self.to_pretty_string())
+
+    def read_from_file(self, filename: str):
+        """Читает матрицу из файла (из таблицы)"""
+        with open(filename + '.txt', 'r') as file:
+            data = file.read()
+        data = data.replace('_', '').replace(" ", '').split('\n')[1::2]
+        new_matrix = []
+        for new_row in data:
+                new_matrix.append(new_row.split('|')[1:-1])
+        new_matrix = new_matrix[:-1]
+        for row_no in range(len(new_matrix)):
+            for col_no in range(len(new_matrix[row_no])):
+                if float(new_matrix[row_no][col_no]) == int(new_matrix[row_no][col_no]):
+                    new_matrix[row_no][col_no] = int(new_matrix[row_no][col_no])
+                else:
+                    new_matrix[row_no][col_no] = float(new_matrix[row_no][col_no])
+        self.matrix = new_matrix
+
+    def to_pretty_string(self):
+        pretty_string = ' ' + '_' * (self.columns * (self.max_len_num + 3) - 1) + ' \n'
+        for row_no in range(self.rows):
+            for col_no in range(self.columns):
+                pretty_string += f'|{str(round(self.matrix[row_no][col_no], 3)).center(self.max_len_num + 2)}'
+            pretty_string += "|\n" + ("|" + "_" * (self.max_len_num + 2)) * self.columns + "|\n"
+        return pretty_string
+
+    @property
+    def max_len_num(self):
+        """Длина максимального строкового представления чисел"""
+        container = len(str(round(self[0][0], 3)))
+        for _ in self.matrix:
+            for __ in _:
+                container = max(len(str(round(__, 3))), container)
+        return container
+
     @property
     def complements(self):
         # TODO: Алгебраические дополнения
@@ -207,7 +266,7 @@ class Matrix:
     @property
     def size(self) -> tuple:
         """Размер матрицы (колонки, строки)"""
-        return self.columns, self.rows
+        return self.rows, self.columns
 
     @property
     def rows(self) -> int:
