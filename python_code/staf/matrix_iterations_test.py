@@ -17,3 +17,10 @@ def test_simple_iterations():
     m = main.Matrix([[20, 4, -8], [-3, 15, 5], [6, 3, -18]])
     free = [1, -2, 3]
     assert main.iterate(m, free, stop_level=8) == [-0.007760768395061721, -0.07433375684194482, -0.1816226104557232]
+
+
+def test_zeidel_method():
+    """По примеру из методички"""
+    m = main.Matrix([[20, 4, -8], [-3, 15, 5], [6, 3, -18]])
+    free = [1, -2, 3]
+    assert main.iterations.zeidel_method(m, free, stop_level=6) == [-0.0077777779120662555, -0.07434465044708496, -0.18165003437853625]

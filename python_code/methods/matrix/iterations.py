@@ -1,4 +1,5 @@
 def simple_iterations(matrix, free_column, await_e=(10 ** -8), stop_level=None, print_middle_values=False):
+    """Метод простых итераций"""
     matrix = matrix.copy()
     free_column = free_column.copy()
     if not matrix.is_dominant:
@@ -42,8 +43,7 @@ def simple_iterations(matrix, free_column, await_e=(10 ** -8), stop_level=None, 
         for row_no in range(matrix.rows):
             container = 0
             for col_no in range(matrix.columns):
-                val_add = solution_vector[col_no] * matrix[row_no][col_no]
-                container += val_add
+                container += solution_vector[col_no] * matrix[row_no][col_no]
             new_solution.append(container)
         new_solution.append(1)
         delta = round(max(map(lambda x: abs(x), [_ - __ for _, __ in zip(solution_vector, new_solution)])), 8)
@@ -53,7 +53,7 @@ def simple_iterations(matrix, free_column, await_e=(10 ** -8), stop_level=None, 
 
 
 def zeidel_method(matrix, free_column, await_e=(10 ** -8), stop_level=None, print_middle_values=False):
-    """Метод Зейделя, пока не отличается от метода простых итераций"""
+    """Метод Зейделя"""
     # TODO: Исправить
     matrix = matrix.copy()
     free_column = free_column.copy()
@@ -85,6 +85,7 @@ def zeidel_method(matrix, free_column, await_e=(10 ** -8), stop_level=None, prin
     iteration_counter = 1
     delta = 'Неизвестно'
     while True:
+        old_solution = solution_vector.copy()
         if print_middle_values:
             print(f'''Номер итерации: {iteration_counter}
             X: {round(solution_vector[0], 8)}; Y: {round(solution_vector[1], 8)}; Z: {round(solution_vector[2], 8)}
@@ -94,15 +95,12 @@ def zeidel_method(matrix, free_column, await_e=(10 ** -8), stop_level=None, prin
                 break
         if await_e > (norma ** (iteration_counter - 2)) / (1 - norma) / 10:
             break
-        new_solution = []
         for row_no in range(matrix.rows):
             container = 0
             for col_no in range(matrix.columns):
                 val_add = solution_vector[col_no] * matrix[row_no][col_no]
                 container += val_add
-            new_solution.append(container)
-        new_solution.append(1)
-        delta = round(max(map(lambda x: abs(x), [_ - __ for _, __ in zip(solution_vector, new_solution)])), 8)
-        solution_vector = new_solution
+            solution_vector[row_no] = container
+        delta = round(max(map(lambda x: abs(x), [_ - __ for _, __ in zip(solution_vector, old_solution)])), 8)
         iteration_counter += 1
     return solution_vector[:-1]

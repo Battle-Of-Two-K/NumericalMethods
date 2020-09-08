@@ -386,3 +386,8 @@ class Matrix:
 
 class Integral:
     ...
+
+
+mat1 = Matrix([[20, 4, -8], [-3, 15, 5], [6, 3, -18]])  # Матрица из задания
+free_column = [1, -2, 3]  # Столбец свободных членов
+print(iterations.zeidel_method(mat1, free_column, stop_level=6, print_middle_values=True))  # Выдаст табличку из примера в методичке
