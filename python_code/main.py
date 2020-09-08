@@ -1,10 +1,16 @@
 import random as rnd
 import python_code.methods.matrix.determinant as determinant
 import pickle
+import python_code.methods.matrix.iterations as iterations
+import warnings
 
 
-def det(matrix):
-    return determinant.minor_method(matrix)
+def det(*args, **kwargs):
+    return determinant.minor_method(*args, **kwargs)
+
+
+def iterate(*args, **kwargs):
+    return iterations.simple_iterations(*args, **kwargs)
 
 
 class Matrix:
@@ -46,7 +52,8 @@ class Matrix:
                     matrix[_][__] += other
             return Matrix(matrix)
         elif isinstance(other, Matrix):
-            assert self.size == self.size, "Нельзя сложить матрицы разного размера"
+            if self.size != other.size:
+                raise ArithmeticError("Нельзя сложить матрицы разного размера")
             matrix = self.matrix.copy()
             for _ in range(self.rows):
                 for __ in range(self.columns):
@@ -108,19 +115,21 @@ class Matrix:
         else:
             return True
 
-    def autofill(self, mode='random', value_range: tuple = None):
+    def autofill(self, mode='random', options: tuple = None):
         """Автоматическое заполнение матрицы
         Режимы:
-            'random' - случайные числа в диапазоне value_range если в value_range int,
+            'random' - случайные числа в диапазоне options если в options int,
                 то целые, иныче - не целые (по умолчанию (-10, 10))
             'ones' - приводит матрицу к единичной
             'sequence' - матрица, заполненная числами от 1 до Matrix.rows * Matrix.columns
             'H_grid' - прямая сетка значений (по умолчанию (1, 0, 2))
-            'X_grid' - косая сетка значений (по умолчанию (1, 0)"""
+            'X_grid' - косая сетка значений (по умолчанию (1, 0)
+            'dominant' - матрица с доминантной диагональю, options как у 'random'"""
         if mode == 'random':
-            if value_range:
-                assert (value_range[1] - value_range[0] > 0), "В указанном диапазоне нет значений"
-                val1, val2 = value_range
+            if options:
+                if not (options[1] - options[0] > 0):
+                    raise IndexError("В указанном диапазоне нет значений")
+                val1, val2 = options
             else:
                 val1, val2 = -10, 10
             if isinstance(val1, float) or isinstance(val2, float):
@@ -128,27 +137,56 @@ class Matrix:
             else:
                 self.matrix = [[rnd.randint(val1, val2) for __ in range(self.columns)] for _ in range(self.rows)]
         elif mode == 'ones':
-            assert self.is_square, "Невозможно составить единичную матрицу изне квадратной матрицы"
+            if not self.is_square:
+                raise LookupError("Невозможно составить единичную матрицу из не квадратной матрицы")
             self.matrix = [[1 if _ == __ else 0 for __ in range(self.columns)] for _ in range(self.rows)]
         elif mode == 'H_grid':
-            if value_range:
-                if len(value_range) == 2:
-                    val1, val2 = value_range
+            if options:
+                if len(options) == 2:
+                    val1, val2 = options
                     step = 2
                 else:
-                    val1, val2, step = value_range
+                    val1, val2, step = options
             else:
                 val1, val2, step = 1, 0, 2
             self.matrix = [[val1 if bool(_ % step) or bool(__ % step) else val2 for __ in range(self.columns)]
                            for _ in range(self.rows)]
         elif mode == 'X_grid':
-            if value_range:
-                val1, val2 = value_range
+            if options:
+                val1, val2 = options
             else:
                 val1, val2 = 1, 0
             self.matrix = [[val1 if _ % 2 == __ % 2 else val2 for __ in range(self.columns)] for _ in range(self.rows)]
         elif mode == 'sequence':
             self.matrix = [[1 + _ + __ * self.columns for _ in range(self.columns)] for __ in range(self.rows)]
+        elif mode == 'dominant':
+            if not self.is_square:
+                raise ArithmeticError("Доминантной можно сделать только квадратную матрицу")
+            if options:
+                if not (options[1] - options[0] > 0):
+                    raise IndexError("В указанном диапазоне нет значений")
+                val1, val2 = options
+            else:
+                val1, val2 = -10, 10
+            new_matrix = Matrix(self.size[0], self.size[1])
+            new_matrix.autofill('random', options)
+            for row_no in range(new_matrix.rows):
+                for col_no in range(new_matrix.columns):
+                    if row_no == col_no:
+                        container = 0
+                        for col_no_inner in range(new_matrix.columns):
+                            if col_no_inner != col_no:
+                                container += abs(new_matrix[row_no][col_no_inner])
+                        if isinstance(val1, float) or isinstance(val2, float):
+                            # Гарантия доминации диагонали
+                            new_matrix[row_no][col_no] = container + abs(rnd.uniform(val1, val2))
+                            # Добавление отрицательных значений
+                            new_matrix[row_no][col_no] *= 1 if rnd.random() < 1/self.rows else -1
+                        else:
+                            # Аналогично для целых чисел
+                            new_matrix[row_no][col_no] = container + abs(rnd.randint(val1, val2))
+                            new_matrix[row_no][col_no] *= 1 if rnd.random() < 1 / self.rows else -1
+            self.matrix = new_matrix.matrix.copy()
         else:
             raise AttributeError(f"Неизветный режим {mode}")
 
@@ -191,10 +229,8 @@ class Matrix:
 
     def append_row(self, new_row: list):
         """Добавляет новую строку в матрицу"""
-        matrix = self.matrix.copy()
         if len(new_row) == self.columns:
-            matrix.append(new_row)
-            return matrix
+            self.matrix.append(new_row)
         else:
             raise IndexError("Длина новой строки не равна количеству столбцов матрицы")
 
@@ -203,10 +239,8 @@ class Matrix:
         if len(new_column) != self.rows:
             raise IndexError("Высота нового столбца не равна количеству строк матрицы")
         else:
-            matrix = self.matrix.copy()
-            for row, new_val in zip(matrix, new_column):
+            for row, new_val in zip(self.matrix, new_column):
                 row.append(new_val)
-            return matrix
 
     def dump_to_file(self, filename: str):
         """Записывает матрицу в файл без потери точности"""
@@ -240,21 +274,69 @@ class Matrix:
                     new_matrix[row_no][col_no] = float(new_matrix[row_no][col_no])
         self.matrix = new_matrix
 
-    def to_pretty_string(self):
+    def to_pretty_string(self, round_to: int = 8):
         pretty_string = ' ' + '_' * (self.columns * (self.max_len_num + 3) - 1) + ' \n'
         for row_no in range(self.rows):
             for col_no in range(self.columns):
-                pretty_string += f'|{str(round(self.matrix[row_no][col_no], 3)).center(self.max_len_num + 2)}'
+                pretty_string += f'|{str(round(self.matrix[row_no][col_no], round_to)).center(self.max_len_num + 2)}'
             pretty_string += "|\n" + ("|" + "_" * (self.max_len_num + 2)) * self.columns + "|\n"
         return pretty_string
 
+    def copy(self):
+        """Функция копирования матрицы (нужно для корректной работы python)"""
+        new_mat = Matrix(self.matrix.copy())
+        return new_mat
+
+    # В разработке!
+
+    def normal_round(self):
+        warnings.warn(message='Данная функция в разработке, может работать некорректно',
+                      category=FutureWarning)
+        for row_no in range(self.rows):
+            for col_no in range(self.columns):
+                self.matrix[row_no][col_no] = 0 if round(self.matrix[row_no][col_no], 16) == 0\
+                    else self.matrix[row_no][col_no]
+
     @property
-    def max_len_num(self):
-        """Длина максимального строкового представления чисел"""
-        container = len(str(round(self[0][0], 3)))
+    def norma_1(self) -> float:
+        """Первая норма матрицы (по строкам)"""
+        return max([sum(map(lambda x: abs(x), row)) for row in self.matrix])
+
+    @property
+    def norma_2(self) -> float:
+        """Вторая норма матрицы (по столбцам)"""
+        norma = []
+        for col_no in range(self.columns):
+            col_value = 0
+            for row_no in range(self.rows):
+                col_value += abs(self[row_no][col_no])
+            norma.append(col_value)
+        norma = max(norma)
+        return norma
+
+    @property
+    def is_dominant(self) -> bool:
+        """Определяет является ли диагональ матрицы доминантной"""
+        if not self.is_square:
+            return False
+        for _ in range(self.rows):
+            summat = 0
+            for __ in range(self.rows):
+                if _ == __:
+                    continue
+                summat += abs(self[_][__])
+            if summat > abs(self[_][_]):
+                return False
+        else:
+            return True
+
+    @property
+    def max_len_num(self, round_to: int = 8):
+        """Длина максимального строкового представления чисел. Для to_pretty_string"""
+        container = len(str(round(self[0][0], round_to)))
         for _ in self.matrix:
             for __ in _:
-                container = max(len(str(round(__, 3))), container)
+                container = max(len(str(round(__, round_to))), container)
         return container
 
     @property

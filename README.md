@@ -17,7 +17,10 @@
 1. Для более удобного использования GitHub лучше установить [Git](https://ru.wikipedia.org/wiki/Git#:~:text=Git%20(%D0%BF%D1%80%D0%BE%D0%B8%D0%B7%D0%BD%D0%BE%D1%81%D0%B8%D1%82%D1%81%D1%8F%20%C2%AB%D0%B3%D0%B8%D1%82%C2%BB),%D0%B4%D0%B5%D0%BD%D1%8C%20%D0%B5%D0%B3%D0%BE%20%D0%BF%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%B8%D0%B2%D0%B0%D0%B5%D1%82%20%D0%94%D0%B6%D1%83%D0%BD%D0%B8%D0%BE%20%D0%A5%D0%B0%D0%BC%D0%B0%D0%BD%D0%BE.)-клиент, например сам 
 [Git](https://git-scm.com/downloads) или [SublimeMerge](https://www.sublimemerge.com/) или [Github Desktop](https://desktop.github.com/)
 ### Структура
-1. В папке _**python_code**_ лежит основной код программы (в случае желания редактировать - в _master_ **не пушить**!)
-1. В папке _**block diagrams**_ должны лежать картинки с блок-схемами алгоритмов.
-1. В папке _**text descriptions**_ должны лежать текстовые описания алгоритмов. \
+1. В папке [python_code](https://github.com/simensgreen/NumericalMethods/tree/master/python_code) 
+лежит основной код программы (в случае желания редактировать - в _master_ **не пушить**!)
+1. В папке [block diagrams](https://github.com/simensgreen/NumericalMethods/tree/master/block%20diagrams) должны лежать 
+картинки с блок-схемами алгоритмов.
+1. В папке [text descriptions](https://github.com/simensgreen/NumericalMethods/tree/master/text%20descriptions) должны 
+лежать текстовые описания алгоритмов. \
 P.S. в каждой папке по две папки - для разделения матриц и интергалов. В будущем структура может быть изменена.
