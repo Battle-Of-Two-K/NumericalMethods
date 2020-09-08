@@ -82,9 +82,17 @@ class Matrix:
         """Перегрузка вычитания"""
         self + (-other)
 
+    def __truediv__(self, other):
+        if isinstance(other, (float, int)):
+            return self * (1 / other)
+        else:
+            return self * ~other
+
     def __invert__(self):
-        # TODO: Обратная матрица
-        return None
+        if det(self) == 0:
+            raise ArithmeticError("Невозможно найти обратную матрицу так как определитель равен нулю")
+        else:
+            return self.complements.T * 1 / det(self)
 
     def console_display(self):
         """Красиво печатет матрицу в консоль"""
@@ -169,6 +177,7 @@ class Matrix:
         matrix = self.matrix.copy()
         for _ in range(self.rows):
             matrix[_][column_1], matrix[_][column_2] = matrix[_][column_2], matrix[_][column_1]
+        return matrix
 
     def search_for_max_num_count(self, num=0):
         """Ищет строку с наибольшим количеством указаной величины (по умолчанию 0), если такой нет - вернет 0"""
@@ -250,8 +259,17 @@ class Matrix:
 
     @property
     def complements(self):
-        # TODO: Алгебраические дополнения
-        return None
+        mat = Matrix(self.rows, self.columns)
+        mid = mat.matrix
+        for i in range(self.columns):
+            for j in range(self.rows):
+                mid[i][j] = det(self.minor(i, j))
+        for i in range(self.columns):
+            for j in range(self.rows):
+                if bool((i + j) % 2):
+                    mid[i][j] = -mid[i][j]
+        mat.matrix = mid
+        return mat
 
     @property
     def T(self):
@@ -265,7 +283,7 @@ class Matrix:
 
     @property
     def size(self) -> tuple:
-        """Размер матрицы (колонки, строки)"""
+        """Размер матрицы (строки, колонки)"""
         return self.rows, self.columns
 
     @property
