@@ -20,6 +20,6 @@ print("Матрица, обратная данной:")
 (~matrix).console_display()
 
 print("\nРешение методом Гаусса для данной СЛАУ:")
-Matrix([solve_gauss(matrix.copy(), free_column)]).console_display()
+Matrix([gauss.gauss_method(matrix.copy(), free_column, print_middle_values=True)]).console_display()
 
 input('Нажмите "Enter" чтобы выйти...')
