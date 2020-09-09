@@ -12,9 +12,6 @@ free_column = [307, -23, -299]
 print("Введенная матрица:")
 matrix.console_display()
 
-print(f"""Первая норма матрицы = {matrix.norma_1}; Вторая норма матрицы = {matrix.norma_2}
-Минимальная норма = {min(matrix.norma_1, matrix.norma_2)}\n""")
-
 if not matrix.is_dominant:
     print("Матрица не сходится")
     input('Нажмите "Enter" чтобы выйти...')

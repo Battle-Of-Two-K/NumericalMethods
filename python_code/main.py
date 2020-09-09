@@ -1,10 +1,11 @@
-import random as rnd
-import python_code.methods.matrix.determinant as determinant
-import pickle
-import python_code.methods.matrix.iterations as iterations
-import warnings
-import python_code.methods.matrix.gauss as gauss
 import copy
+import pickle
+import random as rnd
+import warnings
+
+import python_code.methods.matrix.determinant as determinant
+import python_code.methods.matrix.gauss as gauss
+import python_code.methods.matrix.iterations as iterations
 
 
 def det(*args, **kwargs):
@@ -187,7 +188,7 @@ class Matrix:
                             # Гарантия доминации диагонали
                             new_matrix[row_no][col_no] = container + abs(rnd.uniform(val1, val2))
                             # Добавление отрицательных значений
-                            new_matrix[row_no][col_no] *= 1 if rnd.random() < 1/self.rows else -1
+                            new_matrix[row_no][col_no] *= 1 if rnd.random() < 1 / self.rows else -1
                         else:
                             # Аналогично для целых чисел
                             new_matrix[row_no][col_no] = container + abs(rnd.randint(val1, val2))
@@ -281,7 +282,7 @@ class Matrix:
         data = data.replace('_', '').replace(" ", '').split('\n')[1::2]
         new_matrix = []
         for new_row in data:
-                new_matrix.append(new_row.split('|')[1:-1])
+            new_matrix.append(new_row.split('|')[1:-1])
         new_matrix = new_matrix[:-1]
         for row_no in range(len(new_matrix)):
             for col_no in range(len(new_matrix[row_no])):
@@ -311,11 +312,12 @@ class Matrix:
                       category=FutureWarning)
         for row_no in range(self.rows):
             for col_no in range(self.columns):
-                self.matrix[row_no][col_no] = 0 if round(self.matrix[row_no][col_no], 16) == 0\
+                self.matrix[row_no][col_no] = 0 if round(self.matrix[row_no][col_no], 16) == 0 \
                     else self.matrix[row_no][col_no]
 
     def triangulate(self):
         """Возвращает триангулированную матрицуц"""
+
         def mul_row(row, n):
             return [val * n for val in row]
 
@@ -338,6 +340,7 @@ class Matrix:
 
     def triangulate_to_ones(self):
         """Возвращает триангулированную матрицу с единицами в главной диагонали (возможно и нулями)"""
+
         def mul_row(row, n):
             return [val * n for val in row]
 

@@ -20,6 +20,9 @@ def simple_iterations(matrix, free_column, await_e=(10 ** -8), stop_level=None, 
     free_column = [_ / __ for _, __ in zip(free_column, new_column)]
     # Вычисление нормы (минимальная из двух)
     norma = min(matrix.norma_1, matrix.norma_2)
+    if print_middle_values:
+        print(f"""\nПервая норма матрицы = {round(matrix.norma_1, 8)}; Вторая норма матрицы = {round(matrix.norma_2, 8)}
+Минимальная норма = {round(norma, 8)}\n""")
     # Норма вектора свободных членов
     free_norm = max(map(lambda x: abs(x), free_column))
     # Принимаем за начальный вектор вектор бета с шапкой
@@ -79,6 +82,9 @@ def zeidel_method(matrix, free_column, await_e=(10 ** -8), stop_level=None, prin
     free_column = [_ / __ for _, __ in zip(free_column, new_column)]
     # Вычисление нормы (минимальная из двух)
     norma = min(matrix.norma_1, matrix.norma_2)
+    if print_middle_values:
+        print(f"""\nПервая норма матрицы = {round(matrix.norma_1, 8)}; Вторая норма матрицы = {round(matrix.norma_2, 8)} 
+Минимальная норма = {round(norma, 8)}\n""")
     # Норма вектора свободных членов
     free_norm = max(map(lambda x: abs(x), free_column))
     # Принимаем за начальный вектор вектор бета с шапкой
