@@ -24,7 +24,9 @@ def simple_iterations(matrix, free_column, await_e=(10 ** -8), stop_level=None, 
     free_norm = max(map(lambda x: abs(x), free_column))
     # Принимаем за начальный вектор вектор бета с шапкой
     solution_vector = free_column.copy()
+    # Добавление столбца свободных членов
     matrix.append_column(free_column.copy())
+    # Добавление единицы нужно для нормальной работы цикла с матрицей с добавленным столбцом свободных членов
     solution_vector.append(1)
     # Входим в цикл
     iteration_counter = 1
@@ -44,9 +46,11 @@ def simple_iterations(matrix, free_column, await_e=(10 ** -8), stop_level=None, 
             container = 0
             for col_no in range(matrix.columns):
                 container += solution_vector[col_no] * matrix[row_no][col_no]
+            # Только после заполнения нового вектора (обработана вся матрица), замняем вектор решений на новый на новый
             new_solution.append(container)
         new_solution.append(1)
         delta = round(max(map(lambda x: abs(x), [_ - __ for _, __ in zip(solution_vector, new_solution)])), 8)
+        # Вот и замена
         solution_vector = new_solution
         iteration_counter += 1
     return solution_vector[:-1]
@@ -79,7 +83,9 @@ def zeidel_method(matrix, free_column, await_e=(10 ** -8), stop_level=None, prin
     free_norm = max(map(lambda x: abs(x), free_column))
     # Принимаем за начальный вектор вектор бета с шапкой
     solution_vector = free_column.copy()
+    # Добавление столбца свободных членов
     matrix.append_column(free_column.copy())
+    # Добавление единицы нужно для нормальной работы цикла с матрицей с добавленным столбцом свободных членов
     solution_vector.append(1)
     # Входим в цикл
     iteration_counter = 1
@@ -98,9 +104,15 @@ def zeidel_method(matrix, free_column, await_e=(10 ** -8), stop_level=None, prin
         for row_no in range(matrix.rows):
             container = 0
             for col_no in range(matrix.columns):
-                val_add = solution_vector[col_no] * matrix[row_no][col_no]
-                container += val_add
+                container += solution_vector[col_no] * matrix[row_no][col_no]
+            # В строке ниже и кроется отличие: для дальнейших вычислений сразу используется полученный результат
             solution_vector[row_no] = container
         delta = round(max(map(lambda x: abs(x), [_ - __ for _, __ in zip(solution_vector, old_solution)])), 8)
         iteration_counter += 1
     return solution_vector[:-1]
+
+
+def auto_iterate(matrix, free_column, await_e=(10 ** -8), stop_level=None, print_middle_values=False):
+    """Автоматический выбор лучшего алгоритма"""
+    return zeidel_method(matrix, free_column, await_e=await_e,
+                         stop_level=stop_level, print_middle_values=print_middle_values)

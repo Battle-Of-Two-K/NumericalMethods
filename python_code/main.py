@@ -3,14 +3,19 @@ import python_code.methods.matrix.determinant as determinant
 import pickle
 import python_code.methods.matrix.iterations as iterations
 import warnings
+import python_code.methods.matrix.gauss as gauss
 
 
 def det(*args, **kwargs):
-    return determinant.minor_method(*args, **kwargs)
+    return determinant.auto_det(*args, **kwargs)
 
 
-def iterate(*args, **kwargs):
-    return iterations.simple_iterations(*args, **kwargs)
+def solve_iterations(*args, **kwargs):
+    return iterations.auto_iterate(*args, **kwargs)
+
+
+def solve_gauss(*args, **kwargs):
+    return gauss.gauss_method(*args, **kwargs)
 
 
 class Matrix:
@@ -228,19 +233,30 @@ class Matrix:
         return max_nums_row_no
 
     def append_row(self, new_row: list):
-        """Добавляет новую строку в матрицу"""
+        """Добавляет новую строку в матрицу. Меняет исходную матрицу"""
         if len(new_row) == self.columns:
             self.matrix.append(new_row)
         else:
             raise IndexError("Длина новой строки не равна количеству столбцов матрицы")
 
     def append_column(self, new_column: list):
-        """Добавляет новый столбец в матрицу"""
+        """Добавляет новый столбец в матрицу. Меняет исходную матрицу"""
         if len(new_column) != self.rows:
             raise IndexError("Высота нового столбца не равна количеству строк матрицы")
         else:
             for row, new_val in zip(self.matrix, new_column):
                 row.append(new_val)
+
+    def pop_column(self, col_no: int) -> list:
+        """Удаляет столбец из матрицы. Меняет исходную матрицу"""
+        out_col = []
+        for row_no in range(self.rows):
+            out_col.append(self.matrix[row_no].pop(col_no))
+        return out_col
+
+    def pop_row(self, row_no: int) -> list:
+        """Удаляет строку из матрицы. Меняет исходную матрицу"""
+        return self.matrix.pop(row_no)
 
     def dump_to_file(self, filename: str):
         """Записывает матрицу в файл без потери точности"""
@@ -296,6 +312,44 @@ class Matrix:
             for col_no in range(self.columns):
                 self.matrix[row_no][col_no] = 0 if round(self.matrix[row_no][col_no], 16) == 0\
                     else self.matrix[row_no][col_no]
+
+    def triangulate(self):
+        """Возвращает триангулированную матрицуц"""
+        def mul_row(row, n):
+            return [val * n for val in row]
+
+        def subtract_rows(row1, row2):
+            return [val1 - val2 for val1, val2 in zip(row1, row2)]
+
+        triangulated_matrix = Matrix(self.matrix.copy())
+        for col_no in range(min(triangulated_matrix.columns, triangulated_matrix.rows)):
+            for row_no in range(triangulated_matrix.rows - 1, 0, -1):
+                if col_no == row_no:
+                    break
+                try:
+                    multiplexed_row = mul_row(triangulated_matrix[row_no - 1],
+                                              triangulated_matrix[row_no][col_no] /
+                                              triangulated_matrix[row_no - 1][col_no])
+                    triangulated_matrix[row_no] = subtract_rows(triangulated_matrix[row_no], multiplexed_row)
+                except ZeroDivisionError:
+                    continue
+        return triangulated_matrix
+
+    def triangulate_to_ones(self):
+        """Возвращает триангулированную матрицу с единицами в главной диагонали (возможно и нулями)"""
+        def mul_row(row, n):
+            return [val * n for val in row]
+
+        matrix = Matrix(self.matrix.copy())
+        matrix = matrix.triangulate()
+        for row_no in range(matrix.rows):
+            for col_no in range(matrix.columns):
+                if row_no == col_no:
+                    try:
+                        matrix.matrix[row_no] = mul_row(matrix[row_no], 1 / matrix[row_no][col_no])
+                    except ZeroDivisionError:
+                        continue
+        return matrix
 
     @property
     def norma_1(self) -> float:

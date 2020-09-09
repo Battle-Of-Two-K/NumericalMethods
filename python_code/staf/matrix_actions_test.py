@@ -1,5 +1,6 @@
 import pytest
 import python_code.main as main
+import random
 
 
 def test_minor():
@@ -21,12 +22,23 @@ def test_reverse_matrix():
     """Этот тест проверяет и транспонирование, и алгебраические дополнения разом"""
     m = main.Matrix(3)
     m.autofill()
-    m.console_display()
-    # -1 Иногда выскакивает из-за "-0.0" - очень маленькое значение, но дает знак, см пример ниже
     assert round(main.det((~m) * m)) == 1
 
 
-@pytest.mark.xfail(reason='(~m) * m)[2][0] равно "-0.0" или -2.7755575615628914e-17, достаточно, чтоб дать "-"')
 def test_reverse_matrix2():
     m = main.Matrix([[2, -2, -7], [-4, 8, -8], [10, -7, 0]])
     assert round(main.det((~m) * m)) == 1
+
+
+def test_pop_row():
+    size = random.randint(2, 10)
+    m = main.Matrix(size)
+    what_pop = random.randint(0, size - 1)
+    line = m.matrix[what_pop]
+    assert m.pop_row(what_pop) == line
+
+
+def test_pop_column():
+    m = main.Matrix(4)
+    m.autofill('sequence')
+    assert m.pop_column(0) == [1, 5, 9, 13]

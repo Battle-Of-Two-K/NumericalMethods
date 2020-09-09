@@ -16,7 +16,7 @@ def test_simple_iterations():
     """По примеру из методички"""
     m = main.Matrix([[20, 4, -8], [-3, 15, 5], [6, 3, -18]])
     free = [1, -2, 3]
-    assert main.iterate(m, free, stop_level=8) == [-0.007760768395061721, -0.07433375684194482, -0.1816226104557232]
+    assert main.iterations.simple_iterations(m, free, stop_level=8) == [-0.007760768395061721, -0.07433375684194482, -0.1816226104557232]
 
 
 def test_zeidel_method():
