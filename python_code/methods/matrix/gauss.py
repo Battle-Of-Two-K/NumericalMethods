@@ -6,7 +6,12 @@ def gauss_method(matrix, free_column, print_middle_values=False):
     # Преобразуем матрицу в треугольную с нулями под главной диагональю и единицами в главной диагонали
     matrix = matrix.triangulate_to_ones()
     if print_middle_values:
-        print('\nРасширенная матрица, приведенная к треугольному виду')
+        print('\nЗакончился первый проход')
         matrix.console_display()
-    # Удаляем столбец свободных членов - он и будет решением (в процессе триангуляции он тоже менялся)
-    return matrix.pop_column(matrix.columns - 1)
+    solution = [0 for _ in range(matrix.rows)]
+    free_column = matrix.pop_column(matrix.columns - 1)
+    for row_no in reversed(range(matrix.rows)):
+        for col_no in range(matrix.rows):
+            free_column[row_no] -= solution[col_no] * matrix.matrix[row_no][col_no]
+        solution[row_no] = free_column[row_no]
+    return solution
