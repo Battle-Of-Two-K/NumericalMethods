@@ -118,7 +118,55 @@ def zeidel_method(matrix, free_column, await_e=(10 ** -8), stop_level=None, prin
     return solution_vector[:-1]
 
 
+def triple_diagonal(matrix, free_column, print_middle_values=False):
+    """Метод прогонки. Метод Томаса"""
+
+    def get_element(row, col):
+        if 0 < row <= matrix.rows and 0 < col <= matrix.columns - 1:
+            return matrix[row - 1][col - 1]
+        else:
+            return 0
+
+    if not matrix.is_triple_diagonal:
+        raise ArithmeticError("Метод прогонки работает только с трехдиагональной марицей")
+    matrix = matrix.copy()
+    matrix.append_column(free_column)
+    p = [0]
+    q = [0]
+    # Прямой ход прогонки
+    for row_no in range(1, matrix.rows + 1):
+        a = get_element(row_no, row_no - 1)
+        b = get_element(row_no, row_no)
+        c = get_element(row_no, row_no + 1)
+        d = matrix[row_no - 1][matrix.columns - 1]
+        new_p = -c / (b + a * p[row_no - 1])
+        p.append(new_p)
+        new_q = (d - a * q[row_no - 1]) / (b + a * p[row_no if row_no < 2 else row_no - 1])
+        q.append(new_q)
+    if print_middle_values:
+        print("Первая прогонка:")
+        print('P: ', end='')
+        for val in p:
+            print(round(val, 8), end=', ')
+        print('\nQ: ', end='')
+        for val in q:
+            print(round(val, 8), end=', ')
+        print()
+    # Обратный ход прогонки
+    x = [0 for row_no in range(matrix.rows + 1)]
+    for row_no in range(matrix.rows, 0, -1):
+        if row_no == matrix.rows:
+            x[row_no] = q[row_no]
+        else:
+            # Этот if необходим из-за "кривых" индексов
+            x[row_no] = q[row_no] + p[row_no] * x[row_no + 1]
+    return x[1:]
+
+
 def auto_iterate(matrix, free_column, await_e=(10 ** -8), stop_level=None, print_middle_values=False):
     """Автоматический выбор лучшего алгоритма"""
-    return zeidel_method(matrix, free_column, await_e=await_e,
-                         stop_level=stop_level, print_middle_values=print_middle_values)
+    if matrix.is_triple_diagonal:
+        return triple_diagonal(matrix, free_column, print_middle_values)
+    else:
+        return zeidel_method(matrix, free_column, await_e=await_e,
+                             stop_level=stop_level, print_middle_values=print_middle_values)

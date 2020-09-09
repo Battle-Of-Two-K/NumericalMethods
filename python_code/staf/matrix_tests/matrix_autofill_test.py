@@ -4,7 +4,7 @@ import python_code.main as main
 
 def test_ones_mode():
     m = main.Matrix(3)
-    m.autofill('ones')
+    m.autofill('diagonal_ones')
     assert main.det(m) == 1
 
 
@@ -24,3 +24,9 @@ def test_dominant_mode():
     m = main.Matrix(5)
     m.autofill('dominant')
     assert m.is_dominant
+
+
+def test_triple_diagonal():
+    m = main.Matrix(10)
+    m.autofill('triple_diagonal')
+    assert m.is_triple_diagonal

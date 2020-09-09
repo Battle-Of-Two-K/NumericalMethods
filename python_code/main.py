@@ -12,12 +12,11 @@ def det(*args, **kwargs):
     return determinant.auto_det(*args, **kwargs)
 
 
-def solve_iterations(*args, **kwargs):
-    return iterations.auto_iterate(*args, **kwargs)
-
-
-def solve_gauss(*args, **kwargs):
-    return gauss.gauss_method(*args, **kwargs)
+def solve(matrix, free_column, *args, **kwargs):
+    if matrix.is_dominant:
+        return iterations.auto_iterate(matrix, free_column, *args, **kwargs)
+    else:
+        return gauss.gauss_method(matrix, free_column, *args, **kwargs)
 
 
 class Matrix:
@@ -33,7 +32,7 @@ class Matrix:
             if isinstance(args[0], int) and isinstance(args[1], int):
                 self.matrix = [[0 for j in range(args[1])] for i in range(args[0])]
         else:
-            raise LookupError("Слишком много аргументов")
+            raise ValueError("Слишком много аргументов")
         if not self.check_for_equal_len():
             raise LookupError("Строки матрицы имеют разную длину")
 
@@ -127,23 +126,35 @@ class Matrix:
         Режимы:
             'random' - случайные числа в диапазоне options если в options int,
                 то целые, иныче - не целые (по умолчанию (-10, 10))
-            'ones' - приводит матрицу к единичной
+            'ones' - заполняет единицами
+            'diagonal_ones' - приводит матрицу к единичной
             'sequence' - матрица, заполненная числами от 1 до Matrix.rows * Matrix.columns
             'H_grid' - прямая сетка значений (по умолчанию (1, 0, 2))
             'X_grid' - косая сетка значений (по умолчанию (1, 0)
-            'dominant' - матрица с доминантной диагональю, options как у 'random'"""
-        if mode == 'random':
+            'dominant' - матрица с доминантной диагональю, options как у 'random'
+            'exchange' - обменная матрица
+            'triple_diagonal' - Трёхдиагональная матрица"""
+
+        def get_options():
             if options:
                 if not (options[1] - options[0] > 0):
                     raise IndexError("В указанном диапазоне нет значений")
-                val1, val2 = options
+                return options
             else:
-                val1, val2 = -10, 10
-            if isinstance(val1, float) or isinstance(val2, float):
-                self.matrix = [[rnd.uniform(val1, val2) for __ in range(self.columns)] for _ in range(self.rows)]
+                return -10, 10
+
+        def rnd_generate():
+            _val1, _val2 = get_options()
+            if isinstance(_val1, float) or isinstance(_val2, float):
+                return rnd.uniform(_val1, _val2)
             else:
-                self.matrix = [[rnd.randint(val1, val2) for __ in range(self.columns)] for _ in range(self.rows)]
+                return rnd.randint(_val1, _val2)
+
+        if mode == 'random':
+            self.matrix = [[rnd_generate() for __ in range(self.columns)] for _ in range(self.rows)]
         elif mode == 'ones':
+            self.matrix = [[1 for _ in range(self.columns)] for __ in range(self.rows)]
+        elif mode == 'diagonal_ones':
             if not self.is_square:
                 raise LookupError("Невозможно составить единичную матрицу из не квадратной матрицы")
             self.matrix = [[1 if _ == __ else 0 for __ in range(self.columns)] for _ in range(self.rows)]
@@ -169,12 +180,6 @@ class Matrix:
         elif mode == 'dominant':
             if not self.is_square:
                 raise ArithmeticError("Доминантной можно сделать только квадратную матрицу")
-            if options:
-                if not (options[1] - options[0] > 0):
-                    raise IndexError("В указанном диапазоне нет значений")
-                val1, val2 = options
-            else:
-                val1, val2 = -10, 10
             new_matrix = Matrix(self.size[0], self.size[1])
             new_matrix.autofill('random', options)
             for row_no in range(new_matrix.rows):
@@ -184,16 +189,18 @@ class Matrix:
                         for col_no_inner in range(new_matrix.columns):
                             if col_no_inner != col_no:
                                 container += abs(new_matrix[row_no][col_no_inner])
-                        if isinstance(val1, float) or isinstance(val2, float):
-                            # Гарантия доминации диагонали
-                            new_matrix[row_no][col_no] = container + abs(rnd.uniform(val1, val2))
-                            # Добавление отрицательных значений
-                            new_matrix[row_no][col_no] *= 1 if rnd.random() < 1 / self.rows else -1
-                        else:
-                            # Аналогично для целых чисел
-                            new_matrix[row_no][col_no] = container + abs(rnd.randint(val1, val2))
-                            new_matrix[row_no][col_no] *= 1 if rnd.random() < 1 / self.rows else -1
+                        # Гарантия доминации диагонали
+                        new_matrix[row_no][col_no] = container + abs(rnd_generate())
+                        # Добавление отрицательных значений
+                        new_matrix[row_no][col_no] *= 1 if rnd.random() < 1 / self.rows else -1
             self.matrix = new_matrix.copy().matrix
+        elif mode == 'exchange':
+            if not self.is_square:
+                raise ArithmeticError("Обменной можно сделать только квадратную матрицу")
+            self.matrix = [[int((_ + __) == self.rows - 1) for _ in range(self.columns)] for __ in range(self.rows)]
+        elif mode == 'triple_diagonal':
+            self.matrix = [[rnd_generate() if i == j or i - 1 == j or i == j - 1 else 0 for i in range(self.columns)]
+                           for j in range(self.rows)]
         else:
             raise AttributeError(f"Неизветный режим {mode}")
 
@@ -441,6 +448,24 @@ class Matrix:
         """Проверяет, является ли матрица квадратной"""
         return self.columns == self.rows
 
+    @property
+    def is_triple_diagonal(self) -> bool:
+        if not self.is_square:
+            return False
+        for _ in range(self.rows):
+            for __ in range(self.columns):
+                if not (_ == __ or _ - 1 == __ or _ == __ - 1):
+                    if self[_][__] != 0:
+                        return False
+        else:
+            return True
+
 
 class Integral:
     ...
+
+
+m = Matrix(10)
+m.autofill('triple_diagonal')
+m.console_display()
+print(m.is_triple_diagonal)

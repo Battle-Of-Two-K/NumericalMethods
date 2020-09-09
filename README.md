@@ -13,7 +13,7 @@
 from python_code.main import *
 mat1 = Matrix([[20, 4, -8], [-3, 15, 5], [6, 3, -18]]) # Матрица из задания
 free_column = [1, -2, 3] # Столбец свободных членов
-print(solve_iterations(mat1, free_column, stop_level=9, print_middle_values=True)) # Выдаст табличку из примера в методичке
+print(solve(mat1, free_column, print_middle_values=True)) # Решит СЛАУ оптимальным способом и покажет пояснения
 ```
 Для тех, кто совсем не понял, в корень репозитория добавлены файлы с названием "task%.py" просто подставьте числа из своего варианта.\
 (Используйте только для самопроверки)\

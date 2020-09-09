@@ -42,3 +42,15 @@ def test_pop_column():
     m = main.Matrix(4)
     m.autofill('sequence')
     assert m.pop_column(0) == [1, 5, 9, 13]
+
+
+def test_transpon():
+    m = main.Matrix(5)
+    m.autofill()
+    assert m.matrix == m.T.T.matrix
+
+
+def test_is_triple_diagonal():
+    m = main.Matrix(10)
+    m.autofill('triple_diagonal')
+    assert m.is_triple_diagonal

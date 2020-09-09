@@ -7,7 +7,7 @@ import python_code.main as main
 
 def test_ones_minor_method():
     m = main.Matrix(3)
-    m.autofill('ones')
+    m.autofill('diagonal_ones')
     assert main.determinant.minor_method(m) == 1
 
 
@@ -38,7 +38,7 @@ def test_reverse_matrix_minor_method2():
 
 def test_ones_fast_minor_method():
     m = main.Matrix(3)
-    m.autofill('ones')
+    m.autofill('diagonal_ones')
     assert main.determinant.fast_minor_method(m) == 1
 
 
@@ -69,7 +69,7 @@ def test_reverse_matrix_fast_minor_method2():
 
 def test_ones_fast_diagonal_method():
     m = main.Matrix(3)
-    m.autofill('ones')
+    m.autofill('diagonal_ones')
     assert main.determinant.diagonal_method(m) == 1
 
 
@@ -95,7 +95,7 @@ def test_reverse_matrix_diagonal_method2():
 
 def test_ones_union():
     m = main.Matrix(3)
-    m.autofill('ones')
+    m.autofill('diagonal_ones')
     assert main.determinant.diagonal_method(m) == main.determinant.minor_method(m) == \
            main.determinant.fast_minor_method(m)
 

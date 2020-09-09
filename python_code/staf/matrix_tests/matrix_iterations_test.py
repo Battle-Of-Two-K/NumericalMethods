@@ -23,4 +23,18 @@ def test_zeidel_method():
     """По примеру из методички"""
     m = main.Matrix([[20, 4, -8], [-3, 15, 5], [6, 3, -18]])
     free = [1, -2, 3]
-    assert main.iterations.zeidel_method(m, free, stop_level=6) == [-0.0077777779120662555, -0.07434465044708496, -0.18165003437853625]
+    assert main.iterations.zeidel_method(m, free, stop_level=6) == \
+           [-0.0077777779120662555, -0.07434465044708496, -0.18165003437853625]
+
+
+def test_triple_diagonal():
+    m = main.Matrix([[-34, -26, 0, 0, 0],
+                     [64, -124, -56, 0, 0],
+                     [0, 94, -274, -86, 0],
+                     [0, 0, 124, -484, -116],
+                     [0, 0, 0, 154, -754]
+                     ])
+    free = [34, 38, 42, 46, 50]
+    solution = [-.6181818, -.4993007, -.2794706, -.1437131, -.0956655]
+    test_solution = list(map(lambda x: round(x, 7), main.iterations.triple_diagonal(m, free)))
+    assert solution == test_solution
