@@ -131,6 +131,9 @@ def triple_diagonal(matrix, free_column, print_middle_values=False):
         raise ArithmeticError("Метод прогонки работает только с трехдиагональной марицей")
     matrix = matrix.copy()
     matrix.append_column(free_column)
+    if print_middle_values:
+        print("Расширенная матрица:")
+        matrix.console_display()
     p = [0]
     q = [0]
     # Прямой ход прогонки
@@ -144,7 +147,7 @@ def triple_diagonal(matrix, free_column, print_middle_values=False):
         new_q = (d - a * q[row_no - 1]) / (b + a * p[row_no if row_no < 2 else row_no - 1])
         q.append(new_q)
     if print_middle_values:
-        print("Первая прогонка:")
+        print("Результат прямой прогонки:")
         print('P: ', end='')
         for val in p:
             print(round(val, 8), end=', ')

@@ -463,9 +463,3 @@ class Matrix:
 
 class Integral:
     ...
-
-
-m = Matrix(10)
-m.autofill('triple_diagonal')
-m.console_display()
-print(m.is_triple_diagonal)
