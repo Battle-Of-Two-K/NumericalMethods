@@ -4,6 +4,7 @@ import pickle
 import python_code.methods.matrix.iterations as iterations
 import warnings
 import python_code.methods.matrix.gauss as gauss
+import copy
 
 
 def det(*args, **kwargs):
@@ -51,7 +52,7 @@ class Matrix:
     def __add__(self, other):
         """Перегрузка сложения"""
         if isinstance(other, (float, int)):
-            matrix = self.matrix.copy()
+            matrix = self.copy()
             for _ in range(self.rows):
                 for __ in range(self.columns):
                     matrix[_][__] += other
@@ -59,7 +60,7 @@ class Matrix:
         elif isinstance(other, Matrix):
             if self.size != other.size:
                 raise ArithmeticError("Нельзя сложить матрицы разного размера")
-            matrix = self.matrix.copy()
+            matrix = self.copy()
             for _ in range(self.rows):
                 for __ in range(self.columns):
                     matrix[_][__] += other[_][__]
@@ -68,11 +69,11 @@ class Matrix:
     def __mul__(self, other):
         """Перегрузка умножения"""
         if isinstance(other, (float, int)):
-            matrix = self.matrix.copy()
+            matrix = self.copy()
             for _ in range(self.rows):
                 for __ in range(self.columns):
                     matrix[_][__] *= other
-            return Matrix(matrix)
+            return Matrix(matrix.matrix)
         else:
             if self.columns != other.rows:
                 raise IndexError("Количество столбцов первой матрицы не совпадает с количеством строк второй")
@@ -191,7 +192,7 @@ class Matrix:
                             # Аналогично для целых чисел
                             new_matrix[row_no][col_no] = container + abs(rnd.randint(val1, val2))
                             new_matrix[row_no][col_no] *= 1 if rnd.random() < 1 / self.rows else -1
-            self.matrix = new_matrix.matrix.copy()
+            self.matrix = new_matrix.copy().matrix
         else:
             raise AttributeError(f"Неизветный режим {mode}")
 
@@ -211,13 +212,13 @@ class Matrix:
 
     def swap_rows(self, row_1: int, row_2: int):
         """Меняет 2 строки местами"""
-        new_matrix = self.matrix.copy()
+        new_matrix = self.copy()
         new_matrix[row_1], new_matrix[row_2] = new_matrix[row_2], new_matrix[row_1]
         return Matrix(new_matrix)
 
     def swap_columns(self, column_1: int, column_2: int):
         """Меняет два столбца матрицы местами"""
-        matrix = self.matrix.copy()
+        matrix = self.copy()
         for _ in range(self.rows):
             matrix[_][column_1], matrix[_][column_2] = matrix[_][column_2], matrix[_][column_1]
         return matrix
@@ -300,7 +301,7 @@ class Matrix:
 
     def copy(self):
         """Функция копирования матрицы (нужно для корректной работы python)"""
-        new_mat = Matrix(self.matrix.copy())
+        new_mat = Matrix(list(copy.deepcopy(self.matrix)))
         return new_mat
 
     # В разработке!
@@ -321,7 +322,7 @@ class Matrix:
         def subtract_rows(row1, row2):
             return [val1 - val2 for val1, val2 in zip(row1, row2)]
 
-        triangulated_matrix = Matrix(self.matrix.copy())
+        triangulated_matrix = self.copy()
         for col_no in range(min(triangulated_matrix.columns, triangulated_matrix.rows)):
             for row_no in range(triangulated_matrix.rows - 1, 0, -1):
                 if col_no == row_no:
@@ -340,7 +341,7 @@ class Matrix:
         def mul_row(row, n):
             return [val * n for val in row]
 
-        matrix = Matrix(self.matrix.copy())
+        matrix = self.copy()
         matrix = matrix.triangulate()
         for row_no in range(matrix.rows):
             for col_no in range(matrix.columns):
