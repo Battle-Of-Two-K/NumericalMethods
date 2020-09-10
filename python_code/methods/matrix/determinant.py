@@ -1,3 +1,7 @@
+from functools import lru_cache
+
+
+@lru_cache(maxsize=512)
 def minor_method(matrix):
     """Нахождение определителя по методу миноров (с рекурсией)"""
     if not matrix.is_square:
@@ -24,6 +28,7 @@ def minor_method(matrix):
         return det_value
 
 
+@lru_cache(maxsize=512)
 def fast_minor_method(matrix):
     """Тот же метод миноров, но с предварительной триангуляцией (сокращение до 50% работы метода миноров)
     (метод Гаусса) ТОЧНОСТЬ НИЖЕ, ЧЕМ У МЕТОДА МИНОРОВ"""
@@ -32,6 +37,7 @@ def fast_minor_method(matrix):
     return minor_method(matrix)
 
 
+@lru_cache(maxsize=512)
 def diagonal_method(matrix):
     """Метод, использующий правило диагоналей, не использует рекурсию"""
     if not matrix.is_square:

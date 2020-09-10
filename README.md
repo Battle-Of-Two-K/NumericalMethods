@@ -13,10 +13,10 @@
 1. В папке есть файлы "task%.py" - решения соответствующих заданий. Измените любым текстовым редактором (хоть блокнотом)
 числа внутри (внутри подписано что и где писать)
 1. Сохраните, закройте редактор и запустите как любую другую программу, двойным кликом (если не вышло, то открыть с помощью -> 
-найдите python.exe на компъютере. Обычно он прячется в C:\Users\<User>\AppData\Local\Programs\Python\Python37-32)
+найдите python.exe на компъютере. Обычно он прячется в C:\Users\\<User>\AppData\Local\Programs\Python\Python37-32)
 1. Готово! А для те, кто хочет сам что-то написать, используя модули этого репозитория должны создать файл свое_название.py
 рядом с папкой python_code, в файле первой строкой импортировать все необходимое: "from python_code.main import *", а дальше
-используйтедокументацию ниже 
+используйте документацию ниже 
 #### Регулярные обновления
 При обнаружении ошибок, автор **старается** их исправлять в следующем обновлении. \
 Обновлять программу можно каждый раз скачивая новый архив, полностью заменять его содержимым свою версию.\
@@ -53,42 +53,49 @@
 P.S. в каждой папке по две папки - для разделения матриц и интергалов. В будущем структура может быть изменена.
 # Документация
 (Для продвинутого использования)
+1. Класс [Matrix](#Класс-Matrix)
+1. [Определитель](#Определитель)
+1. [Методы решений СЛАУ](#Методы-решений-СЛАУ)
+    - [Метод Гаусса](#Метод-Гаусса)
+    - [Метод простых итераций](#Метод-простых-итераций)
+    - [Метод Зейделя](#Метод-Зейделя)
+    - [Метод прогонки](#Метод-прогонки)
 ### Класс Matrix
 Класс Matrix - общий класс для матриц любого порядка. В нем объявлено большинство методов для работы с матрицами/
 Нумерация строк и столбцов начинается с 0.
 1. [Атрибуты и свойства (@property)](#Атрибуты-и-свойства):
-    * (Matrix) [complements](#complements) - матрица алгебраических дополнений
-    * (Matrix) [T](#T) - транспонированная матрица
-    * (bool) [is_dominant](#is_dominant) - проверка на преобладающую главную диагональ
-    * (bool) [is_square](#is_square) - является ли матрица квадратной
-    * (bool) [is_triple_diagonal](#is_triple_diagonal) - является ли матрица трехдиагональной
-    * (int) [max_len_num](#max_len_num) - вычисление максимальной длины строкового отображения значений матрицы
-    * (int) [rows](#rows) - количество строк матрицы
-    * (int) [columns](#columns) - количество столбцов матрицы
-    * (float, int) [norma_1](#norma_1) - первая норма матрицы
-    * (float, int) [norma_2](#norma_2) - вторая норма матрицы
-    * (list[list]) [matrix](#matrix) - двумерный список, содержащий саму матрицу
-    * (tuple[int]) [size](#size) - размер матрицы
+    * [complements](#complements) (Matrix) - матрица алгебраических дополнений
+    * [T](#T) (Matrix) - транспонированная матрица
+    * [is_dominant](#is_dominant) (bool) - проверка на преобладающую главную диагональ
+    * [is_square](#is_square) (bool) - является ли матрица квадратной
+    * [is_triple_diagonal](#is_triple_diagonal)(bool)  - является ли матрица трехдиагональной
+    * [max_len_num](#max_len_num) (int) - вычисление максимальной длины строкового отображения значений матрицы
+    * [rows](#rows) (int) - количество строк матрицы
+    * [columns](#columns) (int) - количество столбцов матрицы
+    * [norma_1](#norma_1) (float, int) - первая норма матрицы
+    * [norma_2](#norma_2) (float, int) - вторая норма матрицы
+    * [matrix](#matrix) (list[list]) - двумерный список, содержащий саму матрицу
+    * [size](#size) (tuple[int]) - размер матрицы
 2. [Методы](#Методы)
-    * (Matrix) [minor](#minor) - нахождение минора матрицы
-    * (Matrix) [swap_rows](#swap_rows) - меняет строки местами
-    * (Matrix) [swap_columns](#swap_columns) - меняет столбцы местами
-    * (Matrix) [copy](#copy) - возвращает глубокую копию матрицы
-    * (Matrix) [triangulate](#triangulate) - возвращает триангулированную матрицу (верх)
-    * (Matrix) [triangulate_to_ones](#triangulate_to_ones) - возвращает триангулированную матрицу (верх) с единицами в диагонали
-    * (bool) [check_for_equal_len](#check_for_equal_len) - проверяет равны ли длины строк матрицы
-    * (int) [search_for_max_num_count](#search_for_max_num_count) - ищет строку с максимальным количеством входжений указанного числа
-    * (list) [pop_column](#pop_column) - удаляет указанный столбец и возвращает его в виде списка (меняет исходную)
-    * (list) [pop_row](#pop_row) - удаляет указанную строку и возвращает ее в виде списка (меняет исходную)
-    * (str) [to_pretty_string](#to_pretty_string) - создает таблицу со значениями
-    * (None) [console_display](#console_display) - печатает таблицу матрицы в консоль
-    * (None) [dump_to_file](#dump_to_file) - сохраняет матрицу в файл без потери точности
-    * (None) [append_row](#append_row) - дописывает строку снизу матрицы (меняет исходную)
-    * (None) [autofill](#autofill) - автоматическое заполнение матрицы (меняет исходную)
-    * (None) [append_column](#append_column) - дописывает столбец справа (меняет исходную)
-    * (None) [load_from_file](#load_from_file) - загружает матрицу из файла без потери точности (меняет исходную)
-    * (None) [write_to_file](#write_to_file) - записывает таблицу в файл (с потерей точности)
-    * (None) [read_from_file](#read_from_file) - читает таблицу из текстового файла (меняет исходную)
+    * [minor](#minor) (Matrix) - нахождение минора матрицы
+    * [swap_rows](#swap_rows) (Matrix) - меняет строки местами
+    * [swap_columns](#swap_columns) (Matrix) - меняет столбцы местами
+    * [copy](#copy) (Matrix) - возвращает глубокую копию матрицы
+    * [triangulate](#triangulate) (Matrix) - возвращает триангулированную матрицу (верх)
+    * [triangulate_to_ones](#triangulate_to_ones) (Matrix) - возвращает триангулированную матрицу (верх) с единицами в диагонали
+    * [check_for_equal_len](#check_for_equal_len) (bool) - проверяет равны ли длины строк матрицы
+    * [search_for_max_num_count](#search_for_max_num_count) (int) - ищет строку с максимальным количеством входжений указанного числа
+    * [pop_column](#pop_column) (list) - удаляет указанный столбец и возвращает его в виде списка (меняет исходную)
+    * [pop_row](#pop_row) (list) - удаляет указанную строку и возвращает ее в виде списка (меняет исходную)
+    * [to_pretty_string](#to_pretty_string) (str) - создает таблицу со значениями
+    * [console_display](#console_display) (None) - печатает таблицу матрицы в консоль
+    * [dump_to_file](#dump_to_file) (None) - сохраняет матрицу в файл без потери точности
+    * [append_row](#append_row) (None) - дописывает строку снизу матрицы (меняет исходную)
+    * [autofill](#autofill) (None) - автоматическое заполнение матрицы (меняет исходную)
+    * [append_column](#append_column) (None) - дописывает столбец справа (меняет исходную)
+    * [load_from_file](#load_from_file) (None) - загружает матрицу из файла без потери точности (меняет исходную)
+    * [write_to_file](#write_to_file) (None) - записывает таблицу в файл (с потерей точности)
+    * [read_from_file](#read_from_file) (None) - читает таблицу из текстового файла (меняет исходную)
 3. Перегруженные и переопределенные методы
     * \_\_getitem__ - получение по индексу или срезу
     * \_\_setitem__ - присвоение по индексу
@@ -97,7 +104,9 @@ P.S. в каждой папке по две папки - для разделен
     * \_\_mul__ - оператор умножения (*)
     * \_\_neg__ - унарный минус (-)
     * \_\_truediv__ - деление с плавающей точкой (/)
-    * \_\_invert__ - инверсия (~)
+    * \_\_invert__ - инверсия (~) (Возвращает обратную матрицу)
+    * \_\_eq__ - сравнение (==)
+    * \_\_hash__ - хэш
 ### Методы
 #### minor
 Принимает на вход номер строки и столбца элемента, возвращает матрицу без этой строки и столбца.\
@@ -552,3 +561,297 @@ matrix.console_display()
 # |___|___|___|
 ```
 ### Атрибуты и свойства
+#### complements
+Матрица алгебраических дополнений к исходной матрице
+```python
+from python_code.main import *
+matrix = Matrix(3)
+matrix.autofill()
+matrix.console_display()
+matrix.complements.console_display()
+# Ожидаемый выход:
+# Матрица (3, 3)
+#  ______________ 
+# | 7  | -7 | -5 |
+# |____|____|____|
+# | 0  | 9  | 0  |
+# |____|____|____|
+# | 3  | 5  | -4 |
+# |____|____|____|
+# 
+#   Матрица (3, 3) 
+#  _________________ 
+# | -36 |  0  | -27 |
+# |_____|_____|_____|
+# | -53 | -13 | -56 |
+# |_____|_____|_____|
+# |  45 |  0  |  63 |
+# |_____|_____|_____|
+```
+#### T
+Транспонированная матрица
+```python
+from python_code.main import *
+matrix = Matrix(3)
+matrix.autofill('sequence')
+matrix.console_display()
+matrix.T.console_display()
+# Ожидаемый выход:
+# Матрица (3, 3)
+#  ___________ 
+# | 1 | 2 | 3 |
+# |___|___|___|
+# | 4 | 5 | 6 |
+# |___|___|___|
+# | 7 | 8 | 9 |
+# |___|___|___|
+# 
+# Матрица (3, 3)
+#  ___________ 
+# | 1 | 4 | 7 |
+# |___|___|___|
+# | 2 | 5 | 8 |
+# |___|___|___|
+# | 3 | 6 | 9 |
+# |___|___|___|
+```
+#### is_dominant
+Проверка на преобладающую главную диагональ
+```python
+from python_code.main import *
+matrix = Matrix(3)
+matrix.autofill()
+matrix.console_display()
+matrix_2 = Matrix(3)
+matrix_2.autofill('dominant')
+matrix_2.console_display()
+print(matrix.is_dominant, matrix_2.is_dominant)
+# Ожидаемый выход:
+# Матрица (3, 3)
+#  ______________ 
+# | 3  | 5  | -4 |
+# |____|____|____|
+# | 4  | -1 | 5  |
+# |____|____|____|
+# | 6  | 3  | -3 |
+# |____|____|____|
+# 
+#   Матрица (3, 3) 
+#  _________________ 
+# | -17 |  -3 |  9  |
+# |_____|_____|_____|
+# |  8  | -14 |  3  |
+# |_____|_____|_____|
+# |  4  |  -2 | -10 |
+# |_____|_____|_____|
+# 
+# False True
+```
+#### is_square
+Является ли матрица квадратной
+```python
+from python_code.main import *
+matrix = Matrix(3)
+matrix_2 = Matrix(3, 4)
+print(matrix.is_square, matrix_2.is_square)
+# Ожидаемый выход:
+# True False
+```
+#### is_triple_diagonal
+Является ли матрица трехдиагональной (нужно, например, для метода прогонки)
+```python
+from python_code.main import *
+matrix = Matrix(4)
+matrix.autofill()
+matrix.console_display()
+matrix_2 = Matrix(4)
+matrix_2.autofill('triple_diagonal')
+matrix_2.console_display()
+print(matrix.is_triple_diagonal, matrix_2.is_triple_diagonal)
+# Ожидаемый выход:
+#      Матрица (4, 4)    
+#  _______________________ 
+# |  10 |  -9 |  -4 | -10 |
+# |_____|_____|_____|_____|
+# |  5  |  -6 |  -1 |  -4 |
+# |_____|_____|_____|_____|
+# |  -6 |  8  |  -7 |  -6 |
+# |_____|_____|_____|_____|
+# |  1  |  -1 |  6  |  -7 |
+# |_____|_____|_____|_____|
+# 
+#    Матрица (4, 4)  
+#  ___________________ 
+# | -7 | -9 | 0  | 0  |
+# |____|____|____|____|
+# | 10 | -4 | -6 | 0  |
+# |____|____|____|____|
+# | 0  | 0  | 8  | -2 |
+# |____|____|____|____|
+# | 0  | 0  | 9  | 8  |
+# |____|____|____|____|
+# 
+# False True
+```
+#### max_len_num
+Вычисление максимальной длины строкового отображения значений матрицы
+Преобразует каждое значение в строку (набор символов), считает сколько получилось и выдает максимальное значение (нужно для to_pretty_string)
+```python
+from python_code.main import *
+matrix = Matrix(3)
+matrix.autofill(options=(-10., 10))
+matrix.console_display()
+print(matrix.max_len_num)
+# Ожидаемый выход:
+#               Матрица (3, 3)             
+#  _________________________________________ 
+# | -2.70573464 |  6.45341549 | -6.73833746 |
+# |_____________|_____________|_____________|
+# |  3.49760234 | -1.24910919 |  7.72165818 |
+# |_____________|_____________|_____________|
+# |  4.0763576  | -9.63916566 |  -4.6361087 |
+# |_____________|_____________|_____________|
+# 
+# 11
+```
+#### rows
+Количество строк матрицы
+```python
+from python_code.main import *
+matrix = Matrix(3)
+print(matrix.rows, matrix.columns)
+# Ожидаемый выход:
+# 3 3
+```
+#### columns
+Количество столбцов матрицы
+```python
+from python_code.main import *
+matrix = Matrix(3)
+print(matrix.rows, matrix.columns)
+# Ожидаемый выход:
+# 3 3
+```
+#### norma_1
+Первая норма матрицы
+```python
+from python_code.main import *
+matrix = Matrix(3)
+matrix.autofill()
+matrix.console_display()
+print(matrix.norma_1)
+# Ожидаемый выход:
+# Матрица (3, 3)
+#  ______________ 
+# | 7  | -4 | 8  |
+# |____|____|____|
+# | 0  | -7 | -4 |
+# |____|____|____|
+# | -3 | 5  | 0  |
+# |____|____|____|
+# 
+# 19
+```
+#### norma_2
+Вторая норма матрицы
+```python
+from python_code.main import *
+matrix = Matrix(3)
+matrix.autofill()
+matrix.console_display()
+print(matrix.norma_2)
+# Ожидаемый выход:
+# Матрица (3, 3)
+#  ______________ 
+# | 7  | -9 | 2  |
+# |____|____|____|
+# | 6  | 3  | 8  |
+# |____|____|____|
+# | -9 | -7 | 1  |
+# |____|____|____|
+# 
+# 22
+```
+#### matrix
+(list[list]) - двумерный список, содержащий саму матрицу
+```python
+from python_code.main import *
+matrix = Matrix(3)
+matrix.autofill('sequence')
+print(matrix.matrix)
+# Ожидаемый выход:
+# [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+```
+#### size
+(tuple[int]) - размер матрицы
+```python
+from python_code.main import *
+matrix = Matrix(5, 10)
+print(matrix.size)
+# Ожидаемый выход:
+# (5, 10)
+```
+## Определитель
+Описано 3 метода нахождения определителя в модуле determinant, но функция det из main и auto_det из determinant выберут самый быстрый способ
+Пример использования:
+```python
+from python_code.main import *
+matrix = Matrix(5)
+print(det(matrix))
+```
+## Методы решений СЛАУ
+### Метод Гаусса
+Метод Гаусса описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
+в пункте 1.1 Метод Гаусса решения СЛАУ, страница 7.
+Пример использования:
+```python
+from python_code.main import *
+matrix = Matrix([[20, 4, -8], [-3, 15, 5], [6, 3, -18]])
+free_column = [1, -2, 3]
+print(gauss.gauss_method(matrix, free_column))
+# Для вывода промежуточной информации, флаг print_middle_values нужно поставить в True, как ниже
+print(gauss.gauss_method(matrix, free_column, print_middle_values=True))
+```
+### Метод простых итераций
+Метод простых итераций описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
+в пункте 2.1 Метод простых итераций решения СЛАУ, страница 22.
+Пример использования:
+```python
+from python_code.main import *
+matrix = Matrix(4)
+matrix.autofill('dominant')
+free_column = [1, -2, 3, 5]
+# stop_level=8 означает, что нужно остановиться после 8 итерации
+print(iterations.simple_iterations(matrix, free_column, stop_level=8))
+# Для вывода промежуточной информации, флаг print_middle_values нужно поставить в True, как ниже
+# await_e=10 ** (-5) означает, что цикл нужно продолжать, пока Эпсилон не станет ниже десять в минус пятой степени
+print(iterations.simple_iterations(matrix, free_column, await_e=10 ** (-5), print_middle_values=True))
+```
+### Метод Зейделя
+Метод Зейделя описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
+в пункте 2.2 Метод Зейделя решения СЛАУ, страница 26.
+Пример использования:
+```python
+from python_code.main import *
+matrix = Matrix(4)
+matrix.autofill('dominant')
+free_column = [1, -2, 3, 5]
+# stop_level=8 означает, что нужно остановиться после 8 итерации
+print(iterations.zeidel_method(matrix, free_column, stop_level=8))
+# Для вывода промежуточной информации, флаг print_middle_values нужно поставить в True, как ниже
+# await_e=10 ** (-5) означает, что цикл нужно продолжать, пока Эпсилон не станет ниже десять в минус пятой степени
+print(iterations.zeidel_method(matrix, free_column, await_e=10 ** (-5), print_middle_values=True))
+```
+### Метод прогонки
+Метод прогонки описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
+в пункте 1.6 Решение трёхдиагональной СЛАУ методом прогонки, страница 18.
+Пример использования:
+```python
+from python_code.main import *
+matrix = Matrix(4)
+matrix.autofill('triple_diagonal')
+free_column = [1, -2, 3, 5]
+print(iterations.triple_diagonal(matrix, free_column))
+# Для вывода промежуточной информации, флаг print_middle_values нужно поставить в True, как ниже
+print(iterations.triple_diagonal(matrix, free_column, print_middle_values=True))
+```

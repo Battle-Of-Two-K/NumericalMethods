@@ -1,7 +1,6 @@
 import copy
 import pickle
 import random as rnd
-import warnings
 
 import python_code.methods.matrix.determinant as determinant
 import python_code.methods.matrix.gauss as gauss
@@ -106,6 +105,15 @@ class Matrix:
             raise ArithmeticError("Невозможно найти обратную матрицу так как определитель равен нулю")
         else:
             return self.complements.T * 1 / det(self)
+
+    def __eq__(self, other):
+        if isinstance(other, Matrix):
+            return self.matrix == other.matrix
+        else:
+            return False
+
+    def __hash__(self):
+        return hash(str(self.matrix))
 
     def console_display(self):
         """Красиво печатет матрицу в консоль"""
