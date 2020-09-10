@@ -125,7 +125,7 @@ class Matrix:
         """Автоматическое заполнение матрицы
         Режимы:
             'random' - случайные числа в диапазоне options если в options int,
-                то целые, иныче - не целые (по умолчанию (-10, 10))
+                то целые, иначе - не целые (по умолчанию (-10, 10))
             'ones' - заполняет единицами
             'diagonal_ones' - приводит матрицу к единичной
             'sequence' - матрица, заполненная числами от 1 до Matrix.rows * Matrix.columns
@@ -222,7 +222,7 @@ class Matrix:
         """Меняет 2 строки местами"""
         new_matrix = self.copy()
         new_matrix[row_1], new_matrix[row_2] = new_matrix[row_2], new_matrix[row_1]
-        return Matrix(new_matrix)
+        return new_matrix
 
     def swap_columns(self, column_1: int, column_2: int):
         """Меняет два столбца матрицы местами"""
@@ -311,16 +311,6 @@ class Matrix:
         """Функция копирования матрицы (нужно для корректной работы python)"""
         new_mat = Matrix(list(copy.deepcopy(self.matrix)))
         return new_mat
-
-    # В разработке!
-
-    def normal_round(self):
-        warnings.warn(message='Данная функция в разработке, может работать некорректно',
-                      category=FutureWarning)
-        for row_no in range(self.rows):
-            for col_no in range(self.columns):
-                self.matrix[row_no][col_no] = 0 if round(self.matrix[row_no][col_no], 16) == 0 \
-                    else self.matrix[row_no][col_no]
 
     def triangulate(self):
         """Возвращает триангулированную матрицуц"""

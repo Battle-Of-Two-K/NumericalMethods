@@ -16,15 +16,16 @@ def test_simple_iterations():
     """По примеру из методички"""
     m = main.Matrix([[20, 4, -8], [-3, 15, 5], [6, 3, -18]])
     free = [1, -2, 3]
-    assert main.iterations.simple_iterations(m, free, stop_level=8) == [-0.007760768395061721, -0.07433375684194482, -0.1816226104557232]
+    assert list(map(lambda x: round(x, 8), main.iterations.simple_iterations(m, free, stop_level=7))) == \
+           list(map(lambda x: round(x, 8), [-0.007760768395061721, -0.07433375684194482, -0.1816226104557232]))
 
 
 def test_zeidel_method():
     """По примеру из методички"""
     m = main.Matrix([[20, 4, -8], [-3, 15, 5], [6, 3, -18]])
     free = [1, -2, 3]
-    assert main.iterations.zeidel_method(m, free, stop_level=6) == \
-           [-0.0077777779120662555, -0.07434465044708496, -0.18165003437853625]
+    assert list(map(lambda x: round(x, 8), main.iterations.zeidel_method(m, free, stop_level=5))) == \
+           list(map(lambda x: round(x, 8), [-0.0077777779120662555, -0.07434465044708496, -0.18165003437853625]))
 
 
 def test_triple_diagonal():

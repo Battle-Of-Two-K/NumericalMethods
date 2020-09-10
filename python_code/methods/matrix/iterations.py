@@ -20,6 +20,12 @@ def simple_iterations(matrix, free_column, await_e=(10 ** -8), stop_level=None, 
     free_column = [_ / __ for _, __ in zip(free_column, new_column)]
     # Вычисление нормы (минимальная из двух)
     norma = min(matrix.norma_1, matrix.norma_2)
+    if matrix.norma_1 <= matrix.norma_2:
+        norma_beta = max(map(lambda x: abs(x), free_column))
+    else:
+        norma_beta = sum(map(lambda x: abs(x), free_column))
+    if print_middle_values:
+        print("\nНорма бета: ", norma_beta)
     if print_middle_values:
         print(f"""\nПервая норма матрицы = {round(matrix.norma_1, 8)}; Вторая норма матрицы = {round(matrix.norma_2, 8)}
 Минимальная норма = {round(norma, 8)}\n""")
@@ -32,13 +38,13 @@ def simple_iterations(matrix, free_column, await_e=(10 ** -8), stop_level=None, 
     # Добавление единицы нужно для нормальной работы цикла с матрицей с добавленным столбцом свободных членов
     solution_vector.append(1)
     # Входим в цикл
-    iteration_counter = 1
+    iteration_counter = 0
     delta = 'Неизвестно'
     while True:
         if print_middle_values:
             print(f'''Номер итерации: {iteration_counter}
         X: {round(solution_vector[0], 8)}; Y: {round(solution_vector[1], 8)}; Z: {round(solution_vector[2], 8)}
-        E: {round((norma ** (iteration_counter - 2)) / (1 - norma) / 10, 8)}, delta: {delta}\n''')
+        E: {round(((norma ** iteration_counter) / (1 - norma)) * norma_beta, 8)}, delta: {delta}\n''')
         if stop_level:
             if iteration_counter == stop_level:
                 break
@@ -65,7 +71,7 @@ def zeidel_method(matrix, free_column, await_e=(10 ** -8), stop_level=None, prin
     matrix = matrix.copy()
     free_column = free_column.copy()
     if not matrix.is_dominant:
-        raise ArithmeticError("Метод итераций работаеттолько с матрицами с доминантной диагональю")
+        raise ArithmeticError("Метод итераций работает только с матрицами с доминантной диагональю")
     # Извлечение главной диагонали, замещая значения нулями
     new_column = []
     for _ in range(matrix.rows):
@@ -82,6 +88,12 @@ def zeidel_method(matrix, free_column, await_e=(10 ** -8), stop_level=None, prin
     free_column = [_ / __ for _, __ in zip(free_column, new_column)]
     # Вычисление нормы (минимальная из двух)
     norma = min(matrix.norma_1, matrix.norma_2)
+    if matrix.norma_1 <= matrix.norma_2:
+        norma_beta = max(map(lambda x: abs(x), free_column))
+    else:
+        norma_beta = sum(map(lambda x: abs(x), free_column))
+    if print_middle_values:
+        print("\nНорма бета: ", norma_beta)
     if print_middle_values:
         print(f"""\nПервая норма матрицы = {round(matrix.norma_1, 8)}; Вторая норма матрицы = {round(matrix.norma_2, 8)} 
 Минимальная норма = {round(norma, 8)}\n""")
@@ -94,14 +106,14 @@ def zeidel_method(matrix, free_column, await_e=(10 ** -8), stop_level=None, prin
     # Добавление единицы нужно для нормальной работы цикла с матрицей с добавленным столбцом свободных членов
     solution_vector.append(1)
     # Входим в цикл
-    iteration_counter = 1
+    iteration_counter = 0
     delta = 'Неизвестно'
     while True:
         old_solution = solution_vector.copy()
         if print_middle_values:
             print(f'''Номер итерации: {iteration_counter}
             X: {round(solution_vector[0], 8)}; Y: {round(solution_vector[1], 8)}; Z: {round(solution_vector[2], 8)}
-            E: {round((norma ** (iteration_counter - 2)) / (1 - norma) / 10, 8)}, delta: {delta}\n''')
+            E: {round((norma ** iteration_counter) / (1 - norma) * norma_beta, 8)}, delta: {delta}\n''')
         if stop_level:
             if iteration_counter == stop_level:
                 break
