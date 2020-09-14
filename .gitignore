@@ -130,3 +130,6 @@ dmypy.json
 
 # PyCharm
 .idea
+python_code/telegram/admin_setter.py
+python_code/telegram/bot.data
+python_code/telegram/logs.log

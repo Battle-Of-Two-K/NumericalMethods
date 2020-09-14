@@ -32,8 +32,6 @@ class Matrix:
                 self.matrix = [[0 for j in range(args[1])] for i in range(args[0])]
         else:
             raise ValueError("Слишком много аргументов")
-        if not self.check_for_equal_len():
-            raise LookupError("Строки матрицы имеют разную длину")
 
     def __getitem__(self, item):
         return self.matrix[item]
@@ -119,15 +117,6 @@ class Matrix:
         """Красиво печатет матрицу в консоль"""
         print(f'Матрица {self.size}'.center(self.columns * (self.max_len_num + 3) - 1))
         print(self.to_pretty_string())
-
-    def check_for_equal_len(self):
-        """Провряет равны ли длины строк в матрице"""
-        reference = len(self[0])
-        for line in self.matrix:
-            if len(line) != reference:
-                return False
-        else:
-            return True
 
     def autofill(self, mode='random', options: tuple = None):
         """Автоматическое заполнение матрицы
