@@ -14,15 +14,37 @@ try:
     print("Введенная матрица:")
     matrix.console_display()
 
+    print(f"Столбец свободных членов: {free_column}\n")
+
     if not matrix.is_dominant:
         print("Матрица не сходится")
         input('Нажмите "Enter" чтобы выйти...')
+        exit()
     else:
-        print("Решение методом простых итераций:")
-        iterations.simple_iterations(Matrix(matrix.matrix[:]), free_column, stop_level=10, print_middle_values=True)
+        print(f"\n{' Решение методом простых итераций '.center(50, '=')}\n")
+        solution = iterations.simple_iterations(matrix, free_column, iterations=10, level_of_detail=2)
+        for step in solution:
+            step_info = ''
+            for info in step:
+                if info not in ['Матрица']:
+                    if info in ['Нормы матрицы', 'Нормы вектора', 'Решение']:
+                        step_info += f'{info}: {list(map(lambda x: round(x, 8), step[info]))}\n'
+                    else:
+                        step_info += f'{info}: {step[info]}\n'
+            print(step_info)
 
-        print("\nРешение методом Зейделя")
-        iterations.zeidel_method(matrix, free_column, stop_level=5, print_middle_values=True)
+        print(f"\n{' Решение методом Зейделя '.center(50, '=')}\n")
+        solution = iterations.zeidel_method(matrix, free_column, iterations=5, level_of_detail=2)
+        for step in solution:
+            step_info = ''
+            for info in step:
+                if info not in ['Матрица']:
+                    if info in ['Нормы матрицы', 'Нормы вектора', 'Решение']:
+                        step_info += f'{info}: {list(map(lambda x: round(x, 8), step[info]))}\n'
+                    else:
+                        step_info += f'{info}: {step[info]}\n'
+            print(step_info)
+
 except Exception as error:
     print(error)
 input('Нажмите "Enter" чтобы выйти...')

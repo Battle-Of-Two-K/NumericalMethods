@@ -12,14 +12,25 @@ try:
     # Столбец свободных членов
     free_column = [10, 54, 42, 28, -16]
 
+    print(f"Столбец свободных членов: {free_column}\n")
+
     print("Введенная матрица:\n")
     matrix.console_display()
 
     print("Решение методом прогонки:\n")
-    result = iterations.triple_diagonal(matrix, free_column, print_middle_values=True)
+    solution = iterations.triple_diagonal(matrix, free_column, level_of_detail=2)
+    for step in solution:
+        step_info = ''
+        for info in step:
+            if info not in ['Матрица']:
+                if isinstance(step[info], (tuple, list)):
+                    step_info += f'{info}: {list(map(lambda x: round(x, 8), step[info]))}\n'
+                elif isinstance(step[info], float):
+                    step_info += f'{info}: {round(step[info], 8)}\n'
+                else:
+                    step_info += f'{info}: {step[info]}\n'
+        print(step_info)
 
-    print("\nОтвет:")
-    Matrix([result]).console_display()
 except Exception as error:
     print(error)
 input('Нажмите "Enter" чтобы выйти...')

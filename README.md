@@ -811,7 +811,7 @@ matrix = Matrix(4)
 matrix.autofill('dominant')
 free_column = [1, -2, 3, 5]
 # stop_level=8 означает, что нужно остановиться после 8 итерации
-print(iterations.simple_iterations(matrix, free_column, stop_level=8))
+print(iterations.simple_iterations(matrix, free_column, iterations=8))
 # Для вывода промежуточной информации, флаг print_middle_values нужно поставить в True, как ниже
 # await_e=10 ** (-5) означает, что цикл нужно продолжать, пока Эпсилон не станет ниже десять в минус пятой степени
 print(iterations.simple_iterations(matrix, free_column, await_e=10 ** (-5), print_middle_values=True))
@@ -826,7 +826,7 @@ matrix = Matrix(4)
 matrix.autofill('dominant')
 free_column = [1, -2, 3, 5]
 # stop_level=8 означает, что нужно остановиться после 8 итерации
-print(iterations.zeidel_method(matrix, free_column, stop_level=8))
+print(iterations.zeidel_method(matrix, free_column, iterations=8))
 # Для вывода промежуточной информации, флаг print_middle_values нужно поставить в True, как ниже
 # await_e=10 ** (-5) означает, что цикл нужно продолжать, пока Эпсилон не станет ниже десять в минус пятой степени
 print(iterations.zeidel_method(matrix, free_column, await_e=10 ** (-5), print_middle_values=True))
