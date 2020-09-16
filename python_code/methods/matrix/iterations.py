@@ -282,9 +282,9 @@ def triple_diagonal(matrix, free_column, level_of_detail=3):
         yield answer
 
 
-def auto_iterate(matrix, free_column, await_e=None, iterations=None, print_middle_values=False):
+def auto_iterate(matrix, free_column, await_e=None, iterations=None, level_of_details=3):
     """Автоматический выбор лучшего алгоритма"""
     if matrix.is_triple_diagonal:
-        return triple_diagonal(matrix, free_column, print_middle_values)
+        return triple_diagonal(matrix, free_column, level_of_details)
     else:
         return zeidel_method(matrix, free_column, await_e=await_e, iterations=iterations)

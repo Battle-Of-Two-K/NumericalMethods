@@ -17,7 +17,7 @@
 1. Готово! А те, кто хочет сам что-то написать, используя модули этого репозитория должны создать файл свое_название.py
 рядом с папкой python_code, в файле первой строкой импортировать все необходимое: "from python_code.main import *", а дальше
 используйте документацию ниже 
-#### Регулярные обновления
+#### Регулярные обновления (НЕ автоматические)
 При обнаружении ошибок, автор **старается** их исправлять в следующем обновлении. \
 Обновлять программу можно каждый раз скачивая новый архив, полностью заменять его содержимым свою версию.\
 Для автоматизации процесса можно использовать Git. Краткая инструкция к обновлению с использованием Git:\
@@ -35,6 +35,10 @@
     - Консольный интерфейс - открыть Bash в папке с программой (нужно зайти в папку) (ПКМ в папке -> Git Bash Here)\
     выполнить команду: git pull
     - В графическом интерфейсе найти аналог "git pull" (зачастую это стрелочка вниз)
+P.S. На этапе могут возникать ошибки гита, они могут быть связаны с тем, что вы изменили файлы и гит защищает вас от потери
+данных. Если вас это не волнует, можете исправить данные до исходного состояния или применить команду git stash до git pull.
+Подробнее про [git stash](http://stepansuvorov.com/blog/2012/11/git-stash-%D1%8D%D1%82%D0%BE-%D1%82%D0%BE-%D1%87%D1%82%D0%BE-%D1%8F-%D0%B8%D1%81%D0%BA%D0%B0%D0%BB/)
+(правильное применение команд гита может сохранить ваши данные)
 #### Для участия
 1. Зарегистрироваться на [GitHub](http://github.com)
 1. Написать свою почту (по которой регистрировался) в [личку](https://vk.com/simens_green) чтобы я добавил к разработчикам.
@@ -804,32 +808,42 @@ print(gauss.gauss_method(matrix, free_column, print_middle_values=True))
 ### Метод простых итераций
 Метод простых итераций описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
 в пункте 2.1 Метод простых итераций решения СЛАУ, страница 22.
+Данная реализация возвращает итерируемый объект, а не решение
 Пример использования:
 ```python
 from python_code.main import *
 matrix = Matrix(4)
 matrix.autofill('dominant')
 free_column = [1, -2, 3, 5]
-# stop_level=8 означает, что нужно остановиться после 8 итерации
-print(iterations.simple_iterations(matrix, free_column, iterations=8))
-# Для вывода промежуточной информации, флаг print_middle_values нужно поставить в True, как ниже
+# iterations=8 означает, что нужно остановиться после 8 итерации
+decision = iterations.simple_iterations(matrix, free_column, iterations=8)
+# Для получения решения необходимо пропустить все шаги
+for step in decision:
+    solution = step.get("Решение")
+print(solution)
+# Для получения промежуточной информации нужно указать уровень детализации, где 1 - полная детализация, 3 - только ответ
 # await_e=10 ** (-5) означает, что цикл нужно продолжать, пока Эпсилон не станет ниже десять в минус пятой степени
-print(iterations.simple_iterations(matrix, free_column, await_e=10 ** (-5), print_middle_values=True))
+decision = iterations.simple_iterations(matrix, free_column, await_e=10 ** (-5), level_of_detail=2)
 ```
 ### Метод Зейделя
 Метод Зейделя описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
 в пункте 2.2 Метод Зейделя решения СЛАУ, страница 26.
+Данная реализация возвращает итерируемый объект, а не решение
 Пример использования:
 ```python
 from python_code.main import *
 matrix = Matrix(4)
 matrix.autofill('dominant')
 free_column = [1, -2, 3, 5]
-# stop_level=8 означает, что нужно остановиться после 8 итерации
-print(iterations.zeidel_method(matrix, free_column, iterations=8))
-# Для вывода промежуточной информации, флаг print_middle_values нужно поставить в True, как ниже
+# iterations=8 означает, что нужно остановиться после 8 итерации
+decision = iterations.zeidel_method(matrix, free_column, iterations=8)
+# Для получения решения необходимо пропустить все шаги
+for step in decision:
+    solution = step.get("Решение")
+print(solution)
+# Для получения промежуточной информации нужно указать уровень детализации, где 1 - полная детализация, 3 - только ответ
 # await_e=10 ** (-5) означает, что цикл нужно продолжать, пока Эпсилон не станет ниже десять в минус пятой степени
-print(iterations.zeidel_method(matrix, free_column, await_e=10 ** (-5), print_middle_values=True))
+decision = iterations.zeidel_method(matrix, free_column, await_e=10 ** (-5), level_of_detail=2)
 ```
 ### Метод прогонки
 Метод прогонки описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
@@ -840,7 +854,12 @@ from python_code.main import *
 matrix = Matrix(4)
 matrix.autofill('triple_diagonal')
 free_column = [1, -2, 3, 5]
-print(iterations.triple_diagonal(matrix, free_column))
-# Для вывода промежуточной информации, флаг print_middle_values нужно поставить в True, как ниже
-print(iterations.triple_diagonal(matrix, free_column, print_middle_values=True))
+decision = iterations.triple_diagonal(matrix, free_column)
+# Для получения решения необходимо пропустить все шаги
+for step in decision:
+    solution = step.get("Решение")
+print(solution)
+# Для получения промежуточной информации нужно указать уровень детализации, где 1 - полная детализация, 3 - только ответ
+# await_e=10 ** (-5) означает, что цикл нужно продолжать, пока Эпсилон не станет ниже десять в минус пятой степени
+decision = iterations.triple_diagonal(matrix, free_column, level_of_detail=2)
 ```
