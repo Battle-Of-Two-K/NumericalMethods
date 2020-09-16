@@ -43,8 +43,7 @@ def simple_iterations(matrix, free_column, await_e=None, iterations=None, level_
     if level_of_detail < 3:
         answer.update({'Этап': 'Вычислены необходимые нормы'})
         answer.update({'Нормы матрицы': matrix_norms})
-        answer.update(
-            {'Нормы вектора': vector_norms})
+        answer.update({'Нормы вектора': vector_norms})
         answer.update({'Номер выбранной нормы': norm_number})
         yield answer
     norma_beta = vector_norms[norm_number - 1]
@@ -59,11 +58,16 @@ def simple_iterations(matrix, free_column, await_e=None, iterations=None, level_
     delta = None
     epsilon = None
     iteration_counter = 0
+    answer.pop('Этап', None)
+    answer.pop('Нормы матрицы', None)
+    answer.pop('Нормы вектора', None)
+    answer.pop('Номер выбранной нормы', None)
+    answer.pop('Матрица', None)
+    answer.pop('Столбец свободных членов', None)
     while True:
         if level_of_detail < 3:
-            answer.update({'Этап': f'Номер итерации: {iteration_counter}'})
+            answer.update({'Номер итерации': iteration_counter})
             answer.update({'Решение': solution_vector[:-1]})
-            answer.update({'Матрица': matrix})
             answer.update({'Дельта': delta})
             answer.update({'Эпсилон': epsilon})
             yield answer
@@ -80,13 +84,15 @@ def simple_iterations(matrix, free_column, await_e=None, iterations=None, level_
             # Только после заполнения нового вектора (обработана вся матрица), замняем вектор решений на новый на новый
             new_solution.append(container)
         new_solution.append(1)
+        iteration_counter += 1
         epsilon = ((norma ** iteration_counter) / (1 - norma)) * norma_beta
         delta = max(map(lambda x: abs(x), [_ - __ for _, __ in zip(solution_vector, new_solution)]))
         # Вот и замена
         solution_vector = new_solution
-        iteration_counter += 1
+    answer.pop('Дельта', None)
+    answer.pop('Эпсилон', None)
+    answer.pop('Номер итерации', None)
     if level_of_detail < 4:
-        answer.update({'Этап': 'Решение получено'})
         answer.update({'Решение': solution_vector[:-1]})
         yield answer
 
@@ -136,8 +142,7 @@ def zeidel_method(matrix, free_column, await_e=None, iterations=None, level_of_d
     if level_of_detail < 3:
         answer.update({'Этап': 'Вычислены необходимые нормы'})
         answer.update({'Нормы матрицы': matrix_norms})
-        answer.update(
-            {'Нормы вектора': vector_norms})
+        answer.update({'Нормы вектора': vector_norms})
         answer.update({'Номер выбранной нормы': norm_number})
         yield answer
     norma_beta = vector_norms[norm_number - 1]
@@ -152,12 +157,17 @@ def zeidel_method(matrix, free_column, await_e=None, iterations=None, level_of_d
     delta = None
     epsilon = None
     iteration_counter = 0
+    answer.pop('Этап', None)
+    answer.pop('Нормы матрицы', None)
+    answer.pop('Нормы вектора', None)
+    answer.pop('Номер выбранной нормы', None)
+    answer.pop('Матрица', None)
+    answer.pop('Столбец свободных членов', None)
     while True:
         old_solution = solution_vector.copy()
         if level_of_detail < 3:
-            answer.update({'Этап': f'Номер итерации: {iteration_counter}'})
+            answer.update({'Номер итерации': iteration_counter})
             answer.update({'Решение': solution_vector[:-1]})
-            answer.update({'Матрица': matrix})
             answer.update({'Дельта': delta})
             answer.update({'Эпсилон': epsilon})
             yield answer
@@ -172,11 +182,13 @@ def zeidel_method(matrix, free_column, await_e=None, iterations=None, level_of_d
                 container += solution_vector[col_no] * matrix[row_no][col_no]
             # В строке ниже и кроется отличие: для дальнейших вычислений сразу используется полученный результат
             solution_vector[row_no] = container
+        iteration_counter += 1
         epsilon = ((norma ** iteration_counter) / (1 - norma)) * norma_beta
         delta = max(map(lambda x: abs(x), [_ - __ for _, __ in zip(solution_vector, old_solution)]))
-        iteration_counter += 1
+    answer.pop('Дельта', None)
+    answer.pop('Эпсилон', None)
+    answer.pop('Номер итерации', None)
     if level_of_detail < 4:
-        answer.update({'Этап': 'Решение получено'})
         answer.update({'Решение': solution_vector[:-1]})
         yield answer
 

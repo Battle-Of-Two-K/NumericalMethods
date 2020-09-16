@@ -30,7 +30,8 @@ try:
                     if info in ['Нормы матрицы', 'Нормы вектора', 'Решение']:
                         step_info += f'{info}: {list(map(lambda x: round(x, 8), step[info]))}\n'
                     else:
-                        step_info += f'{info}: {step[info]}\n'
+                        step_info += f'{info}: ' \
+                                     f'{step[info] if not isinstance(step[info], float) else round(step[info], 8)}\n'
             print(step_info)
 
         print(f"\n{' Решение методом Зейделя '.center(50, '=')}\n")
@@ -42,7 +43,8 @@ try:
                     if info in ['Нормы матрицы', 'Нормы вектора', 'Решение']:
                         step_info += f'{info}: {list(map(lambda x: round(x, 8), step[info]))}\n'
                     else:
-                        step_info += f'{info}: {step[info]}\n'
+                        step_info += f'{info}: ' \
+                                     f'{step[info] if not isinstance(step[info], float) else round(step[info], 8)}\n'
             print(step_info)
 
 except Exception as error:
