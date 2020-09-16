@@ -54,3 +54,19 @@ def test_is_triple_diagonal():
     m = main.Matrix(10)
     m.autofill('triple_diagonal')
     assert m.is_triple_diagonal
+
+
+def test_col_insertion():
+    m = main.Matrix([[1, 3], [4, 6]])
+    col_to_insert = [2, 5]
+    correct_result = [[1, 2, 3], [4, 5, 6]]
+    m.insert_column(1, col_to_insert)
+    assert correct_result == m.matrix
+
+
+def test_row_insertion():
+    m = main.Matrix([[1, 2], [5, 6]])
+    row_to_insert = [3, 4]
+    correct_result = [[1, 2], [3, 4], [5, 6]]
+    m.insert_row(1, row_to_insert)
+    assert correct_result == m.matrix

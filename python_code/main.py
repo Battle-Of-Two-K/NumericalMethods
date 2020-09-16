@@ -2,24 +2,27 @@ import copy
 import pickle
 import random as rnd
 
-import python_code.methods.matrix.determinant as determinant
-import python_code.methods.matrix.gauss as gauss
-import python_code.methods.matrix.iterations as iterations
+from python_code.methods.matrix import *
+import python_code.methods.equation as equation
 
 
 def det(*args, **kwargs):
     return determinant.auto_det(*args, **kwargs)
 
 
-def solve(matrix, free_column, *args, **kwargs):
+def solve(matrix, free_column):
     if matrix.is_dominant:
-        return iterations.auto_iterate(matrix, free_column, *args, **kwargs)
+        return iterations.auto_iterate(matrix, free_column)
     else:
-        return gauss.gauss_method(matrix, free_column, *args, **kwargs)
+        return gauss.gauss_method(matrix, free_column)
 
 
 class Matrix:
     def __init__(self, *args):
+        # Эти присвоения нужны для возможности быстро использовать эти методы, имея только экземпляр матрицы
+        self.iterations = iterations
+        self.gauss = gauss
+        self.determinant = determinant
         if len(args) == 1:
             if isinstance(args[0], int):
                 self.matrix = [[0 for j in range(args[0])] for i in range(args[0])]
@@ -264,6 +267,20 @@ class Matrix:
         """Удаляет строку из матрицы. Меняет исходную матрицу"""
         return self.matrix.pop(row_no)
 
+    def insert_row(self, row_no: int, row: list):
+        """Вставляет строку в исходную матрицу"""
+        if len(row) != self.columns:
+            raise IndexError("Количество элементов новой строки не соответствует "
+                             "количеству элементов в строках матрицы")
+        self.matrix.insert(row_no, row)
+
+    def insert_column(self, col_no: int, col: list):
+        if len(col) != self.rows:
+            raise IndexError("Количество элементов нового столбца не соответствует "
+                             "количеству строк в матрице")
+        for row_no in range(self.rows):
+            self.matrix[row_no].insert(col_no, col[row_no])
+
     def dump_to_file(self, filename: str):
         """Записывает матрицу в файл без потери точности"""
         with open(filename + '.matrix', 'wb') as file:
@@ -348,6 +365,43 @@ class Matrix:
                     except ZeroDivisionError:
                         continue
         return matrix
+
+    def vector_scalar_mul(self, other) -> (int, float):
+        """Скалярное произведение векторов"""
+        if 1 not in self.size:
+            ArithmeticError("Скалрное произведение только для векторов (матриц с 1 столбцом или 1 строкой)")
+        if isinstance(other, Matrix):
+            if 1 not in other.size:
+                ArithmeticError("Скалрное произведение только для векторов (матриц с 1 столбцом или 1 строкой)")
+        else:
+            return self.vector_scalar_mul(Matrix(other))
+        if self.rows != other.rows and self.rows != other.T.rows:
+            raise ArithmeticError("Скалярное произведение можно найти только у векторов равной размерности")
+        return sum([elem_1 * elem_2 for elem_1, elem_2 in zip(self.vector_to_list, other.vector_to_list)])
+
+    @property
+    def vector_to_list(self):
+        if self.rows > 1:
+            temp = self.T
+            if temp.rows != 1:
+                raise ArithmeticError("В список можно превратить только вектор")
+            return temp.matrix[0]
+        else:
+            if self.rows != 1:
+                raise ArithmeticError
+            return self.matrix[0]
+
+    @property
+    def vector_norm_3(self) -> float:
+        def to_list(matrix):
+            if matrix.rows > 1:
+                return matrix.T.matrix[0]
+            else:
+                return matrix.matrix[0]
+
+        if 1 not in self.size:
+            raise ArithmeticError("Норму вектора можно найти только у вектора (матрица с 1 столбцом или 1 строкой)")
+        return sum([element ** 2 for element in to_list(self)]) ** .5
 
     @property
     def norma_1(self) -> float:
@@ -446,6 +500,15 @@ class Matrix:
                         return False
         else:
             return True
+
+    @staticmethod
+    def wrap(new_matrix):
+        """Возвращает новую матрицу, не меняя исходную"""
+        return Matrix(new_matrix)
+
+    @staticmethod
+    def vector_get_norm_3_vector(size_of_vector):
+        return Matrix([[1 / size_of_vector ** .5 for _ in range(size_of_vector)]])
 
 
 class Integral:

@@ -59,11 +59,17 @@ P.S. в каждой папке по две папки - для разделен
 (Для продвинутого использования)
 1. Класс [Matrix](#Класс-Matrix)
 1. [Определитель](#Определитель)
+1. [Нахождение корней уравнений](#Нахождение-корней-уравнений)
+    - [Многочлен](#Многочлен)
+        - [Метод Лобачевского](#Метод-Лобачевского)
 1. [Методы решений СЛАУ](#Методы-решений-СЛАУ)
     - [Метод Гаусса](#Метод-Гаусса)
     - [Метод простых итераций](#Метод-простых-итераций)
     - [Метод Зейделя](#Метод-Зейделя)
     - [Метод прогонки](#Метод-прогонки)
+    - [Метод Крамера](#Метод-Крамера)
+1. [Решения второй задачи линейной алгебры](#Решения-второй-задачи-линейной-алгебры)
+    - [Степенной метод вычисления спектрального радиуса](#Степенной-метод-вычисления-спектрального-радиуса)
 ### Класс Matrix
 Класс Matrix - общий класс для матриц любого порядка. В нем объявлено большинство методов для работы с матрицами/
 Нумерация строк и столбцов начинается с 0.
@@ -80,6 +86,8 @@ P.S. в каждой папке по две папки - для разделен
     * [norma_2](#norma_2) (float, int) - вторая норма матрицы
     * [matrix](#matrix) (list[list]) - двумерный список, содержащий саму матрицу
     * [size](#size) (tuple[int]) - размер матрицы
+    * [vector_to_list](#vector_to_list) (list) - Преобразует матрицу (вектор) в список
+    * [vector_norm_3](#vector_norm_3) (float, int) - Евклидова (3) норма вектора
 2. [Методы](#Методы)
     * [minor](#minor) (Matrix) - нахождение минора матрицы
     * [swap_rows](#swap_rows) (Matrix) - меняет строки местами
@@ -99,6 +107,11 @@ P.S. в каждой папке по две папки - для разделен
     * [load_from_file](#load_from_file) (None) - загружает матрицу из файла без потери точности (меняет исходную)
     * [write_to_file](#write_to_file) (None) - записывает таблицу в файл (с потерей точности)
     * [read_from_file](#read_from_file) (None) - читает таблицу из текстового файла (меняет исходную)
+    * [vector_scalar_mul](#vector_scalar_mul) (float, int) - скалярное произведение векторов
+    * [insert_row](#insert_row) (None) - вставляет строку в исходную матрицу
+    * [insert_column](#insert_column) (None) - вставляет столбец в исходную матрицу
+    * [wrap](#wrap) (Matrix) - оборачивает двумерный список в матрицу
+    * [vector_get_norm_3_vector](#vector_get_norm_3_vector) (Matrix) - создает нормированный вектор указанного размера
 3. Перегруженные и переопределенные методы
     * \_\_getitem__ - получение по индексу или срезу
     * \_\_setitem__ - присвоение по индексу
@@ -792,6 +805,21 @@ from python_code.main import *
 matrix = Matrix(5)
 print(det(matrix))
 ```
+## Нахождение корней уравнений
+### Многочлен
+#### Метод Лобачевского
+Пример использования:
+```python
+from python_code import *
+polynom = [1, -5, 6]
+correct_roots = [3, 2]
+# Для получения промежуточной информации нужно указать уровень детализации, где 1 - полная детализация, 3 - только ответ
+decision = methods.equation.polynomial.lobachevsky_method(polynom)
+solution = []
+for step in decision:
+    solution = step.get('Решение')
+print(solution)
+```
 ## Методы решений СЛАУ
 ### Метод Гаусса
 Метод Гаусса описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
@@ -862,4 +890,37 @@ print(solution)
 # Для получения промежуточной информации нужно указать уровень детализации, где 1 - полная детализация, 3 - только ответ
 # await_e=10 ** (-5) означает, что цикл нужно продолжать, пока Эпсилон не станет ниже десять в минус пятой степени
 decision = iterations.triple_diagonal(matrix, free_column, level_of_detail=2)
+```
+### Метод Крамера
+Метод Крамера не описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf).\
+Пример использования:
+```python
+from python_code import *
+matrix = Matrix([[2, 1, 1], [1, -1, 0], [3, -1, 2]])
+free = [2, -2, 2]
+decision = methods.matrix.kramer_method(matrix, free)
+solution = None
+for step in decision:
+    print(step)
+    solution = step.get("Решение")
+# Для получения промежуточной информации нужно указать уровень детализации, где 1 - полная детализация, 3 - только ответ
+decision = methods.matrix.kramer_method(matrix, free, level_of_detail=2)
+```
+
+## Решения второй задачи линейной алгебры
+### Степенной метод вычисления спектрального радиуса
+Степенной метод вычисления спектрального радиуса описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
+в пункте 3.1 Степенной метод вычисления спектрального радиуса, страница 28.
+Пример использования:
+```python
+from python_code import *
+matrix = Matrix([[-12, 4, 8], [4, 11, -6], [8, -6, 2]])
+decision = methods.matrix.power_method(matrix, iterations=21)
+solution = None
+for step in decision:
+    solution = step.get("Решение")
+print(solution)
+# Для получения промежуточной информации нужно указать уровень детализации, где 1 - полная детализация, 3 - только ответ
+# await_d=10 ** (-5) означает, что цикл нужно продолжать, пока Дельта не станет ниже десять в минус пятой степени
+decision = methods.matrix.power_method(matrix, level_of_detail=2, await_d=10 ** (-5))
 ```
