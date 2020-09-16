@@ -892,6 +892,7 @@ print(solution)
 decision = iterations.triple_diagonal(matrix, free_column, level_of_detail=2)
 ```
 ### Метод Крамера
+Метод Крамера не описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
 Метод Крамера не описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf).\
 Пример использования:
 ```python
