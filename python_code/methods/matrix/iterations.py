@@ -94,7 +94,7 @@ def simple_iterations(matrix, free_column, await_e=None, iterations=None, level_
     answer.pop('Номер итерации', None)
     if level_of_detail < 4:
         answer.update({'Решение': solution_vector[:-1]})
-        yield answer
+    yield answer
 
 
 def zeidel_method(matrix, free_column, await_e=None, iterations=None, level_of_detail=3):
@@ -190,7 +190,7 @@ def zeidel_method(matrix, free_column, await_e=None, iterations=None, level_of_d
     answer.pop('Номер итерации', None)
     if level_of_detail < 4:
         answer.update({'Решение': solution_vector[:-1]})
-        yield answer
+    yield answer
 
 
 def triple_diagonal(matrix, free_column, level_of_detail=3):
@@ -221,9 +221,19 @@ def triple_diagonal(matrix, free_column, level_of_detail=3):
     p = [0]
     q = [0]
     # Прямой ход прогонки
+    answer.pop('Этап', None)
+    answer.pop('Матрица', None)
+    answer.pop('Столбец свободных членов', None)
+    if level_of_detail < 3:
+        answer.update({'Прямая прогонка': '0 строка'})
+        answer.update({'P0': p[0]})
+        answer.update({'Q0': q[0]})
+        yield answer
+        answer.pop('Q0', None)
+        answer.pop('P0', None)
     for row_no in range(1, matrix.rows + 1):
         if level_of_detail < 3:
-            answer.update({'Этап': f'Прямая прогонка {row_no} строка'})
+            answer.update({'Прямая прогонка': f'{row_no} строка'})
         a = get_element(row_no, row_no - 1)
         b = get_element(row_no, row_no)
         c = get_element(row_no, row_no + 1)
@@ -252,16 +262,19 @@ def triple_diagonal(matrix, free_column, level_of_detail=3):
         q.append(new_q)
         if level_of_detail < 3:
             yield answer
+            answer.pop(f'Q{row_no}', None)
+            answer.pop(f'P{row_no}', None)
     # Обратный ход прогонки
     answer.pop('a', None)
     answer.pop('b', None)
     answer.pop('c', None)
     answer.pop('d', None)
     answer.pop('Этап решения', None)
+    answer.pop('Прямая прогонка', None)
     x = [0 for row_no in range(matrix.rows + 1)]
     for row_no in range(matrix.rows, 0, -1):
         if level_of_detail < 3:
-            answer.update({'Этап': f'Обратная прогонка {row_no} строка'})
+            answer.update({'Обратная прогонка': f'{row_no} строка'})
         if row_no == matrix.rows:
             if level_of_detail < 2:
                 answer.update({f'Этап решения': f"X{row_no} = Q{row_no} = {q[row_no]}"})
@@ -276,15 +289,21 @@ def triple_diagonal(matrix, free_column, level_of_detail=3):
             answer.update({f"X{row_no}": x[row_no]})
             yield answer
     answer.pop('Этап решения', None)
+    answer.pop('Обратная прогонка', None)
+    for _ in range(1, len(x)):
+        answer.pop(f'X{_}', None)
     if level_of_detail < 4:
-        answer.update({'Этап': 'Решение получено'})
         answer.update({'Решение': x[1:]})
-        yield answer
+    yield answer
 
 
-def auto_iterate(matrix, free_column, await_e=None, iterations=None, level_of_details=3):
+def auto_iterate(matrix, free_column):
     """Автоматический выбор лучшего алгоритма"""
     if matrix.is_triple_diagonal:
-        return triple_diagonal(matrix, free_column, level_of_details)
+        decision = triple_diagonal(matrix, free_column)
     else:
-        return zeidel_method(matrix, free_column, await_e=await_e, iterations=iterations)
+        decision = zeidel_method(matrix, free_column)
+    solution = []
+    for step in decision:
+        solution = step.get('Решение')
+    return solution
