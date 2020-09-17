@@ -27,7 +27,7 @@ def power_method(matrix, await_d=None, iterations=None, level_of_detail=3):
         if level_of_detail < 3:
             answer.update({'Номер итерации': iteration_counter})
             answer.update({f'w{iteration_counter}': omega.vector_to_list})
-        omega = v / v.vector_norm_3
+        omega = v / v.vector_norma_3
         delta = abs(old_ro - ro) if old_ro else None
         old_ro = ro
         iteration_counter += 1

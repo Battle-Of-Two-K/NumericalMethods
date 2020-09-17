@@ -18,7 +18,7 @@ def solve(matrix, free_column):
 
 
 class Matrix:
-    def __init__(self, *args):
+    def __init__(self, *args, **kwargs):
         # Эти присвоения нужны для возможности быстро использовать эти методы, имея только экземпляр матрицы
         self.iterations = iterations
         self.gauss = gauss
@@ -392,16 +392,24 @@ class Matrix:
             return self.matrix[0]
 
     @property
-    def vector_norm_3(self) -> float:
-        def to_list(matrix):
-            if matrix.rows > 1:
-                return matrix.T.matrix[0]
-            else:
-                return matrix.matrix[0]
+    def vector_norma_1(self) -> (float, int):
+        vector = self.vector_to_list
+        return max([abs(element) for element in vector])
 
+    @property
+    def vector_norma_2(self) -> (int, float):
+        vector = self.vector_to_list
+        summa = 0
+        for element in vector:
+            summa += abs(element)
+        return summa
+
+    @property
+    def vector_norma_3(self) -> float:
+        vector = self.vector_to_list
         if 1 not in self.size:
             raise ArithmeticError("Норму вектора можно найти только у вектора (матрица с 1 столбцом или 1 строкой)")
-        return sum([element ** 2 for element in to_list(self)]) ** .5
+        return sum([element ** 2 for element in vector]) ** .5
 
     @property
     def norma_1(self) -> float:
@@ -419,6 +427,14 @@ class Matrix:
             norma.append(col_value)
         norma = max(norma)
         return norma
+
+    @property
+    def norma_3(self) -> float:
+        summa = 0
+        for _ in range(self.rows):
+            for __ in range(self.columns):
+                summa += abs(self.matrix[_][__]) ** 2
+        return summa ** .5
 
     @property
     def is_dominant(self) -> bool:
@@ -501,10 +517,21 @@ class Matrix:
         else:
             return True
 
+    @property
+    def is_symmetrical(self) -> bool:
+        if not self.is_square:
+            raise IndexError("Симметричной можетбыть только квадратная матрица")
+        for row_no in range(self.rows):
+            for col_no in range(self.columns):
+                if self[row_no][col_no] != self[col_no][row_no]:
+                    return False
+        else:
+            return True
+
     @staticmethod
-    def wrap(new_matrix):
+    def wrap(*args, **kwargs):
         """Возвращает новую матрицу, не меняя исходную"""
-        return Matrix(new_matrix)
+        return Matrix(*args, **kwargs)
 
     @staticmethod
     def vector_get_norm_3_vector(size_of_vector):

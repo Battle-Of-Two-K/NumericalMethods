@@ -70,6 +70,7 @@ P.S. в каждой папке по две папки - для разделен
     - [Метод Крамера](#Метод-Крамера)
 1. [Решения второй задачи линейной алгебры](#Решения-второй-задачи-линейной-алгебры)
     - [Степенной метод вычисления спектрального радиуса](#Степенной-метод-вычисления-спектрального-радиуса)
+    - [Метод вращений Якоби для симметричной матрицы](Метод-вращений-Якоби-для-симметричной-матрицы)
 ### Класс Matrix
 Класс Matrix - общий класс для матриц любого порядка. В нем объявлено большинство методов для работы с матрицами/
 Нумерация строк и столбцов начинается с 0.
@@ -78,16 +79,20 @@ P.S. в каждой папке по две папки - для разделен
     * [T](#T) (Matrix) - транспонированная матрица
     * [is_dominant](#is_dominant) (bool) - проверка на преобладающую главную диагональ
     * [is_square](#is_square) (bool) - является ли матрица квадратной
+    * [is_symmetrical](#is_symmetrical) (bool) - является лиматрица симметричной
     * [is_triple_diagonal](#is_triple_diagonal)(bool)  - является ли матрица трехдиагональной
     * [max_len_num](#max_len_num) (int) - вычисление максимальной длины строкового отображения значений матрицы
     * [rows](#rows) (int) - количество строк матрицы
     * [columns](#columns) (int) - количество столбцов матрицы
     * [norma_1](#norma_1) (float, int) - первая норма матрицы
     * [norma_2](#norma_2) (float, int) - вторая норма матрицы
+    * [norma_3](#norma_3) (float, int) - третья норма матрицы
     * [matrix](#matrix) (list[list]) - двумерный список, содержащий саму матрицу
     * [size](#size) (tuple[int]) - размер матрицы
     * [vector_to_list](#vector_to_list) (list) - Преобразует матрицу (вектор) в список
-    * [vector_norm_3](#vector_norm_3) (float, int) - Евклидова (3) норма вектора
+    * [vector_norma_1](#vector_norm_1) (float, int) - первая норма вектора
+    * [vector_norma_2](#vector_norm_2) (float, int) - вторая норма вектора
+    * [vector_norma_3](#vector_norm_3) (float, int) - Евклидова (третья) норма вектора
 2. [Методы](#Методы)
     * [minor](#minor) (Matrix) - нахождение минора матрицы
     * [swap_rows](#swap_rows) (Matrix) - меняет строки местами
@@ -846,6 +851,7 @@ free_column = [1, -2, 3, 5]
 # iterations=8 означает, что нужно остановиться после 8 итерации
 decision = iterations.simple_iterations(matrix, free_column, iterations=8)
 # Для получения решения необходимо пропустить все шаги
+solution = None
 for step in decision:
     solution = step.get("Решение")
 print(solution)
@@ -866,6 +872,7 @@ free_column = [1, -2, 3, 5]
 # iterations=8 означает, что нужно остановиться после 8 итерации
 decision = iterations.zeidel_method(matrix, free_column, iterations=8)
 # Для получения решения необходимо пропустить все шаги
+solution = None
 for step in decision:
     solution = step.get("Решение")
 print(solution)
@@ -884,6 +891,7 @@ matrix.autofill('triple_diagonal')
 free_column = [1, -2, 3, 5]
 decision = iterations.triple_diagonal(matrix, free_column)
 # Для получения решения необходимо пропустить все шаги
+solution = None
 for step in decision:
     solution = step.get("Решение")
 print(solution)
@@ -892,7 +900,6 @@ print(solution)
 decision = iterations.triple_diagonal(matrix, free_column, level_of_detail=2)
 ```
 ### Метод Крамера
-Метод Крамера не описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
 Метод Крамера не описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf).\
 Пример использования:
 ```python
@@ -924,4 +931,19 @@ print(solution)
 # Для получения промежуточной информации нужно указать уровень детализации, где 1 - полная детализация, 3 - только ответ
 # await_d=10 ** (-5) означает, что цикл нужно продолжать, пока Дельта не станет ниже десять в минус пятой степени
 decision = methods.matrix.power_method(matrix, level_of_detail=2, await_d=10 ** (-5))
+```
+### Метод вращений Якоби для симметричной матрицы
+Метод вращений Якоби для симметричной матрицы описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
+в пункте 3.2 Метод вращений Якоби для симметричной матрицы, страница 33.
+Пример использования:
+```python
+from python_code import *
+matrix = Matrix([[17, 1, 1], [1, 17, 2], [1, 2, 4]])
+decision = method_rot_yakobi(matrix, iterations=8)
+solution = None
+for step in decision:
+    solution = step.get("Решение")
+print(solution)
+# Для получения промежуточной информации нужно указать уровень детализации, где 1 - полная детализация, 3 - только ответ
+decision = methods.matrix.power_method(matrix, level_of_detail=2)
 ```

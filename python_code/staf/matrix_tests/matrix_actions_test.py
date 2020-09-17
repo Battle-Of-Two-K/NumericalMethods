@@ -70,3 +70,24 @@ def test_row_insertion():
     correct_result = [[1, 2], [3, 4], [5, 6]]
     m.insert_row(1, row_to_insert)
     assert correct_result == m.matrix
+
+
+def test_vector_norm_1():
+    m = main.Matrix([[1, 2, -3]])
+    assert 3 == m.vector_norma_1
+
+
+def test_vector_norm_2():
+    m = main.Matrix([[1, 2, -3]])
+    assert 6 == m.vector_norma_2
+
+
+def test_vector_norm_3():
+    m = main.Matrix([[1, 2, -3]])
+    assert 14 ** .5 == m.vector_norma_3
+
+
+def test_matrix_norm_3():
+    m = main.Matrix([[1, -3, 5], [-7, 4, -4], [3, -6, 1]])
+    assert 162 ** .5 == m.norma_3
+
