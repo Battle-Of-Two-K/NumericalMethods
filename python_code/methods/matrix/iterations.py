@@ -19,26 +19,25 @@ def simple_iterations(matrix, free_column, await_e=None, iterations=None, level_
         raise ArithmeticError("Метод итераций работает только с матрицами с доминантной диагональю")
     # Извлечение главной диагонали, замещая значения нулями
     new_column = []
-    for _ in range(matrix.rows):
-        for __ in range(matrix.rows):
-            if _ == __:
-                new_column.append(matrix[_][__])
-                matrix.matrix[_][__] = 0
+    for _, __ in matrix:
+        if _ == __:
+            new_column.append(matrix[_][__])
+            matrix.matrix[_][__] = 0
     matrix = -matrix
     # Деление соответствующих строк на значения из диагонали
-    for _ in range(matrix.rows):
-        for __ in range(matrix.rows):
-            matrix.matrix[_][__] /= new_column[_]
+    for _, __ in matrix:
+        matrix.matrix[_][__] /= new_column[_]
     # Деление сободных членов на значения из диагонали
     free_column = [_ / __ for _, __ in zip(free_column, new_column)]
+    free_column = matrix.wrap([free_column])
     if level_of_detail < 2:
         answer.update({'Этап': 'Из матрицы извлечена главная диагональ'})
         answer.update({'Матрица': matrix})
-        answer.update({'Столбец свободных членов': free_column})
+        answer.update({'Столбец свободных членов': free_column.matrix[0]})
         yield answer
     # Вычисление нормы (минимальная из двух)
     matrix_norms = (matrix.norma_1, matrix.norma_2)
-    vector_norms = (max(map(lambda x: abs(x), free_column)), sum(map(lambda x: abs(x), free_column)))
+    vector_norms = (free_column.vector_norma_1, free_column.vector_norma_2)
     norm_number = 1 if matrix.norma_1 <= matrix.norma_2 else 2
     if level_of_detail < 3:
         answer.update({'Этап': 'Вычислены необходимые нормы'})
@@ -49,6 +48,7 @@ def simple_iterations(matrix, free_column, await_e=None, iterations=None, level_
     norma_beta = vector_norms[norm_number - 1]
     norma = matrix_norms[norm_number - 1]
     # Принимаем за начальный вектор вектор бета с шапкой
+    free_column = free_column.vector_to_list
     solution_vector = free_column.copy()
     # Добавление столбца свободных членов
     matrix.append_column(free_column.copy())
@@ -118,26 +118,25 @@ def zeidel_method(matrix, free_column, await_e=None, iterations=None, level_of_d
         raise ArithmeticError("Метод итераций работает только с матрицами с доминантной диагональю")
     # Извлечение главной диагонали, замещая значения нулями
     new_column = []
-    for _ in range(matrix.rows):
-        for __ in range(matrix.rows):
-            if _ == __:
-                new_column.append(matrix[_][__])
-                matrix.matrix[_][__] = 0
+    for _, __ in matrix:
+        if _ == __:
+            new_column.append(matrix[_][__])
+            matrix.matrix[_][__] = 0
     matrix = -matrix
     # Деление соответствующих строк на значения из диагонали
-    for _ in range(matrix.rows):
-        for __ in range(matrix.rows):
-            matrix.matrix[_][__] /= new_column[_]
+    for _, __ in matrix:
+        matrix.matrix[_][__] /= new_column[_]
     # Деление сободных членов на значения из диагонали
     free_column = [_ / __ for _, __ in zip(free_column, new_column)]
+    free_column = matrix.wrap([free_column])
     if level_of_detail < 2:
         answer.update({'Этап': 'Из матрицы извлечена главная диагональ'})
         answer.update({'Матрица': matrix})
-        answer.update({'Столбец свободных членов': free_column})
+        answer.update({'Столбец свободных членов': free_column.matrix[0]})
         yield answer
     # Вычисление нормы (минимальная из двух)
     matrix_norms = (matrix.norma_1, matrix.norma_2)
-    vector_norms = (max(map(lambda x: abs(x), free_column)), sum(map(lambda x: abs(x), free_column)))
+    vector_norms = (free_column.vector_norma_1, free_column.vector_norma_2)
     norm_number = 1 if matrix.norma_1 <= matrix.norma_2 else 2
     if level_of_detail < 3:
         answer.update({'Этап': 'Вычислены необходимые нормы'})
@@ -148,6 +147,7 @@ def zeidel_method(matrix, free_column, await_e=None, iterations=None, level_of_d
     norma_beta = vector_norms[norm_number - 1]
     norma = matrix_norms[norm_number - 1]
     # Принимаем за начальный вектор вектор бета с шапкой
+    free_column = free_column.vector_to_list
     solution_vector = free_column.copy()
     # Добавление столбца свободных членов
     matrix.append_column(free_column.copy())

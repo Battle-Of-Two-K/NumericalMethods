@@ -7,13 +7,12 @@ def method_rot_yakobi(matrix, iterations=8, level_of_detail=3):
         max_elem_row = 0
         max_elem_col = 1
         max_elem = abs(matrix[max_elem_row][max_elem_col])
-        for row_no in range(matrix.rows):
-            for col_no in range(matrix.columns):
-                if row_no < col_no:
-                    if abs(matrix[row_no][col_no]) > max_elem:
-                        max_elem = abs(matrix[row_no][col_no])
-                        max_elem_row = row_no
-                        max_elem_col = col_no
+        for row_no, col_no in matrix:
+            if row_no < col_no:
+                if abs(matrix[row_no][col_no]) > max_elem:
+                    max_elem = abs(matrix[row_no][col_no])
+                    max_elem_row = row_no
+                    max_elem_col = col_no
         return max_elem_row, max_elem_col
 
     def calc_phi(cords_):
@@ -38,10 +37,9 @@ def method_rot_yakobi(matrix, iterations=8, level_of_detail=3):
     def extract_diagonal():
         """Получает значения из главной диагонали"""
         diagonal = []
-        for row_no_ in range(matrix.rows):
-            for col_no_ in range(matrix.columns):
-                if row_no_ == col_no_:
-                    diagonal.append(matrix[row_no_][col_no_])
+        for row_no_, col_no_ in matrix:
+            if row_no_ == col_no_:
+                diagonal.append(matrix[row_no_][col_no_])
         return diagonal
 
     def get_own_vectors():

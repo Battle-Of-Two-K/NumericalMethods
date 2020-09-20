@@ -32,7 +32,6 @@ def minor_method(matrix):
 def fast_minor_method(matrix):
     """Тот же метод миноров, но с предварительной триангуляцией (сокращение до 50% работы метода миноров)
     (метод Гаусса) ТОЧНОСТЬ НИЖЕ, ЧЕМ У МЕТОДА МИНОРОВ"""
-    # TODO: метод через миноры и триангуляцию
     matrix = matrix.triangulate()
     return minor_method(matrix)
 
@@ -62,7 +61,7 @@ def auto_det(matrix):
     """Автоматический выбор лучшего алгоритма"""
     if not matrix.is_square:
         raise ArithmeticError("Определитель возможно найти только у квадратной матрицы")
-    if matrix.rows > 9:
+    if matrix.rows > 10:
         return fast_minor_method(matrix)
     else:
         return minor_method(matrix)

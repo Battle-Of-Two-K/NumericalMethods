@@ -43,14 +43,12 @@ class Matrix:
         self.matrix[key] = value
 
     def __str__(self):
-        """Перегрузка строкового представления"""
         out = f'Матрица {self.size}\n'
         for row in self.matrix:
             out += str(row) + '\n'
         return out
 
     def __add__(self, other):
-        """Перегрузка сложения"""
         if isinstance(other, (float, int)):
             matrix = self.copy()
             for _ in range(self.rows):
@@ -67,7 +65,6 @@ class Matrix:
             return Matrix(matrix)
 
     def __mul__(self, other):
-        """Перегрузка умножения"""
         if isinstance(other, (float, int)):
             matrix = self.copy()
             for _ in range(self.rows):
@@ -88,11 +85,9 @@ class Matrix:
             return Matrix(matrix)
 
     def __neg__(self):
-        """Перегрузка унарного минуса"""
         return self * -1
 
     def __sub__(self, other):
-        """Перегрузка вычитания"""
         self + (-other)
 
     def __truediv__(self, other):
@@ -102,6 +97,7 @@ class Matrix:
             return self * ~other
 
     def __invert__(self):
+        """Обратная матрица"""
         if det(self) == 0:
             raise ArithmeticError("Невозможно найти обратную матрицу так как определитель равен нулю")
         else:
@@ -115,6 +111,16 @@ class Matrix:
 
     def __hash__(self):
         return hash(str(self.matrix))
+
+    def __len__(self):
+        return self.columns * self.rows
+
+    def __iter__(self):
+        def iterator():
+            for row_no in range(self.rows):
+                for col_no in range(self.columns):
+                    yield row_no, col_no
+        return iterator()
 
     def console_display(self):
         """Красиво печатет матрицу в консоль"""
@@ -182,17 +188,16 @@ class Matrix:
                 raise ArithmeticError("Доминантной можно сделать только квадратную матрицу")
             new_matrix = Matrix(self.size[0], self.size[1])
             new_matrix.autofill('random', options)
-            for row_no in range(new_matrix.rows):
-                for col_no in range(new_matrix.columns):
-                    if row_no == col_no:
-                        container = 0
-                        for col_no_inner in range(new_matrix.columns):
-                            if col_no_inner != col_no:
-                                container += abs(new_matrix[row_no][col_no_inner])
-                        # Гарантия доминации диагонали
-                        new_matrix[row_no][col_no] = container + abs(rnd_generate())
-                        # Добавление отрицательных значений
-                        new_matrix[row_no][col_no] *= 1 if rnd.random() < 1 / self.rows else -1
+            for row_no, col_no in new_matrix:
+                if row_no == col_no:
+                    container = 0
+                    for col_no_inner in range(new_matrix.columns):
+                        if col_no_inner != col_no:
+                            container += abs(new_matrix[row_no][col_no_inner])
+                    # Гарантия доминации диагонали
+                    new_matrix[row_no][col_no] = container + abs(rnd_generate())
+                    # Добавление отрицательных значений
+                    new_matrix[row_no][col_no] *= 1 if rnd.random() < 1 / self.rows else -1
             self.matrix = new_matrix.copy().matrix
         elif mode == 'exchange':
             if not self.is_square:
@@ -205,18 +210,70 @@ class Matrix:
             raise AttributeError(f"Неизветный режим {mode}")
 
     def minor(self, row: int, column: int):
-        """Находит минор матрицы по заданой ячейке"""
-        out = []
+        """Находит минор (матрицу, без строки и столбца, содержащих указанный элемент) матрицы по заданой ячейке"""
+        matrix = self.copy()
+        matrix.pop_row(row)
+        matrix.pop_column(column)
+        return matrix
+
+    def add_column(self, col_no: int, n):
+        """Сложение указанного столбца с указанным числом"""
+        matrix = self.copy()
         for row_no in range(self.rows):
-            if row_no == row:
-                continue
-            new_row = []
-            for col_no in range(self.columns):
-                if col_no == column:
-                    continue
-                new_row.append(self[row_no][col_no])
-            out.append(new_row)
-        return Matrix(out)
+            matrix.matrix[row_no][col_no] += n
+        return matrix
+
+    def add_row(self, row_no: int, n):
+        """Сложение указанной строки с указанным числом"""
+        matrix = self.copy()
+        matrix.matrix[row_no] = [elem + n for elem in matrix.matrix[row_no]]
+        return matrix
+
+    def sub_column(self, col_no: int, n):
+        """Вычитание из указанного столбца указанного числа"""
+        return self.add_column(col_no, -n)
+
+    def sub_row(self, row_no: int, n):
+        """Вычитание из указанной строки указанного числа"""
+        return self.add_row(row_no, -n)
+
+    def mul_column(self, col_no: int, n):
+        """Умножение указанного столбца на указанное число"""
+        matrix = self.copy()
+        for row_no in range(self.rows):
+            matrix.matrix[row_no][col_no] *= n
+        return matrix
+
+    def mul_row(self, row_no: int, n):
+        """Умножение указанной строки на указанное число"""
+        matrix = self.copy()
+        matrix.matrix[row_no] = [elem * n for elem in matrix.matrix[row_no]]
+        return matrix
+
+    def div_row(self, row_no: int, n):
+        """Деление указанной строки на указанное число"""
+        return self.mul_row(row_no, 1 / n)
+
+    def div_column(self, col_no: int, n):
+        """Деление указанного столбца на указанное число"""
+        return self.mul_column(col_no, 1 / n)
+
+    def pow_row(self, row_no: int, n):
+        """Удаление указанной строки из матрицы"""
+        matrix = self.copy()
+        matrix.matrix[row_no] = [elem ** n for elem in matrix.matrix[row_no]]
+        return matrix
+
+    def apply_mask(self, other):
+        """Применяет маску (перемножает соответствующие элементы двух матриц)"""
+        if not isinstance(other, Matrix):
+            raise ArithmeticError("Маска тоже должна быть матрицей")
+        if self.size != other.size:
+            raise ArithmeticError("Маска должна быть соответствующего размера")
+        matrix = self.copy()
+        for row_no, col_no in self:
+            matrix.matrix[row_no][col_no] *= other.matrix[row_no][col_no]
+        return matrix
 
     def swap_rows(self, row_1: int, row_2: int):
         """Меняет 2 строки местами"""
@@ -240,6 +297,22 @@ class Matrix:
                 counter = self[row_no].count(num)
                 max_nums_row_no = row_no
         return max_nums_row_no
+
+    def count_in_row(self, row_no, value, invert=False):
+        """Считает сколько содержится в указанном столбце указанных элементов
+        (с invert=True всех, кроме указанного)"""
+        if not invert:
+            return self.matrix[row_no].count(value)
+        else:
+            return self.columns - self.count_in_row(row_no, value)
+
+    def count_in_column(self, col_no, value, invert=False):
+        """Считает сколько содержится в указанной строке указанных элементов
+        (с invert=True всех, кроме указанного)"""
+        if not invert:
+            return self.T.matrix[col_no].count(value)
+        else:
+            return self.T.columns - self.count_in_column(col_no, value)
 
     def append_row(self, new_row: list):
         """Добавляет новую строку в матрицу. Меняет исходную матрицу"""
@@ -268,13 +341,14 @@ class Matrix:
         return self.matrix.pop(row_no)
 
     def insert_row(self, row_no: int, row: list):
-        """Вставляет строку в исходную матрицу"""
+        """Вставляет строку в указанное место в исходную матрицу"""
         if len(row) != self.columns:
             raise IndexError("Количество элементов новой строки не соответствует "
                              "количеству элементов в строках матрицы")
         self.matrix.insert(row_no, row)
 
     def insert_column(self, col_no: int, col: list):
+        """Вставляет столбец в указанное место в исходную матрицу"""
         if len(col) != self.rows:
             raise IndexError("Количество элементов нового столбца не соответствует "
                              "количеству строк в матрице")
@@ -305,12 +379,11 @@ class Matrix:
         for new_row in data:
             new_matrix.append(new_row.split('|')[1:-1])
         new_matrix = new_matrix[:-1]
-        for row_no in range(len(new_matrix)):
-            for col_no in range(len(new_matrix[row_no])):
-                if float(new_matrix[row_no][col_no]) == int(new_matrix[row_no][col_no]):
-                    new_matrix[row_no][col_no] = int(new_matrix[row_no][col_no])
-                else:
-                    new_matrix[row_no][col_no] = float(new_matrix[row_no][col_no])
+        for row_no, col_no in self:
+            if float(new_matrix[row_no][col_no]) == int(new_matrix[row_no][col_no]):
+                new_matrix[row_no][col_no] = int(new_matrix[row_no][col_no])
+            else:
+                new_matrix[row_no][col_no] = float(new_matrix[row_no][col_no])
         self.matrix = new_matrix
 
     def to_pretty_string(self, round_to: int = 8):
@@ -357,13 +430,12 @@ class Matrix:
 
         matrix = self.copy()
         matrix = matrix.triangulate()
-        for row_no in range(matrix.rows):
-            for col_no in range(matrix.columns):
-                if row_no == col_no:
-                    try:
-                        matrix.matrix[row_no] = mul_row(matrix[row_no], 1 / matrix[row_no][col_no])
-                    except ZeroDivisionError:
-                        continue
+        for row_no, col_no in matrix:
+            if row_no == col_no:
+                try:
+                    matrix.matrix[row_no] = mul_row(matrix[row_no], 1 / matrix[row_no][col_no])
+                except ZeroDivisionError:
+                    continue
         return matrix
 
     def vector_scalar_mul(self, other) -> (int, float):
@@ -381,6 +453,7 @@ class Matrix:
 
     @property
     def vector_to_list(self):
+        """Преобразование вектора в список (только для матриц с одним столбцом или строкой)"""
         if self.rows > 1:
             temp = self.T
             if temp.rows != 1:
@@ -393,22 +466,18 @@ class Matrix:
 
     @property
     def vector_norma_1(self) -> (float, int):
-        vector = self.vector_to_list
-        return max([abs(element) for element in vector])
+        """Первая норма вектора (только для матриц с одним столбцом или строкой)"""
+        return max(map(abs, self.vector_to_list))
 
     @property
     def vector_norma_2(self) -> (int, float):
-        vector = self.vector_to_list
-        summa = 0
-        for element in vector:
-            summa += abs(element)
-        return summa
+        """Вторая норма вектора (только для матриц с одним столбцом или строкой)"""
+        return sum(map(abs, self.vector_to_list))
 
     @property
     def vector_norma_3(self) -> float:
+        """Третья норма вектора (только для матриц с одним столбцом или строкой)"""
         vector = self.vector_to_list
-        if 1 not in self.size:
-            raise ArithmeticError("Норму вектора можно найти только у вектора (матрица с 1 столбцом или 1 строкой)")
         return sum([element ** 2 for element in vector]) ** .5
 
     @property
@@ -430,6 +499,7 @@ class Matrix:
 
     @property
     def norma_3(self) -> float:
+        """Третья норма матрицы"""
         summa = 0
         for _ in range(self.rows):
             for __ in range(self.columns):
@@ -463,6 +533,7 @@ class Matrix:
 
     @property
     def complements(self):
+        """Матрица алгебраических дополнений"""
         mat = Matrix(self.rows, self.columns)
         mid = mat.matrix
         for i in range(self.columns):
@@ -477,6 +548,7 @@ class Matrix:
 
     @property
     def T(self):
+        """Транспонированная матрица"""
         out = []
         for column_no in range(self.columns):
             new_column = []
@@ -507,6 +579,7 @@ class Matrix:
 
     @property
     def is_triple_diagonal(self) -> bool:
+        """Является ли матрица трехдиагональной"""
         if not self.is_square:
             return False
         for _ in range(self.rows):
@@ -519,12 +592,12 @@ class Matrix:
 
     @property
     def is_symmetrical(self) -> bool:
+        """Проверка на симметриюотносительно главной диагонали"""
         if not self.is_square:
             raise IndexError("Симметричной можетбыть только квадратная матрица")
-        for row_no in range(self.rows):
-            for col_no in range(self.columns):
-                if self[row_no][col_no] != self[col_no][row_no]:
-                    return False
+        for row_no, col_no in self:
+            if self[row_no][col_no] != self[col_no][row_no]:
+                return False
         else:
             return True
 
@@ -535,8 +608,5 @@ class Matrix:
 
     @staticmethod
     def vector_get_norm_3_vector(size_of_vector):
+        """Возвращает нормированный вектор нужного размера"""
         return Matrix([[1 / size_of_vector ** .5 for _ in range(size_of_vector)]])
-
-
-class Integral:
-    ...
