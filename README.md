@@ -5,7 +5,8 @@
 1. Максимум комментариев в коде
 1. Максимум русского языка
 ### Инструкция
-Изучить Python можно решая простые задачи, желательно на [сайте с автоматической проверкой решений](https://informatics.mccme.ru/)
+Изучить Python можно решая простые задачи, желательно на [сайте с автоматической проверкой решений](https://informatics.mccme.ru/)\
+Рекомендации касательно ПО для работы с Python описаны в разделе [для участия](#Для-участия)
 #### Для запуска
 1. Установить интерпретатор Python 3 и выше, который можно скачать с [официального сайта](https://www.python.org/downloads/).
 Рекомендую во время установки поставить галочку в пункте "Add to PATH", в самом начале
@@ -156,7 +157,7 @@ matrix.minor(1, 1).console_display()
 # |___|___|
 ```
 #### swap_rows
-Принимает на вход номера строк, меняет их местами и возвращает измененную матрицу.
+Принимает на вход номера строк, меняет их местами и возвращает измененную матрицу.\
 Пример использования:
 ```python
 from python_code.main import *
@@ -184,7 +185,7 @@ matrix.swap_rows(0, 2).console_display()
 # |___|___|___|
 ```
 #### swap_columns
-Принимает на вход номера столбцов, меняет их местами и возвращает измененную матрицу.
+Принимает на вход номера столбцов, меняет их местами и возвращает измененную матрицу.\
 Пример использования:
 ```python
 from python_code.main import *
@@ -212,7 +213,7 @@ matrix.swap_columns(0, 2).console_display()
 # |___|___|___|
 ```
 #### triangulate
-Возвращает триангулированную матрицу
+Возвращает триангулированную матрицу\
 Пример использования:
 ```python
 from python_code.main import *
@@ -240,7 +241,7 @@ matrix.triangulate().console_display()
 # |____________|____________|____________|
 ```
 #### copy
-Возвращает глубокую копию матрицы
+Возвращает глубокую копию матрицы\
 Пример использования:
 ```python
 from python_code.main import *
@@ -249,7 +250,7 @@ matrix.autofill('sequence')
 new_matrix = matrix.copy()
 ```
 #### triangulate_to_ones
-Возвращает триангулированную матрицу с единицами в главной диагонали
+Возвращает триангулированную матрицу с единицами в главной диагонали\
 Пример использования:
 ```python
 from python_code.main import *
@@ -300,7 +301,7 @@ print(matrix.search_for_max_num_count(1))
 # 0
 ```
 #### pop_column
-Принимает на вход номер столбца, удаляет его из исходной матрицы и возвращает столбец в виде списка
+Принимает на вход номер столбца, удаляет его из исходной матрицы и возвращает столбец в виде списка\
 Пример использования:
 ```python
 from python_code.main import *
@@ -322,7 +323,7 @@ print(column)
 # [2, 5, 8]
 ```
 #### pop_row
-Принимает на вход номер строки, удаляет ее из исходной матрицы и возвращает строку в виде списка
+Принимает на вход номер строки, удаляет ее из исходной матрицы и возвращает строку в виде списка\
 Пример использования:
 ```python
 from python_code.main import *
@@ -342,7 +343,7 @@ print(column)
 # [4, 5, 6]
 ```
 #### to_pretty_string
-Возвращает отформатрированную в виде таблицы матрицу
+Возвращает отформатрированную в виде таблицы матрицу\
 Пример использования:
 ```python
 from python_code.main import *
@@ -359,7 +360,7 @@ print(matrix.to_pretty_string())
 # |___|___|___|
 ```
 #### console_display
-Печатает в консоль отформатрированную в виде таблицы матрицу
+Печатает в консоль отформатрированную в виде таблицы матрицу\
 Пример использования:
 ```python
 from python_code.main import *
@@ -377,7 +378,7 @@ matrix.console_display()
 # |____|____|____|
 ```
 #### dump_to_file
-Сохраняет матрицу в файл без потери точности
+Сохраняет матрицу в файл без потери точности\
 Пример использования:
 ```python
 from python_code.main import *
@@ -398,7 +399,7 @@ new_matrix.console_display()
 # |___|___|___|
 ```
 #### append_row
-Принимает список и присоединяет его снизу к исходной матрице, как новую строку
+Принимает список и присоединяет его снизу к исходной матрице, как новую строку\
 Пример использования:
 ```python
 from python_code.main import *
@@ -436,7 +437,7 @@ matrix.console_display()
     * 'dominant' - матрица с доминантной диагональю, options как у 'random'
     * 'exchange' - обменная матрица
     * 'triple_diagonal' - Трёхдиагональная матрица, options как у 'random'"""
-По умолчанию mode='random', options=(-10, 10)
+По умолчанию mode='random', options=(-10, 10)\
 Пример использования:
 ```python
 from python_code.main import *
@@ -482,7 +483,7 @@ matrix.console_display()
 # |_____|_____|_____|_____|
 ```
 #### append_column
-Принимает на вход список и присоединяет его к исходной матрице справа как новый столбец
+Принимает на вход список и присоединяет его к исходной матрице справа как новый столбец\
 Пример использования:
 ```python
 from python_code.main import *
@@ -511,7 +512,7 @@ matrix.console_display()
 # |___|___|___|
 ```
 #### load_from_file
-Загружает матрицу из файла (поддерживаются только файлы, сгенерированные dump_to_file)
+Загружает матрицу из файла (поддерживаются только файлы, сгенерированные dump_to_file)\
 Пример использования:
 ```python
 from python_code.main import *
@@ -532,7 +533,7 @@ new_matrix.console_display()
 # |___|___|___|
 ```
 #### write_to_file
-Записывает в файл таблицу, полученную методом to_pretty_string
+Записывает в файл таблицу, полученную методом to_pretty_string\
 Пример использования:
 ```python
 from python_code.main import *
@@ -552,7 +553,7 @@ matrix.console_display()
 # |___|___|___|
 ```
 #### read_from_file
-Читает из файла таблицу (должна соответствовать той, что генерируется write_to_file)
+Читает из файла таблицу (должна соответствовать той, что генерируется write_to_file)\
 Пример использования:
 ```python
 from python_code.main import *
@@ -803,7 +804,7 @@ print(matrix.size)
 # (5, 10)
 ```
 ## Определитель
-Описано 3 метода нахождения определителя в модуле determinant, но функция det из main и auto_det из determinant выберут самый быстрый способ
+Описано 3 метода нахождения определителя в модуле determinant, но функция det из main и auto_det из determinant выберут самый быстрый способ\
 Пример использования:
 ```python
 from python_code.main import *
@@ -813,6 +814,7 @@ print(det(matrix))
 ## Нахождение корней уравнений
 ### Многочлен
 #### Метод Лобачевского
+Метод Лобачевского не описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)\
 Пример использования:
 ```python
 from python_code import *
@@ -828,7 +830,7 @@ print(solution)
 ## Методы решений СЛАУ
 ### Метод Гаусса
 Метод Гаусса описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
-в пункте 1.1 Метод Гаусса решения СЛАУ, страница 7.
+в пункте 1.1 Метод Гаусса решения СЛАУ, страница 7.\
 Пример использования:
 ```python
 from python_code.main import *
@@ -841,7 +843,7 @@ print(gauss.gauss_method(matrix, free_column, print_middle_values=True))
 ### Метод простых итераций
 Метод простых итераций описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
 в пункте 2.1 Метод простых итераций решения СЛАУ, страница 22.
-Данная реализация возвращает итерируемый объект, а не решение
+Данная реализация возвращает итерируемый объект, а не решение\
 Пример использования:
 ```python
 from python_code.main import *
@@ -862,7 +864,7 @@ decision = iterations.simple_iterations(matrix, free_column, await_e=10 ** (-5),
 ### Метод Зейделя
 Метод Зейделя описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
 в пункте 2.2 Метод Зейделя решения СЛАУ, страница 26.
-Данная реализация возвращает итерируемый объект, а не решение
+Данная реализация возвращает итерируемый объект, а не решение\
 Пример использования:
 ```python
 from python_code.main import *
@@ -882,7 +884,7 @@ decision = iterations.zeidel_method(matrix, free_column, await_e=10 ** (-5), lev
 ```
 ### Метод прогонки
 Метод прогонки описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
-в пункте 1.6 Решение трёхдиагональной СЛАУ методом прогонки, страница 18.
+в пункте 1.6 Решение трёхдиагональной СЛАУ методом прогонки, страница 18.\
 Пример использования:
 ```python
 from python_code.main import *
@@ -918,7 +920,7 @@ decision = methods.matrix.kramer_method(matrix, free, level_of_detail=2)
 ## Решения второй задачи линейной алгебры
 ### Степенной метод вычисления спектрального радиуса
 Степенной метод вычисления спектрального радиуса описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
-в пункте 3.1 Степенной метод вычисления спектрального радиуса, страница 28.
+в пункте 3.1 Степенной метод вычисления спектрального радиуса, страница 28.\
 Пример использования:
 ```python
 from python_code import *
@@ -934,7 +936,7 @@ decision = methods.matrix.power_method(matrix, level_of_detail=2, await_d=10 ** 
 ```
 ### Метод вращений Якоби для симметричной матрицы
 Метод вращений Якоби для симметричной матрицы описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
-в пункте 3.2 Метод вращений Якоби для симметричной матрицы, страница 33.
+в пункте 3.2 Метод вращений Якоби для симметричной матрицы, страница 33.\
 Пример использования:
 ```python
 from python_code import *

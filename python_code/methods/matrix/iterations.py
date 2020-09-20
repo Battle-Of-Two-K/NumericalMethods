@@ -19,16 +19,16 @@ def simple_iterations(matrix, free_column, await_e=None, iterations=None, level_
         raise ArithmeticError("Метод итераций работает только с матрицами с доминантной диагональю")
     # Извлечение главной диагонали, замещая значения нулями
     new_column = []
-    for _, __ in matrix:
-        if _ == __:
-            new_column.append(matrix[_][__])
-            matrix.matrix[_][__] = 0
+    for row_no, col_no in matrix:
+        if row_no == col_no:
+            new_column.append(matrix[row_no][col_no])
+            matrix.matrix[row_no][col_no] = 0
     matrix = -matrix
     # Деление соответствующих строк на значения из диагонали
-    for _, __ in matrix:
-        matrix.matrix[_][__] /= new_column[_]
+    for row_no, col_no in matrix:
+        matrix.matrix[row_no][col_no] /= new_column[row_no]
     # Деление сободных членов на значения из диагонали
-    free_column = [_ / __ for _, __ in zip(free_column, new_column)]
+    free_column = [free_elem / diagonal_elem for free_elem, diagonal_elem in zip(free_column, new_column)]
     free_column = matrix.wrap([free_column])
     if level_of_detail < 2:
         answer.update({'Этап': 'Из матрицы извлечена главная диагональ'})
@@ -118,16 +118,16 @@ def zeidel_method(matrix, free_column, await_e=None, iterations=None, level_of_d
         raise ArithmeticError("Метод итераций работает только с матрицами с доминантной диагональю")
     # Извлечение главной диагонали, замещая значения нулями
     new_column = []
-    for _, __ in matrix:
-        if _ == __:
-            new_column.append(matrix[_][__])
-            matrix.matrix[_][__] = 0
+    for row_no, col_no in matrix:
+        if row_no == col_no:
+            new_column.append(matrix[row_no][col_no])
+            matrix.matrix[row_no][col_no] = 0
     matrix = -matrix
     # Деление соответствующих строк на значения из диагонали
-    for _, __ in matrix:
-        matrix.matrix[_][__] /= new_column[_]
+    for row_no, col_no in matrix:
+        matrix.matrix[row_no][col_no] /= new_column[row_no]
     # Деление сободных членов на значения из диагонали
-    free_column = [_ / __ for _, __ in zip(free_column, new_column)]
+    free_column = [free_elem / new_elem for free_elem, new_elem in zip(free_column, new_column)]
     free_column = matrix.wrap([free_column])
     if level_of_detail < 2:
         answer.update({'Этап': 'Из матрицы извлечена главная диагональ'})
