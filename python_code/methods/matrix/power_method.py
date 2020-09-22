@@ -34,10 +34,10 @@ def power_method(matrix, await_d=None, iterations=None, level_of_detail=3):
         if level_of_detail < 3:
             answer.update({
                 f'v{iteration_counter}': v.vector_to_list,
-                'p': ro,
                 'Дельта': delta
             })
             yield answer
+            answer.update({'p': ro})
             answer.pop(f'w{iteration_counter - 1}', None)
             answer.pop(f'v{iteration_counter}', None)
         if await_d:
