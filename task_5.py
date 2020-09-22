@@ -3,9 +3,9 @@ from python_code import *
 
 try:
     # Матрица из задания
-    matrix = Matrix([[17, 1, 1],
-                     [1, 17, 2],
-                     [1, 2, 4]])
+    matrix = Matrix([[19, 5, 8],
+                     [5, -1, -6],
+                     [8, -6, -3]])
 
     # Количество итераций
     number_of_iterations = 8

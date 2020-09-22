@@ -55,7 +55,8 @@ def method_rot_yakobi(matrix, iterations=8, level_of_detail=3):
         # Нормировка столбцов итоговой матрицы
         own_vectors_matrix = own_vectors_matrix.T
         for row_no in range(own_vectors_matrix.rows):
-            own_vectors_matrix.matrix[row_no] = row_div(own_vectors_matrix[row_no], own_vectors_matrix[row_no][row_no])
+            own_vectors_matrix.matrix[row_no] = row_div(own_vectors_matrix[row_no],
+                                                        matrix.wrap([own_vectors_matrix[row_no]]).vector_norma_1)
         own_vectors_matrix = own_vectors_matrix.T
 
         # Вырезание столбцов из матрицы
@@ -77,7 +78,7 @@ def method_rot_yakobi(matrix, iterations=8, level_of_detail=3):
         rotation_matrix = build_rot_matrix(phi, cords_of_max_abs_elem_above_diagonal)
         # Ошибка в методичке? написано произведение матриц вращения,
         # но правильно произведение транспонированных матриц вращения
-        rotation_matrix_list.append(rotation_matrix.T)
+        rotation_matrix_list.append(rotation_matrix)
         matrix = (rotation_matrix.T * matrix * rotation_matrix)
         if level_of_detail < 3:
             answer.update({
