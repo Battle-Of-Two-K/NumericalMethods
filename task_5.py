@@ -27,7 +27,8 @@ try:
                     print(f'{own_num_no + 1} собственное число: {round(solution["Собственные числа"][own_num_no], 8)}')
                     print(f'{own_num_no + 1} собственный вектор: '
                           f'{[round(_, 8) for _ in solution["Собственные векторы"][own_num_no]]}\n')
-
+            elif info == 'Угол поворота фи':
+                print(f'\n{info}: {step[info]}\n')
             else:
                 print(f' {info}: {step[info]} '.center(75, '='))
 except Exception as error:

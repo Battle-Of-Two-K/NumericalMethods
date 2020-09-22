@@ -79,13 +79,16 @@ def method_rot_yakobi(matrix, iterations=8, level_of_detail=3):
         # Ошибка в методичке? написано произведение матриц вращения,
         # но правильно произведение транспонированных матриц вращения
         rotation_matrix_list.append(rotation_matrix)
+        matrix_for_out = rotation_matrix.T * matrix
         matrix = (rotation_matrix.T * matrix * rotation_matrix)
         if level_of_detail < 3:
             answer.update({
                 'Номер итерации': iteration_counter,
+                'Угол поворота фи': phi,
                 'Матрица поворота H': rotation_matrix,
                 'Транспонированная матрица поворота': rotation_matrix.T,
                 'Матрица A после поворота': matrix,
+                'Матрица произведение (H.T * A)': matrix_for_out
             })
             yield answer
     answer.pop('Номер итерации', None)
