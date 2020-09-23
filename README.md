@@ -63,6 +63,7 @@ P.S. в каждой папке по две папки - для разделен
 1. [Нахождение корней уравнений](#Нахождение-корней-уравнений)
     - [Многочлен](#Многочлен)
         - [Метод Лобачевского](#Метод-Лобачевского)
+        - [Метод дихотомии](#Метод-дихотомии)
 1. [Методы решений СЛАУ](#Методы-решений-СЛАУ)
     - [Метод Гаусса](#Метод-Гаусса)
     - [Метод простых итераций](#Метод-простых-итераций)
@@ -826,6 +827,28 @@ solution = []
 for step in decision:
     solution = step.get('Решение')
 print(solution)
+```
+#### Метод дихотомии
+Метод дихотомии описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
+в пункте 5.1 Метод половинного деления (дихотомии, бисекций), страница 39.\
+Пример использования:
+```python
+from python_code.methods.equation import dichotomy
+
+
+def f(x):
+    return x ** 2 - 2
+
+
+section = (0, 8)
+decision = dichotomy(f, section)
+solution = None
+for step in decision:
+    solution = step.get('Решение')
+print(solution)
+# Для получения промежуточной информации нужно указать уровень детализации, где 1 - полная детализация, 3 - только ответ
+# accuracy_order - необходимый порядок точности, level_of_details - уровень детализации
+decision = dichotomy(f, section, accuracy_order=8, level_of_details=2)
 ```
 ## Методы решений СЛАУ
 ### Метод Гаусса
