@@ -1,43 +1,73 @@
-from python_code.methods.equation import dichotomy
-from math import *
+from python_code.methods.equation import dichotomy, hords, tangent_newton, iterations
 
-# =============================================
-# Нахождение корней уравнения методом дихотомии
-# =============================================
-
-
-def f(x: (int, float)) -> (float, int):
-    # Здесь нужно написать функцию из задания
-    # Функция принимает единственное значение x (икс) и возвращает (return) значение функции f(x)
-    # Ниже написано: икс в степени два минус 2
-    return x ** 2 - 2
-    # Например, число эйлера (экспонента) в степени икс минус пять икс плюс десять с половиной выглядит так:
-    return e ** x - 5 * x + 10.5
+# ================================================================
+# Нахождение корней уравнения методом дихотомии, хорд, касательных
+# ================================================================
 
 
-# Отрезок из задания
-section = (0, 8)
+# Введите данные из задания
+task = {
+    'Функция для метода дихотоми': '2 * x * x * x + 5 * x - 1.6',
+    'Отрезок для метода дихотомии': (0, 1),
+    'Функция для метода хорд': 'x * x * x + 9 * x + 5',
+    'Отрезок для метода хорд': (-1, 0),
+    'Функция для метода касательных': '0.5 * x * x * x + 4 * x - 5',
+    'Отрезок для метода касательных': (1, 2),
+    'Функция для метода итераций': '3 * x * x * x + 7 * x + 20',
+    'Отрезок для метода итераций': (-2, -1),
+}
+
+# task = {
+#     'Функция для метода дихотоми': 'x * x - 2',
+#     'Отрезок для метода дихотомии': (0, 8),
+#     'Функция для метода хорд': 'x * x - 2',
+#     'Отрезок для метода хорд': (0, 8),
+#     'Функция для метода касательных': 'x * x - 2',
+#     'Отрезок для метода касательных': (0, 8),
+#     'Функция для метода итераций': 'x ** 3 - x ** 2 + x - 5',
+#     'Отрезок для метода итераций': (0, 8),
+# }
 
 # ============================================================
 # ВНИМАНИЕ! Пугливым ниже не смотреть! Дальше программный код!
 # ATTENTION!  Not for timid people! Below is the program code!
 # ============================================================
 
-try:
-    decision = dichotomy(f, section, accuracy_order=8, level_of_details=2)
-    for step in decision:
-        step_info = ''
-        for info in step:
-            if 'Решение' in step.keys():
-                step_info += f'{info}: {round(step[info], 8) if isinstance(step[info], float) else step[info]}\n'
-            else:
-                step_info += f'{info}: ' \
-                             f'{round(step[info], 8) if isinstance(step[info], float) else step[info]}'.center(20) + '|'
-        if 'Решение' in step.keys():
-            print(('-' * 20 + '+') * (len(step.keys()) + 3), '\n')
+
+def print_data(data):
+    step_info = ''
+    for info in data:
+        if 'Решение' in data.keys():
+            step_info += f'{info}: {round(data[info], 8) if isinstance(data[info], float) else data[info]}\n'
+        elif 'Номер итерации' in data.keys():
+            step_info += f'{info}: ' \
+                         f'{round(data[info], 8) if isinstance(data[info], float) else data[info]}'.center(23) + '|'
         else:
-            print(('-' * 20 + '+') * len(step.keys()))
-        print(step_info)
+            step_info += f'{info}:\n{round(data[info], 8) if isinstance(data[info], float) else data[info]}\n'
+    if 'Решение' in data.keys():
+        print('\n')
+    elif 'Номер итерации' in data.keys():
+        print(('-' * 23 + '+') * len(data.keys()))
+    print(step_info)
+
+try:
+    print(' Решение методом дихотомии '.center(100, '='))
+    decision = dichotomy(task['Функция для метода дихотоми'], task['Отрезок для метода дихотомии'],
+                         iterations=6, level_of_details=2)
+    for step in decision:
+        print_data(step)
+
+    print(' Решение методом хорд '.center(100, '='))
+    decision = hords(task['Функция для метода хорд'], task['Отрезок для метода хорд'],
+                     iterations=6, level_of_details=2)
+    for step in decision:
+        print_data(step)
+
+    print(' Решение методом касательных '.center(100, '='))
+    decision = tangent_newton(task['Функция для метода касательных'], task['Отрезок для метода касательных'],
+                              iterations=6, level_of_details=2)
+    for step in decision:
+        print_data(step)
 
 except Exception as error:
     print(error)
