@@ -1,7 +1,7 @@
 try:
-    from sympy import Symbol, lambdify, diff, simplify, pretty
+    from sympy import lambdify, diff, simplify, pretty, solve, symbols
     from sympy.parsing.sympy_parser import parse_expr
-    x = Symbol('x')
+    x, y = symbols('x y')
 except ModuleNotFoundError:
     try:
         import os

@@ -7,14 +7,20 @@ def hords(function, section, accuracy_order=None, iterations=None, level_of_deta
                (function(right_edge) - function(left_edge))
 
     def stop_iteration():
-        accur = False
-        iter_ = False
-        if accuracy_order:
-            accur = abs(suppression - old_c) < 10 ** (-accuracy_order) and \
-                    function(suppression) < 10 ** (-accuracy_order)
-        if iterations:
-            iter_ = iterations < iteration_counter
-        return accur or iter_
+        if iteration_counter > (100 if iterations is None else iterations * 10):
+            raise IndexError(f"\nОбнаружено нарушение работы функции. Работа аварийно остановлена. Сводка:\n"
+                             f"abs(f(x)): {abs(function(suppression))} < {10 ** (-accuracy_order)} "
+                             f"-> {abs(function(suppression)) < 10 ** (-accuracy_order)}\n"
+                             f"abs(old_x - x): {abs(old_c - suppression)} < {10 ** (-accuracy_order)} -> "
+                             f"{abs(function(suppression)) < 10 ** (-accuracy_order)}\n"
+                             f"i: {iteration_counter} >= {iterations} -> "
+                             f"{iteration_counter >= 0 if iterations is None else iterations}\n"
+                             f"Для нормальной остановки требуется, чтобы все значения были True")
+        return all([
+            True if accuracy_order is None else abs(function(suppression)) < 10 ** (-accuracy_order),
+            True if accuracy_order is None else abs(old_c - suppression) < 10 ** (-accuracy_order),
+            True if iterations is None else iteration_counter >= iterations,
+        ])
 
     if accuracy_order is None and iterations is None:
         accuracy_order = 8
@@ -24,27 +30,22 @@ def hords(function, section, accuracy_order=None, iterations=None, level_of_deta
     function = parse_expr(function)
     answer = {}
     if level_of_details < 3:
-        answer.update({
+        yield {
             'Этап': 'Получены значения',
             'Отрезок': (left_edge, right_edge),
             'Введенная функция': function,
-            'Красиво введенная функция': pretty(function, use_unicode=False),
-        })
-        yield answer
-        answer.pop('Этап', None)
-        answer.pop('Отрезок', None)
-        answer.pop('Введенная функция', None)
-        answer.pop('Красиво введенная функция', None)
+            'Красиво введенная функция': pretty(function, use_unicode=False)
+        }
     function = lambdify(x, function)
     suppression = None
     f_a = function(left_edge)
     f_c = None
     f_b = function(right_edge)
     iteration_counter = 1
-    old_c = 1
+    old_c = 0
     while True:
         if level_of_details < 3:
-            answer.update({
+            yield {
                 'Номер итерации': iteration_counter,
                 'a': left_edge,
                 'c': suppression,
@@ -52,19 +53,11 @@ def hords(function, section, accuracy_order=None, iterations=None, level_of_deta
                 'f(a)': f_a,
                 'f(c)': f_c,
                 'f(b)': f_b
-            })
-            yield answer
-            answer.pop('Номер итерации', None)
-            answer.pop('a', None)
-            answer.pop('c', None)
-            answer.pop('b', None)
-            answer.pop('f(a)', None)
-            answer.pop('f(c)', None)
-            answer.pop('f(b)', None)
+            }
         suppression = draw_secant()
         f_c = function(suppression)
         if level_of_details < 3:
-            answer.update({
+            yield {
                 'Номер итерации': iteration_counter,
                 'a': None,
                 'c': suppression,
@@ -72,15 +65,7 @@ def hords(function, section, accuracy_order=None, iterations=None, level_of_deta
                 'f(a)': None,
                 'f(c)': f_c,
                 'f(b)': None
-            })
-            yield answer
-            answer.pop('Номер итерации', None)
-            answer.pop('a', None)
-            answer.pop('c', None)
-            answer.pop('b', None)
-            answer.pop('f(a)', None)
-            answer.pop('f(c)', None)
-            answer.pop('f(b)', None)
+            }
         if stop_iteration():
             if level_of_details < 4:
                 answer.update({'Решение': suppression})

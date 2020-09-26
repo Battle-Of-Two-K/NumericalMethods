@@ -1,8 +1,8 @@
 from python_code.methods.equation import dichotomy, hords, tangent_newton, iterations
 
-# ================================================================
-# Нахождение корней уравнения методом дихотомии, хорд, касательных
-# ================================================================
+# ==========================================================================
+# Нахождение корней уравнения методом дихотомии, хорд, касательных, итераций
+# ==========================================================================
 
 
 # Введите данные из задания
@@ -15,8 +15,10 @@ task = {
     'Отрезок для метода касательных': (1, 2),
     'Функция для метода итераций': '3 * x * x * x + 7 * x + 20',
     'Отрезок для метода итераций': (-2, -1),
+    'x = g(x)': '((-1)**(2/3)*(-20 - 7*x)**(1/3))/3**(1/3)'  # Уберите эту строку для автоматического вычисления
 }
 
+# Данные из методички для проверки работы программы (проверьте - значения совпадают)
 # task = {
 #     'Функция для метода дихотоми': 'x * x - 2',
 #     'Отрезок для метода дихотомии': (0, 8),
@@ -50,22 +52,29 @@ def print_data(data):
         print(('-' * 23 + '+') * len(data.keys()))
     print(step_info)
 
+
 try:
     print(' Решение методом дихотомии '.center(100, '='))
     decision = dichotomy(task['Функция для метода дихотоми'], task['Отрезок для метода дихотомии'],
-                         iterations=6, level_of_details=2)
+                         iterations=5, accuracy_order=3, level_of_details=2)
     for step in decision:
         print_data(step)
 
     print(' Решение методом хорд '.center(100, '='))
     decision = hords(task['Функция для метода хорд'], task['Отрезок для метода хорд'],
-                     iterations=6, level_of_details=2)
+                     iterations=5, accuracy_order=3, level_of_details=2)
     for step in decision:
         print_data(step)
 
     print(' Решение методом касательных '.center(100, '='))
     decision = tangent_newton(task['Функция для метода касательных'], task['Отрезок для метода касательных'],
-                              iterations=6, level_of_details=2)
+                              iterations=5, accuracy_order=3, level_of_details=2)
+    for step in decision:
+        print_data(step)
+
+    print(' Решение методом итераций '.center(100, '='))
+    decision = iterations(task['Функция для метода итераций'], task['Отрезок для метода итераций'], task.get('x = g(x)'),
+                          level_of_details=2, iterations=5, accuracy_order=3)
     for step in decision:
         print_data(step)
 

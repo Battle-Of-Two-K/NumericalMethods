@@ -101,7 +101,7 @@ class Matrix:
         if det(self) == 0:
             raise ArithmeticError("Невозможно найти обратную матрицу так как определитель равен нулю")
         else:
-            return self.complements.T * 1 / det(self)
+            return self.complements.T / det(self)
 
     def __eq__(self, other):
         if isinstance(other, Matrix):
@@ -477,8 +477,7 @@ class Matrix:
     @property
     def vector_norma_3(self) -> float:
         """Третья норма вектора (только для матриц с одним столбцом или строкой)"""
-        vector = self.vector_to_list
-        return sum([element ** 2 for element in vector]) ** .5
+        return sum([element ** 2 for element in self.vector_to_list]) ** .5
 
     @property
     def norma_1(self) -> float:
