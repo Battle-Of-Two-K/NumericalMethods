@@ -17,7 +17,8 @@ def newton_linearization(system, variables, approximation, accuracy_order=8, lev
     def stop_iteration():
         return all([
             delta < 10 ** (-accuracy_order),
-            (iteration_counter >= iterations) if iterations is not None else True
+            (iteration_counter >= iterations) if iterations is not None else True,
+            system_calc.vector_norma_1 < 10 ** (-accuracy_order)
         ])
 
     system = parse_list(system)
@@ -68,5 +69,9 @@ def newton_linearization(system, variables, approximation, accuracy_order=8, lev
         approximation -= evalfed_matrix
         delta = (old_approx - approximation).vector_norma_1
         if stop_iteration():
+            if level_of_details < 4:
+                yield {
+                    'Решение': get_subs(variables, approximation)
+                }
             break
         iteration_counter += 1

@@ -23,6 +23,7 @@ try:
     # ATTENTION!  Not for timid people! Below is the program code!
     # ============================================================
 
+    print(' Решение методом Ньютона (линеаризации) '.center(100, '='))
     decision = newton_linearization(system, variables, init_approx,
                                     accuracy_order=8, level_of_details=2, iterations=5)
     for step in decision:

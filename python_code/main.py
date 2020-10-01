@@ -7,17 +7,20 @@ import python_code.methods.equation as equation
 
 
 def det(*args, **kwargs):
+    """Автоматическое нахождение определителя"""
     return determinant.auto_det(*args, **kwargs)
 
 
 def solve(matrix, free_column):
-    if matrix.is_dominant:
+    """Решение СЛАУ оптимальным методом"""
+    if matrix.is_dominant or matrix.is_triple_diagonal:
         return iterations.auto_iterate(matrix, free_column)
     else:
         return gauss.gauss_method(matrix, free_column)
 
 
 class Matrix:
+    """Класс, содержащий методы работы с матрицами и векторами (матрицами с одним столбцом или строкой)"""
     def __init__(self, *args, **kwargs):
         # Эти присвоения нужны для возможности быстро использовать эти методы, имея только экземпляр матрицы
         self.iterations = iterations
@@ -129,6 +132,7 @@ class Matrix:
         return iterator()
 
     def map(self, func, *args, **kwargs):
+        """Применяет указанную функцию ко всем элементам матрицы суказанными далее агрументами"""
         matrix = self.copy()
         for row_no, col_no in matrix:
             matrix[row_no][col_no] = func(matrix[row_no][col_no], *args, **kwargs)
@@ -399,6 +403,7 @@ class Matrix:
         self.matrix = new_matrix
 
     def to_pretty_string(self, round_to: int = 8):
+        """Возвращает строку, содержащую матрицу сформированную таблицей"""
         pretty_string = ' ' + '_' * (self.columns * (self.max_len_num + 3) - 1) + ' \n'
         for row_no in self.r_rows:
             for col_no in self.r_cols:
@@ -456,10 +461,10 @@ class Matrix:
 
     def vector_scalar_mul(self, other) -> (int, float):
         """Скалярное произведение векторов"""
-        if 1 not in self.size:
+        if not self.is_vector:
             ArithmeticError("Скалрное произведение только для векторов (матриц с 1 столбцом или 1 строкой)")
         if isinstance(other, Matrix):
-            if 1 not in other.size:
+            if not other.is_vector:
                 ArithmeticError("Скалрное произведение только для векторов (матриц с 1 столбцом или 1 строкой)")
         else:
             return self.vector_scalar_mul(Matrix(other))
@@ -621,6 +626,7 @@ class Matrix:
 
     @property
     def is_vector(self):
+        """Проверяет является ли объект вектором"""
         return 1 in self.size
 
     @staticmethod
@@ -635,8 +641,10 @@ class Matrix:
 
     @property
     def r_rows(self):
+        """range(self.rows)"""
         return range(self.rows)
 
     @property
     def r_cols(self):
+        """range(self.columns)"""
         return range(self.columns)
