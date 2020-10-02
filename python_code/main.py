@@ -4,6 +4,7 @@ import random as rnd
 
 from python_code.methods.matrix import *
 import python_code.methods.equation as equation
+from python_code.staf.sympy_init import *
 
 
 def det(*args, **kwargs):
@@ -132,7 +133,7 @@ class Matrix:
         return iterator()
 
     def map(self, func, *args, **kwargs):
-        """Применяет указанную функцию ко всем элементам матрицы суказанными далее агрументами"""
+        """Применяет указанную функцию ко всем элементам матрицы с указанными далее агрументами"""
         matrix = self.copy()
         for row_no, col_no in matrix:
             matrix[row_no][col_no] = func(matrix[row_no][col_no], *args, **kwargs)
@@ -155,7 +156,8 @@ class Matrix:
             'X_grid' - косая сетка значений (по умолчанию (1, 0)
             'dominant' - матрица с доминантной диагональю, options как у 'random'
             'exchange' - обменная матрица
-            'triple_diagonal' - Трёхдиагональная матрица"""
+            'triple_diagonal' - Трёхдиагональная матрица
+            'symbols' - заполнение символами sympy"""
 
         def get_options():
             if options:
@@ -222,6 +224,12 @@ class Matrix:
         elif mode == 'triple_diagonal':
             self.matrix = [[rnd_generate() if i == j or i - 1 == j or i == j - 1 else 0 for i in range(self.columns)]
                            for j in range(self.rows)]
+        elif mode == 'symbols':
+            if options is not None:
+                self.matrix = [[Symbol(f'a{options[0]}_{row_no}{col_no}') for col_no in self.r_cols]
+                               for row_no in self.r_rows]
+            else:
+                self.matrix = [[Symbol(f'a{row_no}{col_no}') for col_no in self.r_cols] for row_no in self.r_rows]
         else:
             raise AttributeError(f"Неизветный режим {mode}")
 

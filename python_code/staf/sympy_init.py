@@ -26,3 +26,7 @@ def find_symbols(expr):
                 if isinstance(arg, action):
                     symbols_list.update(find_symbols(arg))
     return symbols_list
+
+
+def parse_list(target_list):
+    return [simplify(parse_expr(target)) for target in target_list]

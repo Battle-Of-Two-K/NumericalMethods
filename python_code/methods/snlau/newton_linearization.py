@@ -3,10 +3,6 @@ from python_code.staf.sympy_init import *
 
 
 def newton_linearization(system, variables, approximation, accuracy_order=8, level_of_details=3, iterations=None):
-
-    def parse_list(target_list):
-        return [simplify(parse_expr(target)) for target in target_list]
-
     def get_subs(vars_, approx):
         out = {}
         approx = approx.vector_to_list
