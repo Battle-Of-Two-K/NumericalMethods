@@ -82,10 +82,19 @@ second_value_4.grid(row=10, column=3, pady=10)
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 def knopka():
-	 print(input_box_1.get())
-	
-	
-calculation_button = Button(text="Посчитать", font=('Arial', 32)).grid(row=11, column=1, columnspan=3, pady=20)
+     print(input_box_1.get())
+     print('(', first_value_1.get(), ';', second_value_1.get(), ')')
+     print(input_box_2.get())
+     print('(', first_value_2.get(), ';', second_value_2.get(), ')')
+     print(input_box_3.get())
+     print('(', first_value_3.get(), ';', second_value_3.get(), ')')
+     print(input_box_4.get())
+     print('(', first_value_4.get(), ';', second_value_4.get(), ')')
+
+    
+    
+calculation_button = Button(text="Посчитать", font=('Arial', 32))
+calculation_button.grid(row=11, column=1, columnspan=3, pady=20)
 
 calculation_button.config(command=knopka)
 
