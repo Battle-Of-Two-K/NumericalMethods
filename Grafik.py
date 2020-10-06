@@ -1,12 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-fig, ax = plt.subplots()
+x = np.linspace(-5, 2, 100)                     # от -5 до 2 сделать 100 точек
+y1 = x**3 + 5*x**2 + 10                         # y1 - тоже много точек
 
-x = np.linspace(-5, 5, 100)
-# y = x**3 - 2*x**2 + 3*x - 4
-y*y*y = (3 * x * x * x  + 5) * .5
+fig, ax = plt.subplots()                        # будет 1 график, на нем:
+ax.plot(x, y1, color="blue", label="y(x)")      # функция y1(x), синий, надпись y(x)
+ax.set_xlabel("x")                              # подпись у горизонтальной оси х
+ax.set_ylabel("y")                              # подпись у вертикальной оси y
+ax.legend()                                     # показывать условные обозначения
 
-ax.plot(x, y)
-
-plt.show()
+plt.show()                                      # показать рисунок
+fig.savefig('1.png')                            # сохранить в файл 1.png
