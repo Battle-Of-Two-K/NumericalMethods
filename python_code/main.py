@@ -7,17 +7,21 @@ import python_code.methods.equation as equation
 from python_code.staf.sympy_init import *
 
 
-def det(*args, **kwargs):
+def det(*args, **kwargs) -> (int, float):
     """Автоматическое нахождение определителя"""
     return determinant.auto_det(*args, **kwargs)
 
 
-def solve(matrix, free_column):
+def solve(matrix, free_column) -> list:
     """Решение СЛАУ оптимальным методом"""
+    solution = None
     if matrix.is_dominant or matrix.is_triple_diagonal:
-        return iterations.auto_iterate(matrix, free_column)
+        decision = iterations.auto_iterate(matrix, free_column)
     else:
-        return gauss.gauss_method(matrix, free_column)
+        decision = gauss.gauss_method(matrix, free_column)
+    for step in decision:
+        solution = step.get('Решение')
+    return solution
 
 
 class Matrix:
@@ -613,11 +617,10 @@ class Matrix:
         """Является ли матрица трехдиагональной"""
         if not self.is_square:
             return False
-        for _ in range(self.rows):
-            for __ in range(self.columns):
-                if not (_ == __ or _ - 1 == __ or _ == __ - 1):
-                    if self[_][__] != 0:
-                        return False
+        for row_no, col_no in self:
+            if not (row_no == col_no or row_no - 1 == col_no or row_no == col_no - 1):
+                if self[row_no][col_no] != 0:
+                    return False
         else:
             return True
 

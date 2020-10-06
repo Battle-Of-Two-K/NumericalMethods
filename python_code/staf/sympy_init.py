@@ -5,12 +5,16 @@ try:
     x, y = symbols('x y')
 except ModuleNotFoundError:
     try:
+        print(f'\n{" Фрагмент программы не найден, устанавливается, это займет поределенное время ".center(100, "!")}',
+              end='\n\n')
         import os
         os.system('pip install sympy')
         os.system('pip3 install sympy')
-        from sympy import Symbol, lambdify, diff, simplify
+        from sympy import lambdify, diff, simplify, pretty, solve, symbols, evalf
+        from sympy import Symbol, Pow, Add, Mul
         from sympy.parsing.sympy_parser import parse_expr
-        x = Symbol('x')
+        x, y = symbols('x y')
+        print(f'\n\n{" Все готово, решаю задание... ".center(100, "=")}\n\n')
     except Exception as error:
         input(str(error))
 
