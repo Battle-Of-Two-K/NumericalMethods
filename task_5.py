@@ -6,9 +6,11 @@ from python_code import *
 
 try:
     # Матрица из задания
-    matrix = Matrix([[19, 5, 8],
-                     [5, -1, -6],
-                     [8, -6, -3]])
+    matrix = Matrix([
+                     [-6, -8, -12],
+                     [-8, 14, -2],
+                     [-12, -2, -11]
+    ])
 
     # Количество итераций
     number_of_iterations = 8

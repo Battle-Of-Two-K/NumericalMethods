@@ -52,15 +52,19 @@ def newton_linearization(system, variables, approximation, accuracy_order=8, lev
     iteration_counter = 0
     while True:
         system_calc = system.T
+        functions = []
         for row_no in iteration_matrix.r_rows:
             evalfed_matrix[row_no][0] = iteration_matrix[row_no][0].evalf(subs=get_subs(variables, approximation))
             system_calc[row_no][0] = system_calc[row_no][0].evalf(subs=get_subs(variables, approximation))
+            functions.append(system_calc[row_no][0])
         old_approx = approximation
         if level_of_details < 3:
             yield {
                 "Номер итерации": iteration_counter,
                 'Решение': get_subs(variables, approximation),
-                '||F||_1': system_calc.vector_norma_1
+                '||F||_1': system_calc.vector_norma_1,
+                'F_1': functions[0],
+                'F_2': functions[1]
             }
         approximation -= evalfed_matrix
         delta = (old_approx - approximation).vector_norma_1
