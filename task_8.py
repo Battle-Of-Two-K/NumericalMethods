@@ -7,18 +7,22 @@ from python_code.methods.interpol.canonical import canonical_pol
 # =================================================================================
 
 try:
+    # Таблица для метода Лагранжа
     table_for_lagrange = {
         'x': [2, 3, 4],
         'y': [20, 22, 19],
         'Подставить значения': [3.5]
     }
 
-    table_for_newton = {
-        'x': [3, 4, 5],
-        'y': [22, 19, 18],
-        'Подставить значения': [3.5]
-    }
+    # TODO: Исправить метод Ньютона!
+    # Таблица для метода Ньютона (не работает)
+    # table_for_newton = {
+    #     'x': [3, 4, 5],
+    #     'y': [22, 19, 18],
+    #     'Подставить значения': [3.5]
+    # }
 
+    # Таблица для канонического многочлена
     table_for_canonical = {
         'x': [2, 3, 4, 5],
         'y': [20, 22, 19, 18],
@@ -40,14 +44,15 @@ try:
     for val in table_for_lagrange['Подставить значения']:
         print(f'y({val}) = {round(function(val), 8)}')
 
-    print(' Многочлен Ньютона '.center(100, '='))
-
-    lagrange_result = newton_pol(table_for_newton['x'], table_for_newton['y'])
-    print(f'Полный многочлен: {lagrange_result["Полный многочлен"]}\n'
-          f'Упрощенный многочлен: {lagrange_result["Упрощенный многочлен"]}')
-    function = lagrange_result['Функция python']
-    for val in table_for_newton['Подставить значения']:
-        print(f'y({val}) = {round(function(val), 8)}')
+    # TODO: Включить метод Ньютона!
+    # print(' Многочлен Ньютона '.center(100, '='))
+    #
+    # lagrange_result = newton_pol(table_for_newton['x'], table_for_newton['y'])
+    # print(f'Полный многочлен: {lagrange_result["Полный многочлен"]}\n'
+    #       f'Упрощенный многочлен: {lagrange_result["Упрощенный многочлен"]}')
+    # function = lagrange_result['Функция python']
+    # for val in table_for_newton['Подставить значения']:
+    #     print(f'y({val}) = {round(function(val), 8)}')
 
     print(' Канонический многочлен '.center(100, '='))
 

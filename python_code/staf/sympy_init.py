@@ -2,6 +2,7 @@ try:
     from sympy import lambdify, diff, simplify, pretty, solve, symbols, evalf
     from sympy import Symbol, Pow, Add, Mul
     from sympy.parsing.sympy_parser import parse_expr
+    from sympy.plotting import plot, plot_parametric
     x, y = symbols('x y')
 except ModuleNotFoundError:
     try:
@@ -13,6 +14,7 @@ except ModuleNotFoundError:
         from sympy import lambdify, diff, simplify, pretty, solve, symbols, evalf
         from sympy import Symbol, Pow, Add, Mul
         from sympy.parsing.sympy_parser import parse_expr
+        from sympy.plotting import plot, plot_parametric
         x, y = symbols('x y')
         print(f'\n\n{" Все готово, решаю задание... ".center(100, "=")}\n\n')
     except Exception as error:
