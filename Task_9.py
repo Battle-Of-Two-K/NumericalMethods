@@ -108,7 +108,7 @@ x = np.linspace(-5, 2, 100)  # от -5 до 2 сделать 100 точек
 y = otvet[0] * x * x + otvet[1] * x + otvet[2]  # y1 - тоже много точек
 
 fig, ax = plt.subplots()  # будет 1 график, на нем:
-ax.plot(x, y, color="blue", label="y(x)")  # функция y1(x), синий, надпись y(x)
+ax.plot(x, y, color="blue", label="y(x)")  # функция y(x), синий, надпись y(x)
 ax.set_xlabel("x")  # подпись у горизонтальной оси х
 ax.set_ylabel("y")  # подпись у вертикальной оси y
 ax.legend()  # показывать условные обозначения
