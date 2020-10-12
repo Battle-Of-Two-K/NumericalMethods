@@ -3,6 +3,19 @@ from python_code.staf.sympy_init import *
 
 def iterations(function, section, g_function=None, accuracy_order=8, iterations=None, level_of_details=3):
 
+    def calc_any(func, number):
+        new_function = extract_complex_root(func, {x: number})
+        return new_function.evalf(subs={x: number})
+
+    def calc_function(number):
+        return calc_any(function, number)
+
+    def calc_g_function(number):
+        return calc_any(g_function, number)
+
+    def calc_g_function_d(number):
+        return calc_any(g_function_d, number)
+
     def stop_iteration():
         if iteration_counter > (100 if iterations is None else iterations * 10):
             raise IndexError(f"\nОбнаружено нарушение работы функции. Работа аварийно остановлена. Сводка:\n"
@@ -13,13 +26,13 @@ def iterations(function, section, g_function=None, accuracy_order=8, iterations=
                              f"i: {iteration_counter} >= {iterations} -> {iteration_counter >= iterations}\n"
                              f"Для нормальной остановки требуется, чтобы все значения были True")
         return all([
-            True if accuracy_order is None else abs(function(x_value)) < 10 ** (-accuracy_order),
+            True if accuracy_order is None else abs(calc_function(x_value)) < 10 ** (-accuracy_order),
             True if accuracy_order is None else abs(old_x_value - x_value) < 10 ** (-accuracy_order),
             True if iterations is None else iteration_counter >= iterations,
         ])
 
-    left_edge = min(section)
-    right_edge = max(section)
+    left_edge = section[0]
+    right_edge = section[1]
     function = simplify(parse_expr(function))
     if g_function is None:
         solving = map(simplify, solve(function.subs(x ** 3, y ** 3), y))
@@ -46,25 +59,22 @@ def iterations(function, section, g_function=None, accuracy_order=8, iterations=
             "g'(x)": g_function_d,
             "Красиво g'(x)": pretty(g_function_d, use_unicode=False)
         }
-    function = lambdify(x, function)
-    g_function = lambdify(x, g_function)
-    g_function_d = lambdify(x, g_function_d)
     iteration_counter = 1
-    if abs(g_function_d(right_edge)) < 1:
-        x_value = right_edge
-    else:
+    if abs(calc_g_function_d(left_edge)) < 1:
         x_value = left_edge
+    else:
+        x_value = right_edge
     if level_of_details < 3:
         yield {
             'Номер итерации': iteration_counter,
             'x': x_value,
-            'f(x)': function(x_value),
-            'g(x)': g_function(x_value),
-            "g'(x)": g_function_d(x_value)
+            'f(x)': calc_function(x_value),
+            'g(x)': calc_g_function(x_value),
+            "g'(x)": calc_g_function_d(x_value)
         }
     while True:
         old_x_value = x_value
-        x_value = g_function(x_value)
+        x_value = calc_g_function(x_value)
         if stop_iteration():
             if level_of_details < 3:
                 yield {'Решение': x_value, }
@@ -76,7 +86,7 @@ def iterations(function, section, g_function=None, accuracy_order=8, iterations=
             yield {
                 'Номер итерации': iteration_counter,
                 'x': x_value,
-                'f(x)': function(x_value),
-                'g(x)': g_function(x_value),
-                "g'(x)": g_function_d(x_value)
+                'f(x)': calc_function(x_value),
+                'g(x)': calc_g_function(x_value),
+                "g'(x)": calc_g_function_d(x_value)
             }
