@@ -1,5 +1,7 @@
-from python_code import *
 import timeit
+
+from python_code import *
+
 max_size_of_matrix = 9
 number_of_try = 3
 overall_results = {
@@ -23,16 +25,20 @@ for n in range(1, max_size_of_matrix + 1):
         matrix2 = Matrix(n)
         matrix.autofill(options=(-10, 10))
         matrix2.autofill(options=(-10., 10))
-        results['Метод обычных миноров целые'].append(timeit.timeit(lambda: methods.matrix.determinant.minor_method(matrix), number=1))
+        results['Метод обычных миноров целые'].append(
+            timeit.timeit(lambda: methods.matrix.determinant.minor_method(matrix), number=1))
         progress = round((number_of_try * (n - 1) + (i + .25)) / (max_size_of_matrix * number_of_try) * 100)
         print(f'\r{progress}% [{("#" * progress).ljust(100, ".")}] Матрицы {n} порядка, {i + .25} попытка', end='    ')
-        results['Метод быстрых миноров целые'].append(timeit.timeit(lambda: methods.matrix.determinant.fast_minor_method(matrix), number=1))
+        results['Метод быстрых миноров целые'].append(
+            timeit.timeit(lambda: methods.matrix.determinant.fast_minor_method(matrix), number=1))
         progress = round((number_of_try * (n - 1) + (i + .5)) / (max_size_of_matrix * number_of_try) * 100)
         print(f'\r{progress}% [{("#" * progress).ljust(100, ".")}] Матрицы {n} порядка, {i + .5} попытка', end='    ')
-        results['Метод обычных миноров дробные'].append(timeit.timeit(lambda: methods.matrix.determinant.minor_method(matrix2), number=1))
+        results['Метод обычных миноров дробные'].append(
+            timeit.timeit(lambda: methods.matrix.determinant.minor_method(matrix2), number=1))
         progress = round((number_of_try * (n - 1) + (i + .75)) / (max_size_of_matrix * number_of_try) * 100)
         print(f'\r{progress}% [{("#" * progress).ljust(100, ".")}] Матрицы {n} порядка, {i + .75} попытка', end='    ')
-        results['Метод быстрых миноров дробные'].append(timeit.timeit(lambda: methods.matrix.determinant.fast_minor_method(matrix2), number=1))
+        results['Метод быстрых миноров дробные'].append(
+            timeit.timeit(lambda: methods.matrix.determinant.fast_minor_method(matrix2), number=1))
         progress = round((number_of_try * (n - 1) + (i + 1)) / (max_size_of_matrix * number_of_try) * 100)
         print(f'\r{progress}% [{("#" * progress).ljust(100, ".")}] Матрицы {n} порядка, {i + 1} попытка', end='    ')
     for key in results.keys():

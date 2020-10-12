@@ -22,9 +22,9 @@ def minor_method(matrix):
             if matrix[max_zeros_row_no][_] != 0:
                 # Иначе вычисляем через миноры и рекурсию
                 if bool((max_zeros_row_no + _ + 1) % 2):
-                    det_value += matrix[max_zeros_row_no][_] * minor_method(matrix.minor(max_zeros_row_no, _))
+                    det_value += matrix[max_zeros_row_no][_] * auto_det(matrix.minor(max_zeros_row_no, _))
                 else:
-                    det_value -= matrix[max_zeros_row_no][_] * minor_method(matrix.minor(max_zeros_row_no, _))
+                    det_value -= matrix[max_zeros_row_no][_] * auto_det(matrix.minor(max_zeros_row_no, _))
         return det_value
 
 

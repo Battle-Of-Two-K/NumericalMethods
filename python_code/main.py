@@ -4,20 +4,16 @@ import random as rnd
 
 from python_code.methods.matrix import *
 import python_code.methods.equation as equation
+from python_code.staf.sympy_init import *
 
 
-def det(*args, **kwargs):
+def det(*args, **kwargs) -> (int, float):
+    """Автоматическое нахождение определителя"""
     return determinant.auto_det(*args, **kwargs)
 
 
-def solve(matrix, free_column):
-    if matrix.is_dominant:
-        return iterations.auto_iterate(matrix, free_column)
-    else:
-        return gauss.gauss_method(matrix, free_column)
-
-
 class Matrix:
+    """Класс, содержащий методы работы с матрицами и векторами (матрицами с одним столбцом или строкой)"""
     def __init__(self, *args, **kwargs):
         # Эти присвоения нужны для возможности быстро использовать эти методы, имея только экземпляр матрицы
         self.iterations = iterations
@@ -28,11 +24,18 @@ class Matrix:
                 self.matrix = [[0 for j in range(args[0])] for i in range(args[0])]
             elif isinstance(args[0], list):
                 if isinstance(args[0][0], list):
+                    new_matrix = args[0]
+                    row_len = len(new_matrix[0])
+                    for row in new_matrix:
+                        if row_len != len(row):
+                            raise IndexError("Количество элементов в строках не совпадает")
                     self.matrix = args[0]
                 else:
                     self.matrix = [args[0]]
+            elif isinstance(args[0][0], Matrix):
+                self.matrix = args[0][0].matrix
             else:
-                raise TypeError("Неизвестный тип данных, используйте list")
+                raise TypeError("Неизвестный тип данных, используйте list, или int, или int, int")
         elif len(args) == 2:
             if isinstance(args[0], int) and isinstance(args[1], int):
                 self.matrix = [[0 for j in range(args[1])] for i in range(args[0])]
@@ -75,15 +78,15 @@ class Matrix:
                         return self * other.T
                     except IndexError:
                         return self.T * other
-            matrix = Matrix(self.rows, other.columns).matrix
-            for i in range(self.rows):
-                for j in range(other.columns):
-                    for s in range(self.columns):
+            matrix = Matrix(self.rows, other.columns)
+            for i in self.r_rows:
+                for j in other.r_cols:
+                    for s in self.r_cols:
                         if self.rows > 1:
-                            matrix[i][j] += self.matrix[i][s] * other.matrix[s][j]
+                            matrix[i][j] += self[i][s] * other[s][j]
                         else:
-                            matrix[i][j] += self.matrix[s] * other.matrix[s][j]
-            return Matrix(matrix)
+                            matrix[i][j] += self[s] * other[s][j]
+            return matrix
         else:
             matrix = self.copy()
             for row_no, col_no in self:
@@ -129,6 +132,7 @@ class Matrix:
         return iterator()
 
     def map(self, func, *args, **kwargs):
+        """Применяет указанную функцию ко всем элементам матрицы с указанными далее агрументами"""
         matrix = self.copy()
         for row_no, col_no in matrix:
             matrix[row_no][col_no] = func(matrix[row_no][col_no], *args, **kwargs)
@@ -151,7 +155,8 @@ class Matrix:
             'X_grid' - косая сетка значений (по умолчанию (1, 0)
             'dominant' - матрица с доминантной диагональю, options как у 'random'
             'exchange' - обменная матрица
-            'triple_diagonal' - Трёхдиагональная матрица"""
+            'triple_diagonal' - Трёхдиагональная матрица
+            'symbols' - заполнение символами sympy"""
 
         def get_options():
             if options:
@@ -203,7 +208,7 @@ class Matrix:
             for row_no, col_no in new_matrix:
                 if row_no == col_no:
                     container = 0
-                    for col_no_inner in range(new_matrix.columns):
+                    for col_no_inner in new_matrix.r_cols:
                         if col_no_inner != col_no:
                             container += abs(new_matrix[row_no][col_no_inner])
                     # Гарантия доминации диагонали
@@ -218,6 +223,12 @@ class Matrix:
         elif mode == 'triple_diagonal':
             self.matrix = [[rnd_generate() if i == j or i - 1 == j or i == j - 1 else 0 for i in range(self.columns)]
                            for j in range(self.rows)]
+        elif mode == 'symbols':
+            if options is not None:
+                self.matrix = [[Symbol(f'a{options[0]}_{row_no}{col_no}') for col_no in self.r_cols]
+                               for row_no in self.r_rows]
+            else:
+                self.matrix = [[Symbol(f'a{row_no}{col_no}') for col_no in self.r_cols] for row_no in self.r_rows]
         else:
             raise AttributeError(f"Неизветный режим {mode}")
 
@@ -296,8 +307,8 @@ class Matrix:
     def swap_columns(self, column_1: int, column_2: int):
         """Меняет два столбца матрицы местами"""
         matrix = self.copy()
-        for _ in range(self.rows):
-            matrix[_][column_1], matrix[_][column_2] = matrix[_][column_2], matrix[_][column_1]
+        for row_no in range(self.rows):
+            matrix[row_no][column_1], matrix[row_no][column_2] = matrix[row_no][column_2], matrix[row_no][column_1]
         return matrix
 
     def search_for_max_num_count(self, num=0):
@@ -377,37 +388,18 @@ class Matrix:
         with open(filename + '.matrix', 'rb') as file:
             self.matrix = pickle.load(file)
 
-    def write_to_file(self, filename: str):
-        """Записывает матрицу в файл (с потерей точности) в виде таблицы"""
-        with open(filename + '.txt', 'w') as file:
-            file.write(self.to_pretty_string())
-
-    def read_from_file(self, filename: str):
-        """Читает матрицу из файла (из таблицы)"""
-        with open(filename + '.txt', 'r') as file:
-            data = file.read()
-        data = data.replace('_', '').replace(" ", '').split('\n')[1::2]
-        new_matrix = []
-        for new_row in data:
-            new_matrix.append(new_row.split('|')[1:-1])
-        new_matrix = new_matrix[:-1]
-        for row_no, col_no in self:
-            if float(new_matrix[row_no][col_no]) == int(new_matrix[row_no][col_no]):
-                new_matrix[row_no][col_no] = int(new_matrix[row_no][col_no])
-            else:
-                new_matrix[row_no][col_no] = float(new_matrix[row_no][col_no])
-        self.matrix = new_matrix
-
-    def to_pretty_string(self, round_to: int = 8):
-        pretty_string = ' ' + '_' * (self.columns * (self.max_len_num + 3) - 1) + ' \n'
+    def to_pretty_string(self, round_to: int = 8) -> str:
+        """Возвращает строку, содержащую матрицу сформированную таблицей"""
+        max_len_num = self.max_len_num
+        pretty_string = ' ' + '_' * (self.columns * (max_len_num + 3) - 1) + ' \n'
         for row_no in self.r_rows:
             for col_no in self.r_cols:
-                if isinstance(self.matrix[row_no][col_no], (int, float)):
+                if isinstance(self[row_no][col_no], (int, float)):
                     pretty_string += f'|' \
-                                     f'{str(round(self.matrix[row_no][col_no], round_to)).center(self.max_len_num + 2)}'
+                                     f'{str(round(self[row_no][col_no], round_to)).center(max_len_num + 2)}'
                 else:
-                    pretty_string += f'|{str(self.matrix[row_no][col_no]).center(self.max_len_num + 2)}'
-            pretty_string += "|\n" + ("|" + "_" * (self.max_len_num + 2)) * self.columns + "|\n"
+                    pretty_string += f'|{str(self[row_no][col_no]).center(max_len_num + 2)}'
+            pretty_string += "|\n" + ("|" + "_" * (max_len_num + 2)) * self.columns + "|\n"
         return pretty_string
 
     def copy(self):
@@ -456,16 +448,16 @@ class Matrix:
 
     def vector_scalar_mul(self, other) -> (int, float):
         """Скалярное произведение векторов"""
-        if 1 not in self.size:
+        if not self.is_vector:
             ArithmeticError("Скалрное произведение только для векторов (матриц с 1 столбцом или 1 строкой)")
         if isinstance(other, Matrix):
-            if 1 not in other.size:
+            if not other.is_vector:
                 ArithmeticError("Скалрное произведение только для векторов (матриц с 1 столбцом или 1 строкой)")
         else:
             return self.vector_scalar_mul(Matrix(other))
         if self.rows != other.rows and self.rows != other.T.rows:
             raise ArithmeticError("Скалярное произведение можно найти только у векторов равной размерности")
-        return sum([elem_1 * elem_2 for elem_1, elem_2 in zip(self.vector_to_list, other.vector_to_list)])
+        return sum((elem_1 * elem_2 for elem_1, elem_2 in zip(self.vector_to_list, other.vector_to_list)))
 
     @property
     def vector_to_list(self):
@@ -477,7 +469,7 @@ class Matrix:
             return temp.matrix[0]
         else:
             if self.rows != 1:
-                raise ArithmeticError
+                raise ArithmeticError("В список можно превратить только вектор")
             return self.matrix[0]
 
     @property
@@ -493,12 +485,12 @@ class Matrix:
     @property
     def vector_norma_3(self) -> float:
         """Третья норма вектора (только для матриц с одним столбцом или строкой)"""
-        return sum([element ** 2 for element in self.vector_to_list]) ** .5
+        return sum((element ** 2 for element in self.vector_to_list)) ** .5
 
     @property
     def norma_1(self) -> float:
         """Первая норма матрицы (по строкам)"""
-        return max([sum(map(lambda x: abs(x), row)) for row in self.matrix])
+        return max((sum(map(lambda x: abs(x), row)) for row in self.matrix))
 
     @property
     def norma_2(self) -> float:
@@ -515,24 +507,20 @@ class Matrix:
     @property
     def norma_3(self) -> float:
         """Третья норма матрицы"""
-        summa = 0
-        for _ in range(self.rows):
-            for __ in range(self.columns):
-                summa += abs(self.matrix[_][__]) ** 2
-        return summa ** .5
+        return sum((self[row_no][col_no] ** 2 for row_no, col_no in self)) ** .5
 
     @property
     def is_dominant(self) -> bool:
         """Определяет является ли диагональ матрицы доминантной"""
         if not self.is_square:
             return False
-        for _ in range(self.rows):
+        for row_no in self.r_rows:
             summat = 0
-            for __ in range(self.rows):
-                if _ == __:
+            for col_no in self.r_cols:
+                if row_no == col_no:
                     continue
-                summat += abs(self[_][__])
-            if summat > abs(self[_][_]):
+                summat += abs(self[row_no][col_no])
+            if summat > abs(self[row_no][row_no]):
                 return False
         else:
             return True
@@ -552,17 +540,13 @@ class Matrix:
     @property
     def complements(self):
         """Матрица алгебраических дополнений"""
-        mat = Matrix(self.rows, self.columns)
-        mid = mat.matrix
-        for i in range(self.columns):
-            for j in range(self.rows):
-                mid[i][j] = det(self.minor(i, j))
-        for i in range(self.columns):
-            for j in range(self.rows):
-                if bool((i + j) % 2):
-                    mid[i][j] = -mid[i][j]
-        mat.matrix = mid
-        return mat
+        matrix = self.copy()
+        for row_no, col_no in self:
+            matrix[row_no][col_no] = det(self.minor(row_no, col_no))
+        for row_no, col_no in self:
+            if bool((row_no + col_no) % 2):
+                matrix[row_no][col_no] = -matrix[row_no][col_no]
+        return matrix
 
     @property
     def T(self):
@@ -600,11 +584,10 @@ class Matrix:
         """Является ли матрица трехдиагональной"""
         if not self.is_square:
             return False
-        for _ in range(self.rows):
-            for __ in range(self.columns):
-                if not (_ == __ or _ - 1 == __ or _ == __ - 1):
-                    if self[_][__] != 0:
-                        return False
+        for row_no, col_no in self:
+            if not (row_no == col_no or row_no - 1 == col_no or row_no == col_no - 1):
+                if self[row_no][col_no] != 0:
+                    return False
         else:
             return True
 
@@ -621,7 +604,25 @@ class Matrix:
 
     @property
     def is_vector(self):
+        """Проверяет является ли объект вектором"""
         return 1 in self.size
+
+    @property
+    def r_rows(self):
+        """range(self.rows)"""
+        return range(self.rows)
+
+    @property
+    def r_cols(self):
+        """range(self.columns)"""
+        return range(self.columns)
+
+    @property
+    def to_list(self):
+        if self.is_vector:
+            return self.vector_to_list
+        else:
+            return self.matrix
 
     @staticmethod
     def wrap(*args, **kwargs):
@@ -633,10 +634,20 @@ class Matrix:
         """Возвращает нормированный вектор нужного размера"""
         return Matrix([[1 / size_of_vector ** .5 for _ in range(size_of_vector)]])
 
-    @property
-    def r_rows(self):
-        return range(self.rows)
 
-    @property
-    def r_cols(self):
-        return range(self.columns)
+def solve(matrix: (list, Matrix), free_column: (list, Matrix)) -> list:
+    """Решение СЛАУ оптимальным методом"""
+    if isinstance(matrix, list):
+        matrix = Matrix(matrix)
+    if isinstance(free_column, Matrix):
+        free_column = free_column.vector_to_list
+    solution = None
+    if matrix.is_dominant or matrix.is_triple_diagonal:
+        decision = iterations.auto_iterate(matrix, free_column)
+    else:
+        # TODO: разобраться в причине неработоспособности метода Гаусса
+        # decision = gauss.gauss_method(matrix, free_column)
+        decision = kramer_method(matrix, free_column)
+    for step in decision:
+        solution = step.get('Решение')
+    return solution

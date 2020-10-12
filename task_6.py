@@ -1,4 +1,5 @@
 from python_code.methods.equation import dichotomy, hords, tangent_newton, iterations
+from python_code.staf.sympy_init import Float
 
 # ==========================================================================
 # Нахождение корней уравнения методом дихотомии, хорд, касательных, итераций
@@ -13,9 +14,10 @@ task = {
     'Отрезок для метода хорд': (-1, 0),
     'Функция для метода касательных': '0.5 * x * x * x + 4 * x - 5',
     'Отрезок для метода касательных': (1, 2),
-    'Функция для метода итераций': '3 * x * x * x + 7 * x + 20',
-    'Отрезок для метода итераций': (-2, -1),
-    'x = g(x)': '((-1)**(2/3)*(-20 - 7*x)**(1/3))/3**(1/3)'  # Уберите эту строку для автоматического вычисления
+    'Функция для метода итераций': '3 * x * x * x + 9 * x + 26',
+    # Если вас не устраивает через какое значение был подсчитан результат - укажите два одинаковых
+    'Отрезок для метода итераций': (-2, -2),
+    'x = g(x)': None
 }
 
 # Данные из методички для проверки работы программы (проверьте - значения совпадают)
@@ -42,8 +44,12 @@ def print_data(data):
         if 'Решение' in data.keys():
             step_info += f'{info}: {round(data[info], 8) if isinstance(data[info], float) else data[info]}\n'
         elif 'Номер итерации' in data.keys():
-            step_info += f'{info}: ' \
-                         f'{round(data[info], 8) if isinstance(data[info], float) else data[info]}'.center(23) + '|'
+            value = data[info]
+            if isinstance(value, float):
+                value = round(value, 8)
+            elif isinstance(value, Float):
+                value = round(float(value), 8)
+            step_info += f'{info}: {value}'.center(23) + '|'
         else:
             step_info += f'{info}:\n{round(data[info], 8) if isinstance(data[info], float) else data[info]}\n'
     if 'Решение' in data.keys():
@@ -76,6 +82,8 @@ try:
     decision = iterations(task['Функция для метода итераций'], task['Отрезок для метода итераций'], task.get('x = g(x)'),
                           level_of_details=2, iterations=5, accuracy_order=3)
     for step in decision:
+        if "g'(x)" in step.keys():
+            step.update({"g'(x)": None})
         print_data(step)
 
 except Exception as error:
