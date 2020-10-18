@@ -82,14 +82,14 @@ def test_mul():
 
 def test_reverse_matrix():
     """Этот тест проверяет и транспонирование, и алгебраические дополнения разом"""
-    m = Матрица(3)
-    m.заполнить_случайными()
-    assert round(определитель((~m) * m)) == 1
+    m = Matrix(3)
+    m.fill_random()
+    assert round(det(m ** (-1) * m)) == 1
 
 
 def test_reverse_matrix2():
-    m = Матрица([[2, -2, -7], [-4, 8, -8], [10, -7, 0]])
-    assert round(определитель((~m) * m)) == 1
+    m = Matrix([[2, -2, -7], [-4, 8, -8], [10, -7, 0]])
+    assert round(det(m ** (-1) * m)) == 1
 
 
 def test_pop_row():
@@ -175,14 +175,14 @@ def test_four_minor_method():
 
 
 def test_reverse_matrix_minor_method():
-    m = Матрица([[2, -2, -7], [-4, 8, -8], [10, -7, 0]])
-    assert round(determinant.minor_method((~m) * m)) == 1
+    m = Matrix([[2, -2, -7], [-4, 8, -8], [10, -7, 0]])
+    assert round(determinant.minor_method(m ** (-1) * m)) == 1
 
 
 def test_reverse_matrix_minor_method2():
-    m = Матрица(3)
-    m.заполнить_случайными()
-    assert round(determinant.minor_method((~m) * m)) == 1
+    m = Matrix(3)
+    m.fill_random()
+    assert round(determinant.minor_method(m ** (-1) * m)) == 1
 
 
 # ============================ Метод быстрых миноров ============================
@@ -206,14 +206,14 @@ def test_four_fast_minor_method():
 
 
 def test_reverse_matrix_fast_minor_method():
-    m = Матрица([[2, -2, -7], [-4, 8, -8], [10, -7, 0]])
-    assert round(determinant.fast_minor_method((~m) * m)) == 1
+    m = Matrix([[2, -2, -7], [-4, 8, -8], [10, -7, 0]])
+    assert round(determinant.fast_minor_method(m ** (-1) * m)) == 1
 
 
 def test_reverse_matrix_fast_minor_method2():
-    m = Матрица(3)
-    m.заполнить_случайными()
-    assert round(determinant.fast_minor_method((~m) * m)) == 1
+    m = Matrix(3)
+    m.fill_random()
+    assert round(determinant.fast_minor_method(m ** (-1) * m)) == 1
 
 
 # ============================ Метод диагоналей ============================
@@ -232,14 +232,14 @@ def test_sequence_diagonal_method():
 
 
 def test_reverse_matrix_diagonal_method():
-    m = Матрица([[2, -2, -7], [-4, 8, -8], [10, -7, 0]])
-    assert round(determinant.diagonal_method((~m) * m)) == 1
+    m = Matrix([[2, -2, -7], [-4, 8, -8], [10, -7, 0]])
+    assert round(determinant.diagonal_method(m ** (-1) * m)) == 1
 
 
 def test_reverse_matrix_diagonal_method2():
-    m = Матрица(3)
-    m.заполнить_случайными()
-    assert round(determinant.diagonal_method((~m) * m)) == 1
+    m = Matrix(3)
+    m.fill_random()
+    assert round(determinant.diagonal_method(m ** (-1) * m)) == 1
 
 
 # ============================ Общие тесты ============================
@@ -265,8 +265,8 @@ def test_four_union():
 
 
 def test_reverse_union():
-    m = Матрица([[2, -2, -7], [-4, 8, -8], [10, -7, 0]])
-    m = (~m) * m
+    m = Matrix([[2, -2, -7], [-4, 8, -8], [10, -7, 0]])
+    m = m ** (-1) * m
     assert determinant.diagonal_method(m) == determinant.minor_method(m) == \
            determinant.fast_minor_method(m)
 
