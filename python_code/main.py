@@ -110,13 +110,6 @@ class Matrix:
         else:
             return self * (1 / other)
 
-    def __invert__(self):
-        """Обратная матрица"""
-        if det(self) == 0:
-            raise ArithmeticError("Невозможно найти обратную матрицу так как определитель равен нулю")
-        else:
-            return self.complements.T / det(self)
-
     def __eq__(self, other):
         if isinstance(other, Matrix):
             return self.matrix == other.matrix
@@ -135,6 +128,25 @@ class Matrix:
                 for col_no in self.r_cols:
                     yield row_no, col_no
         return iterator()
+
+    def __pow__(self, power, modulo=None):
+        new_matrix = self.copy()
+        if power == 0:
+            new_matrix.fill_diagonal_ones()
+            return new_matrix
+        elif power == 1:
+            return new_matrix
+        elif power == -1:
+            if det(new_matrix) == 0:
+                raise ArithmeticError("Невозможно найти обратную матрицу так как определитель равен нулю")
+            else:
+                return new_matrix.complements.T / det(new_matrix)
+        elif power > 1:
+            return new_matrix * new_matrix ** (power - 1)
+        else:
+            new_matrix = new_matrix ** (-1)
+            return new_matrix ** (-power)
+
 
     def map(self, func: callable, *args, **kwargs):
         """
@@ -327,7 +339,7 @@ class Matrix:
 
         """
         if not self.is_square:
-            raise TypeError("рехдиагональной можно сделать только квадратную матрицу")
+            raise TypeError("Трехдиагональной можно сделать только квадратную матрицу")
         start, stop = min(start, stop), max(start, stop)
         if stop - start == 0:
             raise IndexError("Выбран пустой диапазон")
