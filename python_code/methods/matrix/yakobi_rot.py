@@ -1,7 +1,21 @@
 from math import atan, cos, sin, pi
 
 
-def method_rot_yakobi(matrix, iterations=8, level_of_detail=3):
+def method_rot_yakobi(matrix,
+                      iterations: int = 8,
+                      level_of_detail: int = 3):
+    """
+    Нахождение собственных чисел и векторов методом вращения Якоби
+
+    Args:
+        matrix (Matrix): матрица у которой необходимо найти собственные числа и векторы
+        iterations (int): количество итераций, которое необходимо совершить
+        level_of_detail (int): уровень детализации (меньше число - больше деталей)
+
+    Yields:
+        dict: данные о текущем шаге решения
+
+    """
     def find_max_abs_elem_above_diagonal():
         """Находит координаты элемента с наибольшим максимальным абсолютным значением выше главной диагонали"""
         max_elem_row = 0

@@ -1,5 +1,22 @@
-def power_method(matrix, await_d=None, iterations=None, level_of_detail=3):
-    """Степенной метод вычисления спектрального радиуса"""
+
+
+def power_method(matrix,
+                 await_d: (int, float) = None,
+                 iterations: int = None,
+                 level_of_detail: int = 3):
+    """
+    Степенной метод вычисления спектрального радиуса
+
+    Args:
+        matrix (Matrix): матрица, радиус которой необходимо найти
+        await_d (int, float): ожидаемая дельта
+        iterations (int): необходимое количество итераций
+        level_of_detail (int): уровень детализации (меньше число - больше деталей)
+
+    Yields:
+        dict: данные о текущем шаге решения
+
+    """
     matrix = matrix.copy()
     answer = {}
     if level_of_detail < 2:

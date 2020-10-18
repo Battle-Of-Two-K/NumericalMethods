@@ -3,7 +3,16 @@ from functools import lru_cache
 
 @lru_cache(maxsize=512)
 def minor_method(matrix):
-    """Нахождение определителя по методу миноров (с рекурсией)"""
+    """
+    Нахождение определителя по методу миноров (с рекурсией)
+
+    Returns:
+        int, float: определитель матрицы
+
+    Raises:
+        ArithmeticError: если матрица не является квадратной
+
+    """
     if not matrix.is_square:
         raise ArithmeticError("Определитель возможно найти только у квадратной матрицы")
     matrix = matrix.copy()
@@ -30,15 +39,32 @@ def minor_method(matrix):
 
 @lru_cache(maxsize=512)
 def fast_minor_method(matrix):
-    """Тот же метод миноров, но с предварительной триангуляцией (сокращение до 50% работы метода миноров)
-    (метод Гаусса) ТОЧНОСТЬ НИЖЕ, ЧЕМ У МЕТОДА МИНОРОВ"""
+    """
+    Тот же метод миноров, но с предварительной триангуляцией (сокращение до 50% работы метода миноров)
+    (метод Гаусса) ТОЧНОСТЬ НИЖЕ, ЧЕМ У МЕТОДА МИНОРОВ
+
+    Returns:
+        float: определитель матрицы
+
+    Raises:
+        ArithmeticError: если матрица не является квадратной
+    """
     matrix = matrix.triangulate()
     return minor_method(matrix)
 
 
 @lru_cache(maxsize=512)
 def diagonal_method(matrix):
-    """Метод, использующий правило диагоналей, не использует рекурсию"""
+    """
+    Метод, использующий правило диагоналей, не использует рекурсию
+
+    Returns:
+        int, float: определитель матрицы
+
+    Raises:
+        ArithmeticError: если матрица не является квадратной
+        IndexError: если размерность матрицы больше 3
+    """
     if not matrix.is_square:
         raise ArithmeticError("Определитель возможно найти только у квадратной матрицы")
     matrix = matrix.copy()
@@ -54,11 +80,20 @@ def diagonal_method(matrix):
                matrix[0][1] * matrix[1][0] * matrix[2][2] - \
                matrix[2][1] * matrix[1][2] * matrix[0][0]
     else:
-        raise ArithmeticError("Этот метод не рассчитанна такое")
+        raise IndexError("Этот метод не рассчитанна такое")
 
 
 def auto_det(matrix):
-    """Автоматический выбор лучшего алгоритма"""
+    """
+    Автоматический выбор лучшего алгоритма
+
+    Returns:
+        int, float: определитель матрицы
+
+    Raises:
+        ArithmeticError: если матрица не является квадратной
+
+    """
     if not matrix.is_square:
         raise ArithmeticError("Определитель возможно найти только у квадратной матрицы")
     if matrix.rows > 10:
