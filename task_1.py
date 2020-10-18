@@ -7,7 +7,7 @@ from python_code.main import *
 
 try:
     # Матрица из задания
-    matrix = Matrix([
+    matrix = Матрица([
         [-11, 7, -1, 6],
         [-11, -9, 2, -7],
         [9, -3, 1, -2],
@@ -22,19 +22,19 @@ try:
     # ============================================================
 
     print("Введенная матрица:")
-    matrix.console_display()
+    matrix.показать_в_консоли()
 
-    print(f'Определитель данной матрицы равен {det(matrix)}\n')
+    print(f'Определитель данной матрицы равен {определитель(matrix)}\n')
 
     print("Матрица, обратная данной:")
-    (~matrix).console_display()
+    (~matrix).показать_в_консоли()
 
     print('\n' + " Решение методом Гаусса для данной СЛАУ: ".center(75, '='))
-    decision = gauss.gauss_method(matrix.copy(), free_column, level_of_details=2)
+    decision = gauss.gauss_method(matrix.копия(), free_column, level_of_details=2)
     for step in decision:
         for info in step:
             if 'Матрица' in info:
-                step[info].console_display()
+                step[info].показать_в_консоли()
             else:
                 print(f"{info}: {step[info]}")
 

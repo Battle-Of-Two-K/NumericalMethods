@@ -28,7 +28,7 @@ try:
     for step in decision:
         for info in step:
             if 'Матрица' in info:
-                step[info].console_display()
+                step[info].показать_в_консоли()
             elif 'python' in info:
                 function = step[info]
                 continue

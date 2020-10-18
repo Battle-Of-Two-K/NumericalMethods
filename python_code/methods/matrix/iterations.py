@@ -25,7 +25,7 @@ def simple_iterations(matrix,
     if iterations is None:
         if await_e is None:
             await_e = (10 ** -8)
-    matrix = matrix.copy()
+    matrix = matrix.копия()
     free_column = free_column.copy()
     answer = {}
     if level_of_detail < 2:
@@ -33,30 +33,30 @@ def simple_iterations(matrix,
         answer.update({'Матрица': matrix})
         answer.update({'Столбец свободных членов': free_column})
         yield answer
-    if not matrix.is_dominant:
+    if not matrix.преобладающая_ли_диагональ:
         raise ArithmeticError("Метод итераций работает только с матрицами с доминантной диагональю")
     # Извлечение главной диагонали, замещая значения нулями
     new_column = []
     for row_no, col_no in matrix:
         if row_no == col_no:
             new_column.append(matrix[row_no][col_no])
-            matrix.matrix[row_no][col_no] = 0
+            matrix.матрица[row_no][col_no] = 0
     matrix = -matrix
     # Деление соответствующих строк на значения из диагонали
     for row_no, col_no in matrix:
-        matrix.matrix[row_no][col_no] /= new_column[row_no]
+        matrix.матрица[row_no][col_no] /= new_column[row_no]
     # Деление сободных членов на значения из диагонали
     free_column = [free_elem / diagonal_elem for free_elem, diagonal_elem in zip(free_column, new_column)]
-    free_column = matrix.wrap([free_column])
+    free_column = matrix.обернуть([free_column])
     if level_of_detail < 2:
         answer.update({'Этап': 'Из матрицы извлечена главная диагональ'})
         answer.update({'Матрица': matrix})
-        answer.update({'Столбец свободных членов': free_column.matrix[0]})
+        answer.update({'Столбец свободных членов': free_column.матрица[0]})
         yield answer
     # Вычисление нормы (минимальная из двух)
-    matrix_norms = (matrix.norma_1, matrix.norma_2)
-    vector_norms = (free_column.vector_norma_1, free_column.vector_norma_2)
-    norm_number = 1 if matrix.norma_1 <= matrix.norma_2 else 2
+    matrix_norms = (matrix.матричная_норма_1, matrix.матричная_норма_2)
+    vector_norms = (free_column.векторная_норма_1, free_column.векторная_норма_2)
+    norm_number = 1 if matrix.матричная_норма_1 <= matrix.матричная_норма_2 else 2
     if level_of_detail < 3:
         answer.update({'Этап': 'Вычислены необходимые нормы'})
         answer.update({'Нормы матрицы': matrix_norms})
@@ -66,10 +66,10 @@ def simple_iterations(matrix,
     norma_beta = vector_norms[norm_number - 1]
     norma = matrix_norms[norm_number - 1]
     # Принимаем за начальный вектор вектор бета с шапкой
-    free_column = free_column.vector_to_list
-    solution_vector = free_column.copy()
+    free_column = free_column.вектор_в_список
+    solution_vector = free_column.копия()
     # Добавление столбца свободных членов
-    matrix.append_column(free_column.copy())
+    matrix.добавить_столбец(free_column.копия())
     # Добавление единицы нужно для нормальной работы цикла с матрицей с добавленным столбцом свободных членов
     solution_vector.append(1)
     # Входим в цикл
@@ -95,9 +95,9 @@ def simple_iterations(matrix,
         elif await_e > (norma ** (iteration_counter - 2)) / (1 - norma) / 10:
             break
         new_solution = []
-        for row_no in range(matrix.rows):
+        for row_no in range(matrix.количество_строк):
             container = 0
-            for col_no in range(matrix.columns):
+            for col_no in range(matrix.количество_столбцов):
                 container += solution_vector[col_no] * matrix[row_no][col_no]
             # Только после заполнения нового вектора (обработана вся матрица), замняем вектор решений на новый на новый
             new_solution.append(container)
@@ -140,7 +140,7 @@ def zeidel_method(matrix,
     if iterations is None:
         if await_e is None:
             await_e = (10 ** -8)
-    matrix = matrix.copy()
+    matrix = matrix.копия()
     free_column = free_column.copy()
     answer = {}
     if level_of_detail < 2:
@@ -148,30 +148,30 @@ def zeidel_method(matrix,
         answer.update({'Матрица': matrix})
         answer.update({'Столбец свободных членов': free_column})
         yield answer
-    if not matrix.is_dominant:
+    if not matrix.преобладающая_ли_диагональ:
         raise ArithmeticError("Метод итераций работает только с матрицами с доминантной диагональю")
     # Извлечение главной диагонали, замещая значения нулями
     new_column = []
     for row_no, col_no in matrix:
         if row_no == col_no:
             new_column.append(matrix[row_no][col_no])
-            matrix.matrix[row_no][col_no] = 0
+            matrix.матрица[row_no][col_no] = 0
     matrix = -matrix
     # Деление соответствующих строк на значения из диагонали
     for row_no, col_no in matrix:
-        matrix.matrix[row_no][col_no] /= new_column[row_no]
+        matrix.матрица[row_no][col_no] /= new_column[row_no]
     # Деление сободных членов на значения из диагонали
     free_column = [free_elem / new_elem for free_elem, new_elem in zip(free_column, new_column)]
-    free_column = matrix.wrap([free_column])
+    free_column = matrix.обернуть([free_column])
     if level_of_detail < 2:
         answer.update({'Этап': 'Из матрицы извлечена главная диагональ'})
         answer.update({'Матрица': matrix})
-        answer.update({'Столбец свободных членов': free_column.matrix[0]})
+        answer.update({'Столбец свободных членов': free_column.матрица[0]})
         yield answer
     # Вычисление нормы (минимальная из двух)
-    matrix_norms = (matrix.norma_1, matrix.norma_2)
-    vector_norms = (free_column.vector_norma_1, free_column.vector_norma_2)
-    norm_number = 1 if matrix.norma_1 <= matrix.norma_2 else 2
+    matrix_norms = (matrix.матричная_норма_1, matrix.матричная_норма_2)
+    vector_norms = (free_column.векторная_норма_1, free_column.векторная_норма_2)
+    norm_number = 1 if matrix.матричная_норма_1 <= matrix.матричная_норма_2 else 2
     if level_of_detail < 3:
         answer.update({'Этап': 'Вычислены необходимые нормы'})
         answer.update({'Нормы матрицы': matrix_norms})
@@ -181,10 +181,10 @@ def zeidel_method(matrix,
     norma_beta = vector_norms[norm_number - 1]
     norma = matrix_norms[norm_number - 1]
     # Принимаем за начальный вектор вектор бета с шапкой
-    free_column = free_column.vector_to_list
-    solution_vector = free_column.copy()
+    free_column = free_column.вектор_в_список
+    solution_vector = free_column.копия()
     # Добавление столбца свободных членов
-    matrix.append_column(free_column.copy())
+    matrix.добавить_столбец(free_column.копия())
     # Добавление единицы нужно для нормальной работы цикла с матрицей с добавленным столбцом свободных членов
     solution_vector.append(1)
     # Входим в цикл
@@ -198,7 +198,7 @@ def zeidel_method(matrix,
     answer.pop('Матрица', None)
     answer.pop('Столбец свободных членов', None)
     while True:
-        old_solution = solution_vector.copy()
+        old_solution = solution_vector.копия()
         if level_of_detail < 3:
             answer.update({'Номер итерации': iteration_counter})
             answer.update({'Решение': solution_vector[:-1]})
@@ -210,9 +210,9 @@ def zeidel_method(matrix,
                 break
         elif await_e > (norma ** (iteration_counter - 2)) / (1 - norma) / 10:
             break
-        for row_no in range(matrix.rows):
+        for row_no in range(matrix.количество_строк):
             container = 0
-            for col_no in range(matrix.columns):
+            for col_no in range(matrix.количество_столбцов):
                 container += solution_vector[col_no] * matrix[row_no][col_no]
             # В строке ниже и кроется отличие: для дальнейших вычислений сразу используется полученный результат
             solution_vector[row_no] = container
@@ -245,22 +245,22 @@ def triple_diagonal(matrix, free_column, level_of_detail=3):
     """
 
     def get_element(row, col):
-        if 0 < row <= matrix.rows and 0 < col <= matrix.columns - 1:
+        if 0 < row <= matrix.количество_строк and 0 < col <= matrix.количество_столбцов - 1:
             return matrix[row - 1][col - 1]
         else:
             return 0
 
     answer = {}
-    matrix = matrix.copy()
+    matrix = matrix.копия()
 
     if level_of_detail < 2:
         answer.update({'Этап': 'Получены значения'})
         answer.update({'Матрица': matrix})
         answer.update({'Столбец свободных членов': free_column})
         yield answer
-    if not matrix.is_triple_diagonal:
+    if not matrix.трехдиагональная_ли:
         raise ArithmeticError("Метод прогонки работает только с трехдиагональной марицей")
-    matrix.append_column(free_column)
+    matrix.добавить_столбец(free_column)
     if level_of_detail < 2:
         answer.update({'Этап': 'Расширена матрица'})
         answer.update({'Матрица': matrix})
@@ -279,13 +279,13 @@ def triple_diagonal(matrix, free_column, level_of_detail=3):
         yield answer
         answer.pop('Q0', None)
         answer.pop('P0', None)
-    for row_no in range(1, matrix.rows + 1):
+    for row_no in range(1, matrix.количество_строк + 1):
         if level_of_detail < 3:
             answer.update({'Прямая прогонка': f'{row_no} строка'})
         a = get_element(row_no, row_no - 1)
         b = get_element(row_no, row_no)
         c = get_element(row_no, row_no + 1)
-        d = matrix[row_no - 1][matrix.columns - 1]
+        d = matrix[row_no - 1][matrix.количество_столбцов - 1]
         new_p = -c / (b + a * p[row_no - 1])
         if level_of_detail < 2:
             answer.update({'a': a})
@@ -319,11 +319,11 @@ def triple_diagonal(matrix, free_column, level_of_detail=3):
     answer.pop('d', None)
     answer.pop('Этап решения', None)
     answer.pop('Прямая прогонка', None)
-    x = [0 for row_no in range(matrix.rows + 1)]
-    for row_no in range(matrix.rows, 0, -1):
+    x = [0 for row_no in range(matrix.количество_строк + 1)]
+    for row_no in range(matrix.количество_строк, 0, -1):
         if level_of_detail < 3:
             answer.update({'Обратная прогонка': f'{row_no} строка'})
-        if row_no == matrix.rows:
+        if row_no == matrix.количество_строк:
             if level_of_detail < 2:
                 answer.update({f'Этап решения': f"X{row_no} = Q{row_no} = {q[row_no]}"})
             x[row_no] = q[row_no]
@@ -357,7 +357,7 @@ def auto_iterate(matrix, free_column: list) -> list:
         list: решение СЛАУ
 
     """
-    if matrix.is_triple_diagonal:
+    if matrix.трехдиагональная_ли:
         decision = triple_diagonal(matrix, free_column)
     else:
         decision = zeidel_method(matrix, free_column)

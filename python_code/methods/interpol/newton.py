@@ -15,7 +15,7 @@ def newton_pol(x_list_of_values, y_list_of_values):
         return out
 
     function_value = [y_list_of_values]
-    x_list = x_list_of_values.copy()
+    x_list = x_list_of_values.копия()
     for col_no in range(1, len(x_list_of_values)):
         new_col = []
         for row_no in range(len(function_value[col_no - 1]) - 1):

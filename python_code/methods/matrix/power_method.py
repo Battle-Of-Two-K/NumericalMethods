@@ -17,7 +17,7 @@ def power_method(matrix,
         dict: данные о текущем шаге решения
 
     """
-    matrix = matrix.copy()
+    matrix = matrix.копия()
     answer = {}
     if level_of_detail < 2:
         answer.update({'Этап': 'Получены данные', 'Матрица': matrix})
@@ -27,7 +27,7 @@ def power_method(matrix,
         await_d = 10 ** (-8)
     # Получение нормированного вектора нужного размера и сразу транспонирование
     # (дальнейшие вычисления в "вертикальном режиме")
-    omega = matrix.vector_get_norm_3_vector(matrix.columns).T
+    omega = matrix.получить_нормированный_по_3_норме_вектор(matrix.количество_столбцов).транспонированная
     if level_of_detail < 2:
         answer.update({'Этап': 'Создан нормированный вектор', 'Нормированный вектор (омега)': omega})
         yield answer
@@ -40,17 +40,17 @@ def power_method(matrix,
         # Далее согласно методичке
         v = matrix * omega
         # Скалярное произведение (ro = (v, omega))
-        ro = v.vector_scalar_mul(omega)
+        ro = v.скалярное_произведение_векторов(omega)
         if level_of_detail < 3:
             answer.update({'Номер итерации': iteration_counter})
-            answer.update({f'w{iteration_counter}': omega.vector_to_list})
-        omega = v / v.vector_norma_3
+            answer.update({f'w{iteration_counter}': omega.вектор_в_список})
+        omega = v / v.векторная_норма_3
         delta = abs(old_ro - ro) if old_ro else None
         old_ro = ro
         iteration_counter += 1
         if level_of_detail < 3:
             answer.update({
-                f'v{iteration_counter}': v.vector_to_list,
+                f'v{iteration_counter}': v.вектор_в_список,
                 'Дельта': delta
             })
             yield answer

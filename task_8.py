@@ -58,7 +58,7 @@ try:
 
     canonical_result = canonical_pol(table_for_canonical['x'], table_for_canonical['y'])
     print('Матрица:')
-    canonical_result['Матрица'].console_display()
+    canonical_result['Матрица'].показать_в_консоли()
     print(f'Столбец свободных членов: {canonical_result["Столбец свободных членов"]}\n')
     print(f'Решение СЛАУ: {canonical_result["Решение СЛАУ"]}')
     print(f'Полином: {canonical_result["Полином"]}\n')

@@ -1,4 +1,4 @@
-from python_code.main import Matrix
+from python_code.main import Матрица
 from python_code.staf.sympy_init import *
 
 
@@ -40,7 +40,7 @@ def zeidel_method(system, variables, approximation, transformed_system=None,
     if level_of_details < 3:
         yield {
             'Этап': 'Получены значения',
-            'Система': Matrix(system).T,
+            'Система': Матрица(system).транспонированная,
             'Начальное приближение': approximation,
             'Преобразованная система': transformed_system,
         }

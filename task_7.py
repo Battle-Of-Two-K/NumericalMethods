@@ -38,9 +38,9 @@ try:
                                     accuracy_order=8, level_of_details=2, iterations=5)
     for step in decision:
         for info in step:
-            if isinstance(step[info], Matrix):
+            if isinstance(step[info], Матрица):
                 print(f'{info}:\n')
-                step[info].console_display()
+                step[info].показать_в_консоли()
             elif isinstance(step[info], dict):
                 for key in step[info]:
                     print(f'{key}: {round(step[info][key], 8)}', end='; ')
@@ -55,9 +55,9 @@ try:
     for step in decision:
         step_info = ''
         for info in step:
-            if isinstance(step[info], Matrix):
+            if isinstance(step[info], Матрица):
                 print(info, ':')
-                step[info].console_display()
+                step[info].показать_в_консоли()
             else:
                 try:
                     step_info += f'{info}: {round(step[info], 8)}'.center(25) + '|'
@@ -71,9 +71,9 @@ try:
     for step in decision:
         step_info = ''
         for info in step:
-            if isinstance(step[info], Matrix):
+            if isinstance(step[info], Матрица):
                 print(info, ':')
-                step[info].console_display()
+                step[info].показать_в_консоли()
             else:
                 try:
                     step_info += f'{info}: {round(step[info], 8)}'.center(25) + '|'

@@ -3,7 +3,7 @@ from python_code import *
 
 
 def test_kramer_2():
-    matrix = Matrix([[5, 2], [2, 1]])
+    matrix = Матрица([[5, 2], [2, 1]])
     free = [7, 9]
     decision = methods.matrix.kramer_method(matrix, free)
     solution = None
@@ -13,7 +13,7 @@ def test_kramer_2():
 
 
 def test_kramer_3():
-    matrix = Matrix([[2, 1, 1], [1, -1, 0], [3, -1, 2]])
+    matrix = Матрица([[2, 1, 1], [1, -1, 0], [3, -1, 2]])
     free = [2, -2, 2]
     decision = methods.matrix.kramer_method(matrix, free)
     solution = None

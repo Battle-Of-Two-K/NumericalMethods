@@ -11,8 +11,8 @@ def canonical_pol(x_list_of_values, y_list_of_values):
             row.append(x_list_of_values[row_no] ** i)
         row.append(1)
         matrix.append(row)
-    matrix = Matrix(matrix)
-    koefs = solve(matrix, y_list_of_values)
+    matrix = Матрица(matrix)
+    koefs = решить(matrix, y_list_of_values)
     polynomial = 0
     for koef_no in range(len(koefs)):
         polynomial += koefs[::-1][koef_no] * x ** koef_no

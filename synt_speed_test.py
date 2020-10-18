@@ -21,8 +21,8 @@ for n in range(1, max_size_of_matrix + 1):
         'Метод быстрых миноров дробные': [],
     }
     for i in range(number_of_try):
-        matrix = Matrix(n)
-        matrix2 = Matrix(n)
+        matrix = Матрица(n)
+        matrix2 = Матрица(n)
         matrix.autofill(options=(-10, 10))
         matrix2.autofill(options=(-10., 10))
         results['Метод обычных миноров целые'].append(

@@ -6,7 +6,7 @@ from python_code import *
 
 try:
     # Матрица из задания
-    matrix = Matrix([
+    matrix = Матрица([
                      [-6, -8, -12],
                      [-8, 14, -2],
                      [-12, -2, -11]
@@ -21,7 +21,7 @@ try:
     # ============================================================
 
     print("Введенная матрица:\n")
-    matrix.console_display()
+    matrix.показать_в_консоли()
 
     print("Нахождение собственных чисел и векторов методом вращения Якоби:\n")
     decision = method_rot_yakobi(matrix, level_of_detail=2, iterations=number_of_iterations)
@@ -29,7 +29,7 @@ try:
         for info in step:
             if 'матрица' in info.lower():
                 print(info, end=':\n\n')
-                step[info].console_display()
+                step[info].показать_в_консоли()
             elif info == 'Решение':
                 print('\n', ' Решение '.center(75, '='), '\n')
                 solution = step['Решение']

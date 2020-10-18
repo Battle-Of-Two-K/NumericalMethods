@@ -14,21 +14,21 @@ def kramer_method(matrix, free_column: list, level_of_detail: int = 3):
         ArithmeticError: если определитель матрицы равен нулю
 
     """
-    def det(mat):
+    def определитель(mat):
         return matrix.determinant.auto_det(mat)
 
     def calc_col_det(mat, free, col_no_):
-        mat = mat.copy()
-        mat.pop_column(col_no_)
-        mat.insert_column(col_no_, free)
-        det_ = det(mat)
+        mat = mat.копия()
+        mat.удалить_столбец(col_no_)
+        mat.вставить_столбец(col_no_, free)
+        det_ = определитель(mat)
         if level_of_detail < 3:
             answer.update({"Матрица с замененным столбцом": mat, "Определитель": det_})
         return det_
 
     answer = {}
-    matrix = matrix.copy()
-    main_det = det(matrix)
+    matrix = matrix.копия()
+    main_det = определитель(matrix)
     if level_of_detail < 3:
         answer.update({'Этап': 'Получены данные', 'Матрица': matrix, 'Общий определитель': main_det})
         yield answer
@@ -39,12 +39,12 @@ def kramer_method(matrix, free_column: list, level_of_detail: int = 3):
         raise ArithmeticError("Метод крамера не работает с матрицами, определитель которых равен нулю")
 
     solution = []
-    for col_no in range(matrix.columns):
+    for col_no in range(matrix.количество_столбцов):
         if level_of_detail < 3:
             answer.update({"Номер столбца замены": col_no})
         solution.append(calc_col_det(matrix, free_column, col_no) / main_det)
         if level_of_detail < 2:
-            answer.update({"Решение": f'X{col_no + 1} = det(matrix_{col_no}) / det(matrix) = '
+            answer.update({"Решение": f'X{col_no + 1} = определитель(matrix_{col_no}) / определитель(матрица) = '
                                       f'{answer["Определитель"]} / {main_det} = {answer["Определитель"] / main_det}'})
         if level_of_detail < 3:
             yield answer

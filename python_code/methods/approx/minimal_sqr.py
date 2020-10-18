@@ -39,7 +39,7 @@ def minimal_sqr(table, level_of_details=3):
         free_column.append(sum_xny(table[0], koef_power, table[1]))
     if level_of_details < 3:
         yield {
-            'Матрица': Matrix(system),
+            'Матрица': Матрица(system),
             'Столбец свободных членов': free_column
         }
     koefs = slau_solve(system, free_column)

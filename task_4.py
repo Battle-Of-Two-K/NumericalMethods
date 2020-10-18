@@ -5,7 +5,7 @@ from python_code import *
 # ==================================================
 try:
     # Матрица из задания
-    matrix = Matrix([
+    matrix = Матрица([
                      [19, 5, 8],
                      [5, -1, -6],
                      [8, -6, -3]
@@ -20,7 +20,7 @@ try:
     # ============================================================
 
     print("Введенная матрица:\n")
-    matrix.console_display()
+    matrix.показать_в_консоли()
 
     print("Нахождение спектрального радиуса степенным методом:\n")
     decision = spectral_rad_power_method(matrix, level_of_detail=2, iterations=number_of_iterations)

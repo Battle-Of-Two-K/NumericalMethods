@@ -3,7 +3,7 @@ from python_code import *
 
 
 def test_yakobi_rot_1():
-    matrix = Matrix([[17, 1, 1], [1, 17, 2], [1, 2, 4]])
+    matrix = Матрица([[17, 1, 1], [1, 17, 2], [1, 2, 4]])
     decision = method_rot_yakobi(matrix, iterations=8)
     solution = None
     for step in decision:

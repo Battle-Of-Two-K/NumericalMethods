@@ -3,18 +3,18 @@ from python_code.main import *
 
 
 def test_norma_1():
-    m = Matrix([[0, -1 / 5, 2 / 5], [1 / 5, 0, -1 / 3], [1 / 3, 1 / 6, 0]])
-    assert round(m.norma_1, 8) == 0.6
+    m = Матрица([[0, -1 / 5, 2 / 5], [1 / 5, 0, -1 / 3], [1 / 3, 1 / 6, 0]])
+    assert round(m.матричная_норма_1, 8) == 0.6
 
 
 def test_norma_2():
-    m = Matrix([[0, -1 / 5, 2 / 5], [1 / 5, 0, -1 / 3], [1 / 3, 1 / 6, 0]])
-    assert round(m.norma_2, 8) == 0.73333333
+    m = Матрица([[0, -1 / 5, 2 / 5], [1 / 5, 0, -1 / 3], [1 / 3, 1 / 6, 0]])
+    assert round(m.матричная_норма_2, 8) == 0.73333333
 
 
 def test_simple_iterations():
     """По примеру из методички"""
-    m = Matrix([[20, 4, -8], [-3, 15, 5], [6, 3, -18]])
+    m = Матрица([[20, 4, -8], [-3, 15, 5], [6, 3, -18]])
     free = [1, -2, 3]
     solution = iterations.simple_iterations(m, free, iterations=7)
     true_solution = None
@@ -26,7 +26,7 @@ def test_simple_iterations():
 
 def test_zeidel_method():
     """По примеру из методички"""
-    m = Matrix([[20, 4, -8], [-3, 15, 5], [6, 3, -18]])
+    m = Матрица([[20, 4, -8], [-3, 15, 5], [6, 3, -18]])
     free = [1, -2, 3]
     solution = iterations.zeidel_method(m, free, iterations=5)
     true_solution = None
@@ -37,12 +37,12 @@ def test_zeidel_method():
 
 
 def test_triple_diagonal():
-    m = Matrix([[-34, -26, 0, 0, 0],
-                     [64, -124, -56, 0, 0],
-                     [0, 94, -274, -86, 0],
-                     [0, 0, 124, -484, -116],
-                     [0, 0, 0, 154, -754]
-                     ])
+    m = Матрица([[-34, -26, 0, 0, 0],
+                 [64, -124, -56, 0, 0],
+                 [0, 94, -274, -86, 0],
+                 [0, 0, 124, -484, -116],
+                 [0, 0, 0, 154, -754]
+                 ])
     free = [34, 38, 42, 46, 50]
     solution = [-.6181818, -.4993007, -.2794706, -.1437131, -.0956655]
     test_solution = iterations.triple_diagonal(m, free)

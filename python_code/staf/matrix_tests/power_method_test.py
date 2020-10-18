@@ -3,7 +3,7 @@ from python_code import *
 
 
 def test_method_data():
-    matrix = Matrix([[-12, 4, 8], [4, 11, -6], [8, -6, 2]])
+    matrix = Матрица([[-12, 4, 8], [4, 11, -6], [8, -6, 2]])
     decision = methods.matrix.power_method(matrix)
     solution = None
     for step in decision:
@@ -13,7 +13,7 @@ def test_method_data():
 
 
 def test_mathprofi_data():
-    matrix = Matrix([[-1, -6], [2, 6]])
+    matrix = Матрица([[-1, -6], [2, 6]])
     decision = methods.matrix.power_method(matrix)
     solution = None
     for step in decision:

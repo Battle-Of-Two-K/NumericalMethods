@@ -6,7 +6,7 @@ from python_code.main import *
 
 try:
     # Матрица из задания
-    matrix = Matrix([
+    matrix = Матрица([
                      [7, -1, 0, 0, 0],
                      [5, -11, -4, 0, 0],
                      [0, 2, -8, 4, 0],
@@ -24,7 +24,7 @@ try:
     print(f"Столбец свободных членов: {free_column}\n")
 
     print("Введенная матрица:\n")
-    matrix.console_display()
+    matrix.показать_в_консоли()
 
     print("Решение методом прогонки:\n")
     solution = iterations.triple_diagonal(matrix, free_column, level_of_detail=2)
