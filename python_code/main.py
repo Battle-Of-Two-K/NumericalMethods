@@ -160,94 +160,203 @@ class Matrix:
         print(f'Матрица {self.size}'.center(self.columns * (self.max_len_num + 3) - 1))
         print(self.to_pretty_string())
 
-    def autofill(self, mode='random', options: tuple = None):
-        """Автоматическое заполнение матрицы
-        Режимы:
-            'random' - случайные числа в диапазоне options если в options int,
-                то целые, иначе - не целые (по умолчанию (-10, 10))
-            'ones' - заполняет единицами
-            'diagonal_ones' - приводит матрицу к единичной
-            'sequence' - матрица, заполненная числами от 1 до Matrix.rows * Matrix.columns
-            'H_grid' - прямая сетка значений (по умолчанию (1, 0, 2))
-            'X_grid' - косая сетка значений (по умолчанию (1, 0)
-            'dominant' - матрица с доминантной диагональю, options как у 'random'
-            'exchange' - обменная матрица
-            'triple_diagonal' - Трёхдиагональная матрица
-            'symbols' - заполнение символами sympy"""
+    def fill_random(self, start: (int, float) = -10, stop: (int, float) = 10) -> None:
+        """
+        Заполняет матрицу случайными числами, принадлежащими указанному отрезку. Меняет исходную матрицу.
+        Если указанные края отрезка - целые числа, матрица будет заполнена целыми числами,
+        иначе - числами с плавающей точкой
 
-        def get_options():
-            if options:
-                if not (options[1] - options[0] > 0):
-                    raise IndexError("В указанном диапазоне нет значений")
-                return options
-            else:
-                return -10, 10
+        Args:
+            start (int, float): левый край отрезка (по умолчанию -10)
+            stop (int, float): правый край отрезка (по умолчанию 10)
 
-        def rnd_generate():
-            _val1, _val2 = get_options()
-            if isinstance(_val1, float) or isinstance(_val2, float):
-                return rnd.uniform(_val1, _val2)
-            else:
-                return rnd.randint(_val1, _val2)
+        Returns:
+            None
 
-        if mode == 'random':
-            self.matrix = [[rnd_generate() for __ in range(self.columns)] for _ in range(self.rows)]
-        elif mode == 'ones':
-            self.matrix = [[1 for _ in range(self.columns)] for __ in range(self.rows)]
-        elif mode == 'diagonal_ones':
-            if not self.is_square:
-                raise LookupError("Невозможно составить единичную матрицу из не квадратной матрицы")
-            self.matrix = [[1 if _ == __ else 0 for __ in range(self.columns)] for _ in range(self.rows)]
-        elif mode == 'H_grid':
-            if options:
-                if len(options) == 2:
-                    val1, val2 = options
-                    step = 2
-                else:
-                    val1, val2, step = options
-            else:
-                val1, val2, step = 1, 0, 2
-            self.matrix = [[val1 if bool(_ % step) or bool(__ % step) else val2 for __ in range(self.columns)]
-                           for _ in range(self.rows)]
-        elif mode == 'X_grid':
-            if options:
-                val1, val2 = options
-            else:
-                val1, val2 = 1, 0
-            self.matrix = [[val1 if _ % 2 == __ % 2 else val2 for __ in range(self.columns)] for _ in range(self.rows)]
-        elif mode == 'sequence':
-            self.matrix = [[1 + _ + __ * self.columns for _ in range(self.columns)] for __ in range(self.rows)]
-        elif mode == 'dominant':
-            if not self.is_square:
-                raise ArithmeticError("Доминантной можно сделать только квадратную матрицу")
-            new_matrix = Matrix(self.size[0], self.size[1])
-            new_matrix.autofill('random', options)
-            for row_no, col_no in new_matrix:
-                if row_no == col_no:
-                    container = 0
-                    for col_no_inner in new_matrix.r_cols:
-                        if col_no_inner != col_no:
-                            container += abs(new_matrix[row_no][col_no_inner])
-                    # Гарантия доминации диагонали
-                    new_matrix[row_no][col_no] = container + abs(rnd_generate())
-                    # Добавление отрицательных значений
-                    new_matrix[row_no][col_no] *= 1 if rnd.random() < 1 / self.rows else -1
-            self.matrix = new_matrix.copy().matrix
-        elif mode == 'exchange':
-            if not self.is_square:
-                raise ArithmeticError("Обменной можно сделать только квадратную матрицу")
-            self.matrix = [[int((_ + __) == self.rows - 1) for _ in range(self.columns)] for __ in range(self.rows)]
-        elif mode == 'triple_diagonal':
-            self.matrix = [[rnd_generate() if i == j or i - 1 == j or i == j - 1 else 0 for i in range(self.columns)]
-                           for j in range(self.rows)]
-        elif mode == 'symbols':
-            if options is not None:
-                self.matrix = [[Symbol(f'a{options[0]}_{row_no}{col_no}') for col_no in self.r_cols]
-                               for row_no in self.r_rows]
-            else:
-                self.matrix = [[Symbol(f'a{row_no}{col_no}') for col_no in self.r_cols] for row_no in self.r_rows]
+        Raises:
+              IndexError: если длина выбранного отрезка равна нулю
+
+        """
+        start, stop = min(start, stop), max(start, stop)
+        if stop - start == 0:
+            raise IndexError("Выбран пустой диапазон")
+        if isinstance(start, float) or isinstance(stop, float):
+            self.matrix = [[rnd.uniform(start, stop) for col_no in self.r_cols] for row_no in self.r_rows]
         else:
-            raise AttributeError(f"Неизветный режим {mode}")
+            self.matrix = [[rnd.randint(start, stop) for col_no in self.r_cols] for row_no in self.r_rows]
+
+    def fill_value(self, value=1) -> None:
+        """
+        Заполняет матрицу указанным значением. Меняет исходную матрицу.
+
+        Args:
+            value (Any): значение-наполнитель (по умолчанию 1)
+
+        Returns:
+            None
+        """
+        self.matrix = [[value for col_no in self.r_cols] for row_no in self.r_rows]
+
+    def fill_diagonal_ones(self) -> None:
+        """
+        Превращает матрицу в единичную. Меняет исходную матрицу.
+
+        Returns:
+            None
+
+        Raises:
+              TypeError: если матрица не является квадратной
+
+        """
+        if not self.is_square:
+            raise TypeError("Невозможно составить единичную матрицу из не квадратной матрицы")
+        self.matrix = [[1 if row_no == col_no else 0 for col_no in self.r_cols] for row_no in self.r_rows]
+
+    def fill_sequence(self, start: int = 1) -> None:
+        """
+        Заполняет матрицу последовательно увеличивающимися числами. Меняет исходную матрицу.
+        Например: 1 2 3
+                  4 5 6
+                  7 8 9
+        Args:
+            start (int): начальное значение (по умолчанию 1)
+
+        Returns:
+            None
+        """
+        self.matrix = [[start + col_no + row_no * self.columns for col_no in self.r_cols] for row_no in self.r_rows]
+
+    def fill_H_grid(self, fill_value_1=0, fill_value_2=1, step: int = 1) -> None:
+        """
+        Заполняет матрицу сеткой значений. Меняет исходную матрицу.
+        Например: 1 0 1 0 1
+                  1 1 1 1 1
+                  1 0 1 0 1
+                  1 1 1 1 1
+        Args:
+            fill_value_1 (Any): первое значение-наполнитель (по умолчанию 0)
+            fill_value_2 (Any): второе значение-наполнитель (по умолчанию 1)
+            step (int): шаг сетки (по умолчанию 1)
+
+        Returns:
+            None
+        """
+        self.matrix = [[fill_value_1 if bool(row_no % (step + 1)) or bool(col_no % (step + 1)) else fill_value_2
+                        for col_no in self.r_cols]
+                       for row_no in self.r_rows]
+
+    def fill_X_grid(self, fill_value_1=0, fill_value_2=1, step: int = 1) -> None:
+        """
+        Заполняет матрицу сеткой значений. Меняет исходную матрицу.
+        Например: 1 0 1 0 1
+                  0 1 0 1 0
+                  1 0 1 0 1
+                  0 1 0 1 0
+                  1 0 1 0 1
+        Args:
+            fill_value_1 (Any): первое значение-наполнитель (по умолчанию 0)
+            fill_value_2 (Any): второе значение-наполнитель (по умолчанию 1)
+            step (int): шаг сетки (по умолчанию 1)
+
+        Returns:
+            None
+        """
+        self.matrix = [[fill_value_1 if row_no % (step + 1) == col_no % (step + 1) else fill_value_2
+                        for col_no in self.r_cols]
+                       for row_no in self.r_rows]
+
+    def fill_dominant(self, start: (int, float) = -10, stop: (int, float) = 10) -> None:
+        """
+        Заполняет матрицу случайными числами с преобладающей диагональю. Значения на главной диагонали могут выходить
+        за пределы указанного отрезка. Меняет исходную матрицу.
+        Если указанные края отрезка - целые числа, матрица будет заполнена целыми числами,
+        иначе - числами с плавающей точкой
+
+        Args:
+            start (int, float): левый край отрезка (по умолчанию -10)
+            stop (int, float): правый край отрезка (по умолчанию 10)
+
+        Returns:
+            None
+
+        Raises:
+              TypeError: если матрица не является квадратной
+
+        """
+        if not self.is_square:
+            raise TypeError("Доминантной можно сделать только квадратную матрицу")
+        new_matrix = Matrix(self.size[0], self.size[1])
+        new_matrix.fill_random(start, stop)
+        if isinstance(start, float) or isinstance(stop, float):
+            random = rnd.uniform
+        else:
+            random = rnd.randint
+        for row_no, col_no in new_matrix:
+            if row_no == col_no:
+                container = 0
+                for col_no_inner in new_matrix.r_cols:
+                    if col_no_inner != col_no:
+                        container += abs(new_matrix[row_no][col_no_inner])
+                # Гарантия доминации диагонали
+                new_matrix[row_no][col_no] = container + abs(random(start, stop))
+                # Добавление отрицательных значений
+                new_matrix[row_no][col_no] *= 1 if rnd.random() < 1 / self.rows else -1
+        self.matrix = new_matrix.copy().matrix
+
+    def fill_triple_diagonal(self, start: (int, float) = -10, stop: (int, float) = 10) -> None:
+        """
+        Заполняет три диагонали матрицы случайными числами из указанного отрезка. Меняет исходную матрицу.
+        Если указанные края отрезка - целые числа, матрица будет заполнена целыми числами,
+        иначе - числами с плавающей точкой
+
+        Args:
+            start (int, float): левый край отрезка (по умолчанию -10)
+            stop (int, float): правый край отрезка (по умолчанию 10)
+
+        Returns:
+            None
+
+        Raises:
+              IndexError: если длина выбранного отрезка равна нулю
+              TypeError: если матрица не является квадратной
+
+        """
+        if not self.is_square:
+            raise TypeError("рехдиагональной можно сделать только квадратную матрицу")
+        start, stop = min(start, stop), max(start, stop)
+        if stop - start == 0:
+            raise IndexError("Выбран пустой диапазон")
+        if isinstance(start, float) or isinstance(stop, float):
+            random = rnd.uniform
+        else:
+            random = rnd.randint
+        self.matrix = [[random(start, stop) if col_no == row_no or col_no - 1 == row_no or col_no == row_no - 1 else 0
+                        for col_no in self.r_cols]
+                       for row_no in self.r_rows]
+
+    def fill_symbols(self, liter: str = 'a',
+                     prefix: str = '',
+                     postfix: str = '',
+                     row_start: int = 0,
+                     col_start: int = 0) -> None:
+        """
+        Заполняет матрицу символами Sympy. Меняет исходную матрицу.
+
+        Args:
+            liter (str): буква, обозначающая значение элемента матрицы (по умолчанию 'a')
+            prefix (str): префикс (по умолчанию '')
+            postfix (str): постфикс (по умолчанию '')
+            row_start (int): начало нумерации строк (по умолчанию 0)
+            col_start (int): начало нумерации столбцов. (по умолчанию 0)
+
+        Returns:
+            None
+        """
+
+        def getchar(row_no, col_no):
+            return f'{prefix}{liter}{row_no + row_start}{col_no + col_start}{postfix}'
+
+        self.matrix = [[Symbol(getchar(row_no, col_no)) for col_no in self.r_cols] for row_no in self.r_rows]
 
     def minor(self, row: int, column: int):
         """
@@ -451,7 +560,7 @@ class Matrix:
         Ищет строку с наибольшим количеством указаной величины (по умолчанию 0), если такой нет - вернет 0
 
         Args:
-            num (Any): число, количество вхождений которонго нужно определить
+            num (Any): число, количество вхождений которого нужно определить
 
         Returns:
             int: номер строки с наибольшим количеством вхождений указаной величины, если такой нет - вернет 0
@@ -872,7 +981,10 @@ class Matrix:
         """
         Количество столбцов в матрице
         """
-        return len(self.matrix[0])
+        try:
+            return len(self.matrix[0])
+        except IndexError:
+            return 0
 
     @property
     def is_square(self) -> bool:

@@ -41,7 +41,7 @@ def method_rot_yakobi(matrix,
         """Создает матрицу поворота"""
         row_no_, col_no_ = cords_
         h_matrix = matrix.wrap(*matrix.size)
-        h_matrix.autofill('diagonal_ones')
+        h_matrix.fill_diagonal_ones()
         h_matrix[row_no_][row_no_] = cos(phi_)
         h_matrix[row_no_][col_no_] = -sin(phi_)
         h_matrix[col_no_][row_no_] = sin(phi_)
@@ -62,7 +62,7 @@ def method_rot_yakobi(matrix,
 
         # Перемножение матриц вращения
         own_vectors_matrix = matrix.wrap(*matrix.size)
-        own_vectors_matrix.autofill('diagonal_ones')
+        own_vectors_matrix.fill_diagonal_ones()
         for mat in rotation_matrix_list:
             own_vectors_matrix *= mat
 

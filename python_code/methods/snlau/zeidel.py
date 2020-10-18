@@ -4,6 +4,8 @@ from python_code.staf.sympy_init import *
 
 def zeidel_method(system, variables, approximation, transformed_system=None,
                   accuracy_order=8, level_of_details=3, iterations=None):
+    raise Exception("Этот метод временно недоступен")
+    # TODO: узнать откуда комплексные числа
     def transform(solutions):
         solutions = list(map(simplify, solutions))
         min_sol = solutions[0]
