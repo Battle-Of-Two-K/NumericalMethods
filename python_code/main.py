@@ -14,6 +14,9 @@ def det(*args, **kwargs) -> (int, float):
 
 class Matrix:
     """Класс, содержащий методы работы с матрицами и векторами (матрицами с одним столбцом или строкой)"""
+
+    matrix_container = []
+
     def __init__(self, *args, **kwargs):
         # Эти присвоения нужны для возможности быстро использовать эти методы, имея только экземпляр матрицы
         self.iterations = iterations
@@ -46,6 +49,8 @@ class Matrix:
         return self.matrix[item]
 
     def __setitem__(self, key, value):
+        if len(value) != self.columns:
+            raise IndexError("Ширина новой строки не совпадает с шириной матрицы")
         self.matrix[key] = value
 
     def __str__(self):
@@ -839,6 +844,21 @@ class Matrix:
         if self.rows != other.rows and self.rows != other.T.rows:
             raise IndexError("Скалярное произведение можно найти только у векторов равной размерности")
         return sum((elem_1 * elem_2 for elem_1, elem_2 in zip(self.vector_to_list, other.vector_to_list)))
+
+    @property
+    def matrix(self):
+        return self.matrix_container
+
+    @matrix.setter
+    def matrix(self, new_value):
+        if not isinstance(new_value, list):
+            new_value = list(new_value)
+        if len(new_value) == 0:
+            new_value.append([])
+        for row_no in range(len(new_value)):
+            if len(new_value[0]) != len(new_value[row_no]):
+                raise IndexError("Длины строк матрицы не равны")
+        self.matrix_container = new_value
 
     @property
     def vector_to_list(self):
