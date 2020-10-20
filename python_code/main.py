@@ -106,7 +106,7 @@ class Matrix:
 
     def __truediv__(self, other):
         if isinstance(other, Matrix):
-            return self * ~other
+            return self * other ** (-1)
         else:
             return self * (1 / other)
 
