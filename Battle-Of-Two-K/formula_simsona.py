@@ -7,7 +7,8 @@ try:
 
     list_1 = list()
     list_2 = list()
-
+    sum_1 = 0
+    sum_2 = 0
 
     def integrand(X):
         for i in range(n + 1):
@@ -23,9 +24,11 @@ try:
     def summa(X):
         for i in list_1:
             if i % 2 == 0:
-                sum
-
-
+                sum_1 += list_1[i]
+            else:
+                sum_2 += list_1[i]
+        return sum_2
+                
 
 
 

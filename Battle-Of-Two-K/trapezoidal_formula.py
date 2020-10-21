@@ -1,34 +1,34 @@
 from math import *
 
 try:
-    n = 4  # Количество шагов
-    a = 0  # Нижний предел (в градусах)
-    b = 90  # Верхний предел (в градусах)
+    n = 3  # Количество шагов
+    a = -3  # Нижний предел (в градусах)
+    b = 1  # Верхний предел (в градусах)
 
 
-    def integrand(X):
+    def integrand(x):
         for i in range(n + 1):
-            c = ((b - a) / n) * (pi / 180)
-            A = sin(X)
-            print(f'X: {X}')
+            c = (b - a) / n
+            A = (7 * x + 2) / (x * x + 5)
+            print(f'X: {x}')
             print(f'Y: {A}\n')
-            X += c
+            x += c
 
 
-    def summa(X):
+    def summa(x):
         Summa_ = 0
         for i in range(n):
-            c = ((b - a) / n) * (pi / 180)
-            A = sin(X)
+            c = (b - a) / n
+            A = (7 * x + 2) / (x * x + 5)
             Summa_ += A
-            X += c
-        return Summa_ - sin(a)
+            x += c
+        return Summa_ - A(a)
 
 
     integrand(0)
 
     h = ((b - a) * (pi / 180)) / n
-    T_n = (h / 2) * (sin(a * (pi / 180)) + 2 * summa(0) + sin(b * (pi / 180)))
+    T_n = (h / 2) * (A(a)) + 2 * A(0) + A(b)
 
     print(T_n)
 
