@@ -1,8 +1,8 @@
 from python_code.staf.sympy_init import *
-from python_code.staf.res_tools import *
 
 
 def tangent_newton(function, section, accuracy_order=8, iterations=None, level_of_details=3):
+
     def draw_tangent():
         return value - function(value) / function_d(value)
 
@@ -62,7 +62,12 @@ def tangent_newton(function, section, accuracy_order=8, iterations=None, level_o
         if level_of_details < 3:
             answer.update({'a_n': value})
             yield answer
-            answer = cleanup_answer(answer, ['Номер итерации', 'a_n-1', 'f(a_n-1)', 'f\'(a_n-1)', "f''(a_n-1)", 'a_n'])
+            answer.pop('Номер итерации', None)
+            answer.pop('a_n-1', None)
+            answer.pop('f(a_n-1)', None)
+            answer.pop('f\'(a_n-1)', None)
+            answer.pop("f''(a_n-1)", None)
+            answer.pop('a_n', None)
         if stop_iteration():
             if level_of_details < 4:
                 answer.update({'Решение': value})

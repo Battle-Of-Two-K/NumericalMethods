@@ -42,6 +42,9 @@ try:
     section_centers = [x_list[no] + (x_list[no + 1] - x_list[no]) / 2 for no in range(len(x_list) - 1)]
     for center in section_centers:
         print(f'S({center}) = {function(center)}')
+    # section_centers = x_list
+    # for center in section_centers:
+    #     print(f'S({center}) = {function(center)}')
 
 except Exception as error:
     print(error)

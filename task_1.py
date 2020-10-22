@@ -27,7 +27,7 @@ try:
     print(f'Определитель данной матрицы равен {det(matrix)}\n')
 
     print("Матрица, обратная данной:")
-    (~matrix).console_display()
+    (matrix ** (-1)).console_display()
 
     print('\n' + " Решение методом Гаусса для данной СЛАУ: ".center(75, '='))
     decision = gauss.gauss_method(matrix.copy(), free_column, level_of_details=2)
