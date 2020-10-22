@@ -1,6 +1,5 @@
 from python_code.methods.snlau.newton_linearization import newton_linearization
-from python_code.methods.snlau.simple_iterations import simple_iterations
-from python_code.methods.snlau.zeidel import zeidel_method
+from python_code.methods.snlau.simple_iterations import simple_iterations, zeidel_method
 from python_code import *
 
 # ==========================================================================================================

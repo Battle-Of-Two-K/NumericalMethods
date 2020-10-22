@@ -1,7 +1,21 @@
 from math import atan, cos, sin, pi
 
 
-def method_rot_yakobi(matrix, iterations=8, level_of_detail=3):
+def method_rot_yakobi(matrix,
+                      iterations: int = 8,
+                      level_of_detail: int = 3):
+    """
+    Нахождение собственных чисел и векторов методом вращения Якоби
+
+    Args:
+        matrix (Matrix): матрица у которой необходимо найти собственные числа и векторы
+        iterations (int): количество итераций, которое необходимо совершить
+        level_of_detail (int): уровень детализации (меньше число - больше деталей)
+
+    Yields:
+        dict: данные о текущем шаге решения
+
+    """
     def find_max_abs_elem_above_diagonal():
         """Находит координаты элемента с наибольшим максимальным абсолютным значением выше главной диагонали"""
         max_elem_row = 0
@@ -27,7 +41,7 @@ def method_rot_yakobi(matrix, iterations=8, level_of_detail=3):
         """Создает матрицу поворота"""
         row_no_, col_no_ = cords_
         h_matrix = matrix.wrap(*matrix.size)
-        h_matrix.autofill('diagonal_ones')
+        h_matrix.fill_diagonal_ones()
         h_matrix[row_no_][row_no_] = cos(phi_)
         h_matrix[row_no_][col_no_] = -sin(phi_)
         h_matrix[col_no_][row_no_] = sin(phi_)
@@ -48,7 +62,7 @@ def method_rot_yakobi(matrix, iterations=8, level_of_detail=3):
 
         # Перемножение матриц вращения
         own_vectors_matrix = matrix.wrap(*matrix.size)
-        own_vectors_matrix.autofill('diagonal_ones')
+        own_vectors_matrix.fill_diagonal_ones()
         for mat in rotation_matrix_list:
             own_vectors_matrix *= mat
 

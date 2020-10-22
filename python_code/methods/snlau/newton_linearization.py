@@ -36,7 +36,7 @@ def newton_linearization(system, variables, approximation, accuracy_order=8, lev
             'J_n': matrix_j_n
         }
     system = Matrix(system)
-    matrix_j_n_rev = (~matrix_j_n).map(simplify)
+    matrix_j_n_rev = (matrix_j_n ** (-1)).map(simplify)
     if level_of_details < 2:
         yield {
             "Этап": "Получена обратная матрица для матрицы Якоби",

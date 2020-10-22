@@ -1,4 +1,19 @@
-def kramer_method(matrix, free_column, level_of_detail=3):
+def kramer_method(matrix, free_column: list, level_of_detail: int = 3):
+    """
+    Решает СЛАУ методом Крамера
+
+    Args:
+        matrix (Matrix): матрица, относительно которой требуется решение
+        free_column (list): столбец свободных членов
+        level_of_detail (int): (int): уровень детализации (меньше число - больше деталей)
+
+    Yields:
+        dict: данные о текущем шаге решения
+
+    Raises:
+        ArithmeticError: если определитель матрицы равен нулю
+
+    """
     def det(mat):
         return matrix.determinant.auto_det(mat)
 

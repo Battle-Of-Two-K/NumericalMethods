@@ -27,10 +27,17 @@ try:
     print(f'Определитель данной матрицы равен {det(matrix)}\n')
 
     print("Матрица, обратная данной:")
-    (~matrix).console_display()
+    (matrix ** (-1)).console_display()
 
-    print("\nРешение методом Гаусса для данной СЛАУ:")
-    Matrix([gauss.gauss_method(matrix.copy(), free_column, print_middle_values=True)]).console_display()
+    print('\n' + " Решение методом Гаусса для данной СЛАУ: ".center(75, '='))
+    decision = gauss.gauss_method(matrix.copy(), free_column, level_of_details=2)
+    for step in decision:
+        for info in step:
+            if 'Матрица' in info:
+                step[info].console_display()
+            else:
+                print(f"{info}: {step[info]}")
+
 except Exception as error:
     print(error)
 input('Нажмите "Enter" чтобы выйти...')

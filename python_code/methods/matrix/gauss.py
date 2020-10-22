@@ -1,5 +1,16 @@
-def gauss_method(matrix, free_column, level_of_details=3):
-    """Решает матрицу методом Гаусса"""
+def gauss_method(matrix, free_column: list, level_of_details: int = 3):
+    """
+    Решает СЛАУ методом Гаусса
+
+    Args:
+        matrix (Matrix): матрица, относительно которой требуется решение
+        free_column (list): столбец свободных членов
+        level_of_details (int): уровень детализации (меньше число - больше деталей)
+
+    Yields:
+        dict: данные о текущем шаге решения
+
+    """
     matrix = matrix.copy()
     # Добавляем столбец свободных членов
     matrix.append_column(free_column)

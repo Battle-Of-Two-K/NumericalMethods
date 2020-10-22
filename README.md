@@ -1,4 +1,5 @@
 # NumericalMethods
+Используйте только для самопроверки!
 ## Численные методы
 Основные идеи:
 1. Минимум внешних модулей, без внешних модулей для численных методов
@@ -110,18 +111,26 @@ P.S. в каждой папке по две папки - для разделен
     * [console_display](#console_display) (None) - печатает таблицу матрицы в консоль
     * [dump_to_file](#dump_to_file) (None) - сохраняет матрицу в файл без потери точности
     * [append_row](#append_row) (None) - дописывает строку снизу матрицы (меняет исходную)
-    * [autofill](#autofill) (None) - автоматическое заполнение матрицы (меняет исходную)
+    * [fill_random](#fill) (None) - заполняет матрицу случайными числами, принадлежащими указанному отрезку. Меняет исходную матрицу.
+    * [fill_value](#fill) (None) - заполняет матрицу указанным значением. Меняет исходную матрицу.
+    * [fill_diagonal_ones](#fill) (None) - превращает матрицу в единичную. Меняет исходную матрицу.
+    * [fill_sequence](#fill) (None) - заполняет матрицу последовательно увеличивающимися числами. Меняет исходную матрицу.
+    * [fill_H_grid](#fill) (None) - заполняет матрицу сеткой значений. Меняет исходную матрицу.
+    * [fill_X_grid](#fill) (None) - заполняет матрицу сеткой значений. Меняет исходную матрицу.
+    * [fill_dominant](#fill) (None) - заполняет матрицу случайными числами с преобладающей диагональю. Меняет исходную матрицу.
+    * [fill_triple_diagonal](#fill) (None) - заполняет три диагонали матрицы случайными числами из указанного отрезка. Меняет исходную матрицу.
+    * [fill_symbols](#fill) (None) - заполняет матрицу символами Sympy. Меняет исходную матрицу.
     * [append_column](#append_column) (None) - дописывает столбец справа (меняет исходную)
-    * [load_from_file](#load_from_file) (None) - загружает матрицу из файла без потери точности (меняет исходную)
-    * [write_to_file](#write_to_file) (None) - записывает таблицу в файл (с потерей точности)
-    * [read_from_file](#read_from_file) (None) - читает таблицу из текстового файла (меняет исходную)
     * [vector_scalar_mul](#vector_scalar_mul) (float, int) - скалярное произведение векторов
     * [insert_row](#insert_row) (None) - вставляет строку в исходную матрицу
     * [insert_column](#insert_column) (None) - вставляет столбец в исходную матрицу
     * [wrap](#wrap) (Matrix) - оборачивает двумерный список в матрицу
-    * [vector_get_norm_3_vector](#vector_get_norm_3_vector) (Matrix) - создает нормированный вектор указанного размера
     * [map](#map) (Matrix) - Возвращает матрицу, в которой к каждому элементу была применена указанная функция с указанными агрументами
-3. Перегруженные и переопределенные методы
+3. Статические методы
+    * [load_from_file](#load_from_file) (None) - загружает матрицу из файла без потери точности
+    * [vector_get_norm_3_vector](#vector_get_norm_3_vector) (Matrix) - создает нормированный вектор указанного размера
+    * [wrap](#wrap) - создает матрицу по указанным аргументам
+4. Перегруженные и переопределенные методы
     * \_\_getitem__ - получение по индексу или срезу
     * \_\_setitem__ - присвоение по индексу
     * \_\_str__ - преобразование в строковый тип
@@ -129,9 +138,10 @@ P.S. в каждой папке по две папки - для разделен
     * \_\_mul__ - оператор умножения (*)
     * \_\_neg__ - унарный минус (-)
     * \_\_truediv__ - деление с плавающей точкой (/)
-    * \_\_invert__ - инверсия (~) (Возвращает обратную матрицу)
+    * \_\_pow__ - возведение в степень (**)
     * \_\_eq__ - сравнение (==)
     * \_\_hash__ - хэш
+    * \_\_iter__ - перебор по строкам и столбцам
 ### Методы
 #### minor
 Принимает на вход номер строки и столбца элемента, возвращает матрицу без этой строки и столбца.\
@@ -139,7 +149,7 @@ P.S. в каждой папке по две папки - для разделен
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill('sequence')
+matrix.fill_sequence()
 matrix.console_display()
 matrix.minor(1, 1).console_display()
 # Ожидаемый выход:
@@ -165,7 +175,7 @@ matrix.minor(1, 1).console_display()
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill('sequence')
+matrix.fill_sequence()
 matrix.console_display()
 matrix.swap_rows(0, 2).console_display()
 # Ожидаемый выход:
@@ -193,7 +203,7 @@ matrix.swap_rows(0, 2).console_display()
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill('sequence')
+matrix.fill_sequence()
 matrix.console_display()
 matrix.swap_columns(0, 2).console_display()
 # Ожидаемый выход:
@@ -221,7 +231,7 @@ matrix.swap_columns(0, 2).console_display()
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill()
+matrix.fill_sequence()
 matrix.console_display()
 matrix.triangulate().console_display()
 # Ожидаемый выход:
@@ -249,7 +259,7 @@ matrix.triangulate().console_display()
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill('sequence')
+matrix.fill_sequence()
 new_matrix = matrix.copy()
 ```
 #### triangulate_to_ones
@@ -258,7 +268,7 @@ new_matrix = matrix.copy()
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill()
+matrix.fill_random()
 matrix.console_display()
 matrix.triangulate_to_ones().console_display()
 # Ожидаемый выход:
@@ -288,7 +298,7 @@ matrix.triangulate_to_ones().console_display()
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill()
+matrix.fill_random()
 matrix.console_display()
 print(matrix.search_for_max_num_count(1))
 # Ожидаемый выход:
@@ -309,7 +319,7 @@ print(matrix.search_for_max_num_count(1))
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill('sequence')
+matrix.fill_sequence()
 column = matrix.pop_column(1)
 matrix.console_display()
 print(column)
@@ -331,7 +341,7 @@ print(column)
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill('sequence')
+matrix.fill_sequence()
 column = matrix.pop_row(1)
 matrix.console_display()
 print(column)
@@ -351,7 +361,7 @@ print(column)
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill('sequence')
+matrix.fill_sequence()
 print(matrix.to_pretty_string())
 # Ожидаемый выход:
 #  ___________ 
@@ -368,7 +378,7 @@ print(matrix.to_pretty_string())
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill()
+matrix.fill_random()
 matrix.console_display()
 # Ожидаемый выход:
 # Матрица (3, 3)
@@ -386,7 +396,7 @@ matrix.console_display()
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill('sequence')
+matrix.fill_sequence()
 matrix.dump_to_file('file')
 new_matrix = Matrix(3)
 new_matrix.load_from_file('file')
@@ -407,7 +417,7 @@ new_matrix.console_display()
 ```python
 from python_code.main import *
 matrix = Matrix(2)
-matrix.autofill('sequence')
+matrix.fill_sequence()
 matrix.console_display()
 matrix.append_row([5, 6])
 matrix.console_display()
@@ -428,28 +438,26 @@ matrix.console_display()
 # | 5 | 6 |
 # |___|___|
 ```
-#### autofill
+#### fill
 Автоматическое заполнение матрицы.
 1. Режимы:
-    * 'random' - случайные числа в диапазоне options если в options int, то целые, иначе - не целые (по умолчанию (-10, 10))
-    * 'ones' - заполняет единицами
-    * 'diagonal_ones' - приводит матрицу к единичной
-    * 'sequence' - матрица, заполненная числами от 1 до Matrix.rows * Matrix.columns
-    * 'H_grid' - прямая сетка значений (по умолчанию (1, 0, 2))
-    * 'X_grid' - косая сетка значений (по умолчанию (1, 0)
-    * 'dominant' - матрица с доминантной диагональю, options как у 'random'
-    * 'exchange' - обменная матрица
-    * 'triple_diagonal' - Трёхдиагональная матрица, options как у 'random'"""
-По умолчанию mode='random', options=(-10, 10)\
+    * random - случайные числа в пределах указанного отрезка
+    * value - заполняет указанным значением
+    * diagonal_ones - приводит матрицу к единичной
+    * sequence - матрица, заполненная числами от начального значения до Matrix.rows * Matrix.columns
+    * H_grid - прямая сетка значений (по умолчанию (1, 0, 1))
+    * X_grid - косая сетка значений (по умолчанию (1, 0)
+    * dominant - матрица с доминантной диагональю со случайными числами
+    * triple_diagonal - трёхдиагональная матрица со случайными числами\
 Пример использования:
 ```python
 from python_code.main import *
 matrix = Matrix(4)
-matrix.autofill('sequence')
+matrix.fill_sequence()
 matrix.console_display()
-matrix.autofill('random', options=(-10., 10))
+matrix.fill_random(-10., 10)
 matrix.console_display()
-matrix.autofill('dominant')
+matrix.fill_dominant()
 matrix.console_display()
 # Ожидаемый выход:
 #    Матрица (4, 4)  
@@ -491,7 +499,7 @@ matrix.console_display()
 ```python
 from python_code.main import *
 matrix = Matrix(3, 2)
-matrix.autofill('sequence')
+matrix.fill_sequence()
 matrix.console_display()
 matrix.append_column([0, 0, 0])
 matrix.console_display()
@@ -520,51 +528,10 @@ matrix.console_display()
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill('sequence')
+matrix.fill_sequence()
 matrix.dump_to_file('file')
-new_matrix = Matrix(3)
-new_matrix.load_from_file('file')
+new_matrix = Matrix.load_from_file('file')
 new_matrix.console_display()
-# Ожидаемый выход:
-# Матрица (3, 3)
-#  ___________ 
-# | 1 | 2 | 3 |
-# |___|___|___|
-# | 4 | 5 | 6 |
-# |___|___|___|
-# | 7 | 8 | 9 |
-# |___|___|___|
-```
-#### write_to_file
-Записывает в файл таблицу, полученную методом to_pretty_string\
-Пример использования:
-```python
-from python_code.main import *
-matrix = Matrix(3)
-matrix.write_to_file('file')
-new_matrix = Matrix(3)
-matrix.read_from_file('file')
-matrix.console_display()
-# Ожидаемый выход:
-# Матрица (3, 3)
-#  ___________ 
-# | 1 | 2 | 3 |
-# |___|___|___|
-# | 4 | 5 | 6 |
-# |___|___|___|
-# | 7 | 8 | 9 |
-# |___|___|___|
-```
-#### read_from_file
-Читает из файла таблицу (должна соответствовать той, что генерируется write_to_file)\
-Пример использования:
-```python
-from python_code.main import *
-matrix = Matrix(3)
-matrix.write_to_file('file')
-new_matrix = Matrix(3)
-matrix.read_from_file('file')
-matrix.console_display()
 # Ожидаемый выход:
 # Матрица (3, 3)
 #  ___________ 
@@ -581,7 +548,7 @@ matrix.console_display()
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill()
+matrix.fill_random()
 matrix.console_display()
 matrix.complements.console_display()
 # Ожидаемый выход:
@@ -608,7 +575,7 @@ matrix.complements.console_display()
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill('sequence')
+matrix.fill_sequence()
 matrix.console_display()
 matrix.T.console_display()
 # Ожидаемый выход:
@@ -635,10 +602,10 @@ matrix.T.console_display()
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill()
+matrix.fill_sequence()
 matrix.console_display()
 matrix_2 = Matrix(3)
-matrix_2.autofill('dominant')
+matrix_2.fill_dominant()
 matrix_2.console_display()
 print(matrix.is_dominant, matrix_2.is_dominant)
 # Ожидаемый выход:
@@ -677,10 +644,10 @@ print(matrix.is_square, matrix_2.is_square)
 ```python
 from python_code.main import *
 matrix = Matrix(4)
-matrix.autofill()
+matrix.fill_random()
 matrix.console_display()
 matrix_2 = Matrix(4)
-matrix_2.autofill('triple_diagonal')
+matrix_2.fill_triple_diagonal()
 matrix_2.console_display()
 print(matrix.is_triple_diagonal, matrix_2.is_triple_diagonal)
 # Ожидаемый выход:
@@ -714,7 +681,7 @@ print(matrix.is_triple_diagonal, matrix_2.is_triple_diagonal)
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill(options=(-10., 10))
+matrix.fill_random(-10., 10)
 matrix.console_display()
 print(matrix.max_len_num)
 # Ожидаемый выход:
@@ -752,7 +719,7 @@ print(matrix.rows, matrix.columns)
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill()
+matrix.fill_random()
 matrix.console_display()
 print(matrix.norma_1)
 # Ожидаемый выход:
@@ -772,7 +739,7 @@ print(matrix.norma_1)
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill()
+matrix.fill_random()
 matrix.console_display()
 print(matrix.norma_2)
 # Ожидаемый выход:
@@ -792,7 +759,7 @@ print(matrix.norma_2)
 ```python
 from python_code.main import *
 matrix = Matrix(3)
-matrix.autofill('sequence')
+matrix.fill_sequence()
 print(matrix.matrix)
 # Ожидаемый выход:
 # [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
@@ -824,7 +791,7 @@ from python_code import *
 polynom = [1, -5, 6]
 correct_roots = [3, 2]
 # Для получения промежуточной информации нужно указать уровень детализации, где 1 - полная детализация, 3 - только ответ
-decision = methods.equation.polynomial.lobachevsky_method(polynom)
+decision = methods.equation.lobachevsky_method(polynom)
 solution = []
 for step in decision:
     solution = step.get('Решение')
@@ -862,8 +829,8 @@ from python_code.main import *
 matrix = Matrix([[20, 4, -8], [-3, 15, 5], [6, 3, -18]])
 free_column = [1, -2, 3]
 print(gauss.gauss_method(matrix, free_column))
-# Для вывода промежуточной информации, флаг print_middle_values нужно поставить в True, как ниже
-print(gauss.gauss_method(matrix, free_column, print_middle_values=True))
+# Для получения промежуточной информации нужно указать уровень детализации, где 1 - полная детализация, 3 - только ответ
+print(gauss.gauss_method(matrix, free_column, level_of_details=2))
 ```
 ### Метод простых итераций
 Метод простых итераций описан в [методичке](https://github.com/simensgreen/NumericalMethods/blob/master/text%20descriptions/MA_Cherkasov_Kurs_chisl_metodov_2020_03_22.pdf)
@@ -873,7 +840,7 @@ print(gauss.gauss_method(matrix, free_column, print_middle_values=True))
 ```python
 from python_code.main import *
 matrix = Matrix(4)
-matrix.autofill('dominant')
+matrix.fill_dominant()
 free_column = [1, -2, 3, 5]
 # iterations=8 означает, что нужно остановиться после 8 итерации
 decision = iterations.simple_iterations(matrix, free_column, iterations=8)
@@ -894,7 +861,7 @@ decision = iterations.simple_iterations(matrix, free_column, await_e=10 ** (-5),
 ```python
 from python_code.main import *
 matrix = Matrix(4)
-matrix.autofill('dominant')
+matrix.fill_dominant()
 free_column = [1, -2, 3, 5]
 # iterations=8 означает, что нужно остановиться после 8 итерации
 decision = iterations.zeidel_method(matrix, free_column, iterations=8)
@@ -914,7 +881,7 @@ decision = iterations.zeidel_method(matrix, free_column, await_e=10 ** (-5), lev
 ```python
 from python_code.main import *
 matrix = Matrix(4)
-matrix.autofill('triple_diagonal')
+matrix.fill_triple_diagonal()
 free_column = [1, -2, 3, 5]
 decision = iterations.triple_diagonal(matrix, free_column)
 # Для получения решения необходимо пропустить все шаги

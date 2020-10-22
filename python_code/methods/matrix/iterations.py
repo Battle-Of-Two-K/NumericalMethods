@@ -1,9 +1,27 @@
-def simple_iterations(matrix, free_column, await_e=None, iterations=None, level_of_detail=3):
-    """Метод простых итераций
-    0 - администраторский уровень
-    1 - максималььная сводка
-    2 - обзор некоторых промежуточных значений
-    3 - только ответ"""
+
+
+def simple_iterations(matrix,
+                      free_column: list,
+                      await_e: float = None,
+                      iterations: int = None,
+                      level_of_detail: int = 3):
+    """
+    Решает СЛАУ методом простых итераций
+
+    Args:
+        matrix (Matrix): матрица, относительно которой требуется решение
+        free_column (list): столбец свободных членов
+        await_e (float): необходимая точность, например точность до 3 знака после точки - .001
+        iterations (int): количество итераций, которое необходимо совершить
+        level_of_detail (int): уровень детализации (меньше число - больше деталей)
+
+    Yields:
+        dict: данные о текущем шаге решения
+
+    Raises:
+        ArithmeticError: если главная диагональ матрицы не является доминирующей
+
+    """
     if iterations is None:
         if await_e is None:
             await_e = (10 ** -8)
@@ -97,12 +115,28 @@ def simple_iterations(matrix, free_column, await_e=None, iterations=None, level_
     yield answer
 
 
-def zeidel_method(matrix, free_column, await_e=None, iterations=None, level_of_detail=3):
-    """Метод простых итераций
-    0 - администраторский уровень
-    1 - максималььная сводка
-    2 - обзор некоторых промежуточных значений
-    3 - только ответ"""
+def zeidel_method(matrix,
+                  free_column: list,
+                  await_e: float = None,
+                  iterations: int = None,
+                  level_of_detail: int = 3):
+    """
+    Решает СЛАУ методом Зейделя
+
+    Args:
+        matrix (Matrix): матрица, относительно которой требуется решение
+        free_column (list): столбец свободных членов
+        await_e (float): необходимая точность, например точность до 3 знака после точки - .001
+        iterations (int): количество итераций, которое необходимо совершить
+        level_of_detail (int): (int): уровень детализации (меньше число - больше деталей)
+
+    Yields:
+        dict: данные о текущем шаге решения
+
+    Raises:
+        ArithmeticError: если главная диагональ матрицы не является доминирующей
+
+    """
     if iterations is None:
         if await_e is None:
             await_e = (10 ** -8)
@@ -194,7 +228,21 @@ def zeidel_method(matrix, free_column, await_e=None, iterations=None, level_of_d
 
 
 def triple_diagonal(matrix, free_column, level_of_detail=3):
-    """Метод прогонки. Метод Томаса"""
+    """
+    Решает СЛАУ методом Томаса (прогонки)
+
+    Args:
+        matrix (Matrix): матрица, относительно которой требуется решение
+        free_column (list): столбец свободных членов
+        level_of_detail (int): (int): уровень детализации (меньше число - больше деталей)
+
+    Yields:
+        dict: данные о текущем шаге решения
+
+    Raises:
+        ArithmeticError: если матрица не является трехдиагональной
+
+    """
 
     def get_element(row, col):
         if 0 < row <= matrix.rows and 0 < col <= matrix.columns - 1:
@@ -297,8 +345,18 @@ def triple_diagonal(matrix, free_column, level_of_detail=3):
     yield answer
 
 
-def auto_iterate(matrix, free_column):
-    """Автоматический выбор лучшего алгоритма"""
+def auto_iterate(matrix, free_column: list) -> list:
+    """
+    Автоматический выбор лучшего алгоритма для решения СЛАУ
+
+    Args:
+        matrix (Matrix): матрица, относительно которой требуется решение
+        free_column (list): столбец свободных членов
+
+    Returns:
+        list: решение СЛАУ
+
+    """
     if matrix.is_triple_diagonal:
         decision = triple_diagonal(matrix, free_column)
     else:
