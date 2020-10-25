@@ -1052,13 +1052,7 @@ class Matrix:
             Matrix: транспонированная матрица
 
         """
-        out = []
-        for column_no in self.r_cols:
-            new_column = []
-            for row_no in self.r_rows:
-                new_column.append(self.matrix[row_no][column_no])
-            out.append(new_column)
-        return Matrix(out)
+        return Matrix([list(new_column) for new_column in zip(*self.matrix)])
 
     @property
     def size(self) -> tuple:

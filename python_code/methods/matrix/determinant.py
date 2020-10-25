@@ -26,14 +26,14 @@ def minor_method(matrix):
         if matrix[max_zeros_row_no].count(0) == matrix.columns:
             return 0
         det_value = 0
-        for _ in range(matrix.columns):
+        for row_no in range(matrix.columns):
             # Если значение в ячейке = 0, то пропускаем шаг (избежали потенциальную кучу дополнительных определителей)
-            if matrix[max_zeros_row_no][_] != 0:
+            if matrix[max_zeros_row_no][row_no] != 0:
                 # Иначе вычисляем через миноры и рекурсию
-                if bool((max_zeros_row_no + _ + 1) % 2):
-                    det_value += matrix[max_zeros_row_no][_] * auto_det(matrix.minor(max_zeros_row_no, _))
+                if bool((max_zeros_row_no + row_no + 1) % 2):
+                    det_value += matrix[max_zeros_row_no][row_no] * auto_det(matrix.minor(max_zeros_row_no, row_no))
                 else:
-                    det_value -= matrix[max_zeros_row_no][_] * auto_det(matrix.minor(max_zeros_row_no, _))
+                    det_value -= matrix[max_zeros_row_no][row_no] * auto_det(matrix.minor(max_zeros_row_no, row_no))
         return det_value
 
 
