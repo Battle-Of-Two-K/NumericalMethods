@@ -13,7 +13,7 @@ class My_matrix:
             for row_ in self.range_line_length():
                 col_new.append(self.list_[row_][col_])
             output.append(col_new)
-        return output
+        return My_matrix(output)
 
     def number_of_matrix_elements(self):
         """
