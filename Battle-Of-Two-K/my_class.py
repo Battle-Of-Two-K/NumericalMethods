@@ -11,7 +11,24 @@ class My_matrix:
             out += str(row) + '\n'
         return out
 
+    def null_matrix(self):
+        return [[0 for i in self.range_row()] for j in self.range_col()]
+
+    def matrix_multiplication(self, new_matrix):
+        output = self.null_matrix
+        for row_ in self.range_row():
+            for col_ in self.range_col():
+                for new_variable in range(1, len(new_matrix[0])):
+                    output += self.list_[row_][new_variable] * new_matrix[new_variable][col_]
+        return My_matrix(output())
+
     def mul_on_num(self, number):
+        """
+        @param number:
+        Число, на которое умножаем исходную матрица
+        @return:
+        Возвращает матрицу, умноженную на число
+        """
         for row_ in self.range_row():
             for col_ in self.range_col():
                 self.list_[row_][col_] *= number
@@ -30,6 +47,21 @@ class My_matrix:
             output.append(col_new)
         return My_matrix(output)
 
+    def matrix_addition(self, new_matrix):
+        """
+        @param new_matrix:
+        Матрица, которую прибавляем к исходной
+        @return:
+        Сумму двух матриц
+        """
+        if len(new_matrix) == self.row() and len(new_matrix) == self.col():
+            for row_ in self.range_row():
+                for col_ in self.range_col():
+                    self.list_[row_][col_] += new_matrix[row_][col_]
+            return My_matrix(self.list_)
+        else:
+            return 'Невозможно сложить матрицы, так как их размеры не совпадают!'
+
     def number_of_matrix_elements(self):
         """
         @return:
@@ -45,7 +77,7 @@ class My_matrix:
         @return:
         Возвращает размер матрицы (строки, столбцы)
         """
-        return self.row, self.col
+        return self.row(), self.col()
 
     def row(self):
         """
@@ -92,4 +124,5 @@ m = My_matrix([
     [8, 9, 4, 1]
 ])
 
-print(m.transposed_matrix())
+print(m.matrix_multiplication([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]]))
+print(null_matrix())
