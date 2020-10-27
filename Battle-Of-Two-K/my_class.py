@@ -5,6 +5,12 @@ class My_matrix:
     def __init__(self, list_):
         self.list_ = list_
 
+    def __str__(self):
+        out = f'{self.matrix_size}\n'
+        for row in self.list_:
+            out += str(row) + '\n'
+        return out
+
     def mul_on_num(self, number):
         for row_ in self.range_row():
             for col_ in self.range_col():
@@ -33,6 +39,13 @@ class My_matrix:
         for i in self.list_:
             s += len(i)
         return s
+
+    def matrix_size(self):
+        """
+        @return:
+        Возвращает размер матрицы (строки, столбцы)
+        """
+        return self.row, self.col
 
     def row(self):
         """
@@ -80,4 +93,3 @@ m = My_matrix([
 ])
 
 print(m.transposed_matrix())
-
