@@ -5,6 +5,7 @@ import random as rnd
 from python_code.methods.matrix import *
 import python_code.methods.equation as equation
 from python_code.staf.sympy_init import *
+from python_code.staf.multistring import MultiString
 
 
 def det(*args, **kwargs) -> (int, float):
@@ -220,9 +221,14 @@ class Matrix:
     def fill_sequence(self, start: int = 1) -> None:
         """
         Заполняет матрицу последовательно увеличивающимися числами. Меняет исходную матрицу.
-        Например: 1 2 3
-                  4 5 6
-                  7 8 9
+        Например:
+
+        1 2 3
+
+        4 5 6
+
+        7 8 9
+
         Args:
             start (int): начальное значение (по умолчанию 1)
 
@@ -234,10 +240,16 @@ class Matrix:
     def fill_H_grid(self, fill_value_1=0, fill_value_2=1, step: int = 1) -> None:
         """
         Заполняет матрицу сеткой значений. Меняет исходную матрицу.
-        Например: 1 0 1 0 1
-                  1 1 1 1 1
-                  1 0 1 0 1
-                  1 1 1 1 1
+        Например:
+
+        1 0 1 0 1
+
+        1 1 1 1 1
+
+        1 0 1 0 1
+
+        1 1 1 1 1
+
         Args:
             fill_value_1 (Any): первое значение-наполнитель (по умолчанию 0)
             fill_value_2 (Any): второе значение-наполнитель (по умолчанию 1)
@@ -253,11 +265,18 @@ class Matrix:
     def fill_X_grid(self, fill_value_1=0, fill_value_2=1, step: int = 1) -> None:
         """
         Заполняет матрицу сеткой значений. Меняет исходную матрицу.
-        Например: 1 0 1 0 1
-                  0 1 0 1 0
-                  1 0 1 0 1
-                  0 1 0 1 0
-                  1 0 1 0 1
+        Например:
+
+        1 0 1 0 1
+
+        0 1 0 1 0
+
+        1 0 1 0 1
+
+        0 1 0 1 0
+
+        1 0 1 0 1
+
         Args:
             fill_value_1 (Any): первое значение-наполнитель (по умолчанию 0)
             fill_value_2 (Any): второе значение-наполнитель (по умолчанию 1)
@@ -1065,6 +1084,11 @@ class Matrix:
         """
         return self.rows, self.columns
 
+    @size.setter
+    def size(self, new_value: tuple):
+        self.rows = new_value[0]
+        self.columns = new_value[1]
+
     @property
     def rows(self) -> int:
         """
@@ -1075,6 +1099,13 @@ class Matrix:
 
         """
         return len(self.matrix)
+
+    @rows.setter
+    def rows(self, new_value: int):
+        while self.rows < new_value:
+            self.append_row([0 for col_no in self.r_cols])
+        while self.rows > new_value:
+            self.pop_row(self.rows - 1)
 
     @property
     def columns(self) -> int:
@@ -1089,6 +1120,13 @@ class Matrix:
             return len(self.matrix[0])
         except IndexError:
             return 0
+
+    @columns.setter
+    def columns(self, new_value: int):
+        while self.columns < new_value:
+            self.append_column([0 for col_no in self.r_rows])
+        while self.columns > new_value:
+            self.pop_column(self.columns - 1)
 
     @property
     def is_square(self) -> bool:
@@ -1175,6 +1213,14 @@ class Matrix:
             return self.vector_to_list
         else:
             return self.matrix
+
+    @property
+    def multistring(self):
+        """
+        Returns:
+            MultiString: мультистрока матрицы
+        """
+        return MultiString(self.to_pretty_string())
 
     @staticmethod
     def wrap(*args, **kwargs):
