@@ -106,7 +106,7 @@ class Matrix:
             return False
 
     def __hash__(self):
-        return hash(str(self.matrix))
+        return hash(tuple(map(tuple, self.matrix)))
 
     def __len__(self):
         return self.columns * self.rows
@@ -784,8 +784,7 @@ class Matrix:
             Matrix: новая матрица
 
         """
-        new_mat = Matrix(list(copy.deepcopy(self.matrix)))
-        return new_mat
+        return Matrix(list(map(list, self.matrix)))
 
     def triangulate(self):
         """
