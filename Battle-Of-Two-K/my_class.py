@@ -125,4 +125,4 @@ m = My_matrix([
 ])
 
 print(m.matrix_multiplication([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]]))
-print(null_matrix())
+print(m.null_matrix())
