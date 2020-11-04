@@ -2,8 +2,8 @@ import timeit
 
 from python_code import *
 
-max_size_of_matrix = 9
-number_of_try = 3
+max_size_of_matrix = 10
+number_of_try = 5
 overall_results = {
     'Метод обычных миноров целые': [],
     'Метод быстрых миноров целые': [],
@@ -23,8 +23,8 @@ for n in range(1, max_size_of_matrix + 1):
     for i in range(number_of_try):
         matrix = Matrix(n)
         matrix2 = Matrix(n)
-        matrix.autofill(options=(-10, 10))
-        matrix2.autofill(options=(-10., 10))
+        matrix.fill_random()
+        matrix2.fill_random(-10., 10)
         results['Метод обычных миноров целые'].append(
             timeit.timeit(lambda: methods.matrix.determinant.minor_method(matrix), number=1))
         progress = round((number_of_try * (n - 1) + (i + .25)) / (max_size_of_matrix * number_of_try) * 100)
@@ -62,4 +62,4 @@ rating.sort(key=lambda x: x[1])
 for item in rating:
     print(f'{item[0]}: {item[1]}')
 
-input('\nНажмите "Enter" чтобы выйти...')
+# input('\nНажмите "Enter" чтобы выйти...')

@@ -5,6 +5,7 @@ import random as rnd
 from python_code.methods.matrix import *
 import python_code.methods.equation as equation
 from python_code.staf.sympy_init import *
+from python_code.staf.multistring import MultiString
 
 
 def det(*args, **kwargs) -> (int, float):
@@ -15,23 +16,14 @@ def det(*args, **kwargs) -> (int, float):
 class Matrix:
     """Класс, содержащий методы работы с матрицами и векторами (матрицами с одним столбцом или строкой)"""
 
-    matrix_container = []
+    __matrix = []
 
     def __init__(self, *args, **kwargs):
-        # Эти присвоения нужны для возможности быстро использовать эти методы, имея только экземпляр матрицы
-        self.iterations = iterations
-        self.gauss = gauss
-        self.determinant = determinant
         if len(args) == 1:
             if isinstance(args[0], int):
                 self.matrix = [[0 for j in range(args[0])] for i in range(args[0])]
             elif isinstance(args[0], list):
                 if isinstance(args[0][0], list):
-                    new_matrix = args[0]
-                    row_len = len(new_matrix[0])
-                    for row in new_matrix:
-                        if row_len != len(row):
-                            raise IndexError("Количество элементов в строках не совпадает")
                     self.matrix = args[0]
                 else:
                     self.matrix = [args[0]]
@@ -105,10 +97,7 @@ class Matrix:
         return self + (-other)
 
     def __truediv__(self, other):
-        if isinstance(other, Matrix):
-            return self * other ** (-1)
-        else:
-            return self * (1 / other)
+        return self * other ** (-1)
 
     def __eq__(self, other):
         if isinstance(other, Matrix):
@@ -117,7 +106,7 @@ class Matrix:
             return False
 
     def __hash__(self):
-        return hash(str(self.matrix))
+        return hash(tuple(map(tuple, self.matrix)))
 
     def __len__(self):
         return self.columns * self.rows
@@ -232,9 +221,14 @@ class Matrix:
     def fill_sequence(self, start: int = 1) -> None:
         """
         Заполняет матрицу последовательно увеличивающимися числами. Меняет исходную матрицу.
-        Например: 1 2 3
-                  4 5 6
-                  7 8 9
+        Например:
+
+        1 2 3
+
+        4 5 6
+
+        7 8 9
+
         Args:
             start (int): начальное значение (по умолчанию 1)
 
@@ -246,10 +240,16 @@ class Matrix:
     def fill_H_grid(self, fill_value_1=0, fill_value_2=1, step: int = 1) -> None:
         """
         Заполняет матрицу сеткой значений. Меняет исходную матрицу.
-        Например: 1 0 1 0 1
-                  1 1 1 1 1
-                  1 0 1 0 1
-                  1 1 1 1 1
+        Например:
+
+        1 0 1 0 1
+
+        1 1 1 1 1
+
+        1 0 1 0 1
+
+        1 1 1 1 1
+
         Args:
             fill_value_1 (Any): первое значение-наполнитель (по умолчанию 0)
             fill_value_2 (Any): второе значение-наполнитель (по умолчанию 1)
@@ -265,11 +265,18 @@ class Matrix:
     def fill_X_grid(self, fill_value_1=0, fill_value_2=1, step: int = 1) -> None:
         """
         Заполняет матрицу сеткой значений. Меняет исходную матрицу.
-        Например: 1 0 1 0 1
-                  0 1 0 1 0
-                  1 0 1 0 1
-                  0 1 0 1 0
-                  1 0 1 0 1
+        Например:
+
+        1 0 1 0 1
+
+        0 1 0 1 0
+
+        1 0 1 0 1
+
+        0 1 0 1 0
+
+        1 0 1 0 1
+
         Args:
             fill_value_1 (Any): первое значение-наполнитель (по умолчанию 0)
             fill_value_2 (Any): второе значение-наполнитель (по умолчанию 1)
@@ -777,8 +784,7 @@ class Matrix:
             Matrix: новая матрица
 
         """
-        new_mat = Matrix(list(copy.deepcopy(self.matrix)))
-        return new_mat
+        return Matrix(list(map(list, self.matrix)))
 
     def triangulate(self):
         """
@@ -857,9 +863,45 @@ class Matrix:
             raise IndexError("Скалярное произведение можно найти только у векторов равной размерности")
         return sum((elem_1 * elem_2 for elem_1, elem_2 in zip(self.vector_to_list, other.vector_to_list)))
 
+    def slau_solve(self, free_column: list) -> list:
+        """
+        Решение СЛАУ
+
+        Args:
+            free_column (list): столбец свободных членов
+
+        Returns:
+            list: список решений
+
+        """
+        return solve(self, free_column)
+
+    @property
+    def det(self) -> (int, float):
+        """
+        Returns:
+            float: определитель матрицы
+
+        """
+        return det(self)
+
+    @property
+    def triangulated(self):
+        """
+        Returns:
+            Matrix: триангулировання матрица
+
+        """
+        return self.triangulate()
+
     @property
     def matrix(self):
-        return self.matrix_container
+        """
+        Returns:
+            list: двумерный список, олицетворяющий матрицу
+
+        """
+        return self.__matrix
 
     @matrix.setter
     def matrix(self, new_value):
@@ -870,12 +912,15 @@ class Matrix:
         for row_no in range(len(new_value)):
             if len(new_value[0]) != len(new_value[row_no]):
                 raise IndexError("Длины строк матрицы не равны")
-        self.matrix_container = new_value
+        self.__matrix = new_value
 
     @property
     def vector_to_list(self):
         """
         Преобразование вектора в список (только для матриц с одним столбцом или строкой)
+        Returns:
+            list: одномерный список, олицетворяющий вектор
+
         """
         if self.rows > 1:
             temp = self.T
@@ -891,6 +936,10 @@ class Matrix:
     def vector_norma_1(self) -> (float, int):
         """
         Первая норма вектора (только для матриц с одним столбцом или строкой)
+
+        Returns:
+            float: первая норма вектора
+
         """
         return max(map(abs, self.vector_to_list))
 
@@ -898,6 +947,10 @@ class Matrix:
     def vector_norma_2(self) -> (int, float):
         """
         Вторая норма вектора (только для матриц с одним столбцом или строкой)
+
+        Returns:
+            float: вторая норма вектора
+
         """
         return sum(map(abs, self.vector_to_list))
 
@@ -905,6 +958,10 @@ class Matrix:
     def vector_norma_3(self) -> float:
         """
         Третья норма вектора (только для матриц с одним столбцом или строкой)
+
+        Returns:
+            float: третья норма вектора
+
         """
         return sum((element ** 2 for element in self.vector_to_list)) ** .5
 
@@ -912,6 +969,10 @@ class Matrix:
     def norma_1(self) -> float:
         """
         Первая норма матрицы (по строкам)
+
+        Returns:
+            float: первая норма матрицы
+
         """
         return max((sum(map(lambda x: abs(x), row)) for row in self.matrix))
 
@@ -919,6 +980,10 @@ class Matrix:
     def norma_2(self) -> float:
         """
         Вторая норма матрицы (по столбцам)
+
+        Returns:
+            float: вторая норма матрицы
+
         """
         norma = []
         for col_no in self.r_cols:
@@ -933,6 +998,10 @@ class Matrix:
     def norma_3(self) -> float:
         """
         Третья норма матрицы
+
+        Returns:
+            float: третья норма матрицы
+
         """
         return sum((self[row_no][col_no] ** 2 for row_no, col_no in self)) ** .5
 
@@ -940,6 +1009,10 @@ class Matrix:
     def is_dominant(self) -> bool:
         """
         Определяет является ли диагональ матрицы доминантной
+
+        Returns:
+            bool: является ли диагональ матрицы доминантной
+
         """
         if not self.is_square:
             return False
@@ -957,7 +1030,10 @@ class Matrix:
     @property
     def max_len_num(self, round_to: int = 8):
         """
-        Длина максимального строкового представления чисел. Для to_pretty_string
+        Длина максимального строкового представления элемента матрицы. Для to_pretty_string
+
+        Returns:
+            int: длина максимального строкового представления элемента матрицы
         """
         container = 0
         for row in self.matrix:
@@ -972,6 +1048,10 @@ class Matrix:
     def complements(self):
         """
         Матрица алгебраических дополнений
+
+        Returns:
+            Matrix: матрица алгебраических дополнений
+
         """
         matrix = self.copy()
         for row_no, col_no in self:
@@ -985,43 +1065,76 @@ class Matrix:
     def T(self):
         """
         Транспонированная матрица
+
+        Returns:
+            Matrix: транспонированная матрица
+
         """
-        out = []
-        for column_no in self.r_cols:
-            new_column = []
-            for row_no in self.r_rows:
-                new_column.append(self.matrix[row_no][column_no])
-            out.append(new_column)
-        return Matrix(out)
+        return Matrix([list(new_column) for new_column in zip(*self.matrix)])
 
     @property
     def size(self) -> tuple:
         """
         Размер матрицы (строки, столбцы)
+
+        Returns:
+            tuple: (строки, столбцы)
+
         """
         return self.rows, self.columns
+
+    @size.setter
+    def size(self, new_value: tuple):
+        self.rows = new_value[0]
+        self.columns = new_value[1]
 
     @property
     def rows(self) -> int:
         """
         Количество строк в матрице
+
+        Returns:
+            int: количество строк в матрице
+
         """
         return len(self.matrix)
+
+    @rows.setter
+    def rows(self, new_value: int):
+        while self.rows < new_value:
+            self.append_row([0 for col_no in self.r_cols])
+        while self.rows > new_value:
+            self.pop_row(self.rows - 1)
 
     @property
     def columns(self) -> int:
         """
         Количество столбцов в матрице
+
+        Returns:
+            int: количество столбцов в матрице
+
         """
         try:
             return len(self.matrix[0])
         except IndexError:
             return 0
 
+    @columns.setter
+    def columns(self, new_value: int):
+        while self.columns < new_value:
+            self.append_column([0 for col_no in self.r_rows])
+        while self.columns > new_value:
+            self.pop_column(self.columns - 1)
+
     @property
     def is_square(self) -> bool:
         """
         Проверяет, является ли матрица квадратной
+
+        Returns:
+            bool: является ли матрица квадратной
+
         """
         return self.columns == self.rows
 
@@ -1029,6 +1142,10 @@ class Matrix:
     def is_triple_diagonal(self) -> bool:
         """
         Является ли матрица трехдиагональной
+
+        Returns:
+            bool: является ли матрица трехдиагональной
+
         """
         if not self.is_square:
             return False
@@ -1043,6 +1160,10 @@ class Matrix:
     def is_symmetrical(self) -> bool:
         """
         Проверка на симметриюотносительно главной диагонали
+
+        Returns:
+            bool: является ли матрица симметричной относительно главной диагонали
+
         """
         if not self.is_square:
             raise IndexError("Симметричной можетбыть только квадратная матрица")
@@ -1053,20 +1174,32 @@ class Matrix:
             return True
 
     @property
-    def is_vector(self):
+    def is_vector(self) -> bool:
         """
         Проверяет является ли объект вектором
+
+        Returns:
+            bool: является ли объект вектором
+
         """
         return 1 in self.size
 
     @property
-    def r_rows(self):
-        """range(self.rows)"""
+    def r_rows(self) -> range:
+        """
+        Returns:
+            range: range(self.rows)
+
+        """
         return range(self.rows)
 
     @property
-    def r_cols(self):
-        """range(self.columns)"""
+    def r_cols(self) -> range:
+        """
+        Returns:
+            range: range(self.columns)
+
+        """
         return range(self.columns)
 
     @property
@@ -1080,10 +1213,22 @@ class Matrix:
         else:
             return self.matrix
 
+    @property
+    def multistring(self):
+        """
+        Returns:
+            MultiString: мультистрока матрицы
+        """
+        return MultiString(self.to_pretty_string())
+
     @staticmethod
     def wrap(*args, **kwargs):
         """
         Возвращает новую матрицу, не меняя исходную
+
+        Returns:
+            Matrix: новая матрица
+
         """
         return Matrix(*args, **kwargs)
 
@@ -1091,6 +1236,10 @@ class Matrix:
     def vector_get_norm_3_vector(size_of_vector):
         """
         Возвращает нормированный вектор нужного размера (по 3 норме)
+
+        Returns:
+            Matrix: нормированный вектор нужного размера
+
         """
         return Matrix([[1 / size_of_vector ** .5 for _ in range(size_of_vector)]])
 

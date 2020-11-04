@@ -15,7 +15,7 @@ def kramer_method(matrix, free_column: list, level_of_detail: int = 3):
 
     """
     def det(mat):
-        return matrix.determinant.auto_det(mat)
+        return mat.det
 
     def calc_col_det(mat, free, col_no_):
         mat = mat.copy()
