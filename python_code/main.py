@@ -771,6 +771,9 @@ class Matrix:
                 if isinstance(self[row_no][col_no], (int, float)):
                     pretty_string += f'|' \
                                      f'{str(round(self[row_no][col_no], round_to)).center(max_len_num + 2)}'
+                if isinstance(self[row_no][col_no], Float):
+                    pretty_string += f'|' \
+                                     f'{str(round(float(self[row_no][col_no]), round_to)).center(max_len_num + 2)}'
                 else:
                     pretty_string += f'|{str(self[row_no][col_no]).center(max_len_num + 2)}'
             pretty_string += "|\n" + ("|" + "_" * (max_len_num + 2)) * self.columns + "|\n"
