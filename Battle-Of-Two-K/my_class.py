@@ -24,10 +24,8 @@ class My_matrix:
 
     def mul_on_num(self, number):
         """
-        @param number:
-        Число, на которое умножаем исходную матрица
-        @return:
-        Возвращает матрицу, умноженную на число
+        @param number: Число, на которое умножаем исходную матрица
+        @return: матрица, кмноженная на число
         """
         for row_ in self.range_row():
             for col_ in self.range_col():
@@ -36,8 +34,7 @@ class My_matrix:
 
     def transposed_matrix(self):
         """
-        @return:
-        Возвращает транспонированную матрицу
+        @return: транспонировання матрица
         """
         output = []
         for col_ in self.range_col():
@@ -49,10 +46,8 @@ class My_matrix:
 
     def matrix_addition(self, new_matrix):
         """
-        @param new_matrix:
-        Матрица, которую прибавляем к исходной
-        @return:
-        Сумму двух матриц
+        @param new_matrix: Матрица, которую прибавляем к исходной
+        @return: Сумма двух матриц
         """
         if len(new_matrix) == self.row() and len(new_matrix) == self.col():
             for row_ in self.range_row():
@@ -117,12 +112,13 @@ class My_matrix:
         return new_mat
 
 
-m = My_matrix([
-    [1, 3, 4, 5],
-    [1, 5, 7, 6],
-    [3, 4, 6, 7],
-    [8, 9, 4, 1]
-])
+if __name__ == '__main__':
+    m = My_matrix([
+        [1, 3, 4, 5],
+        [1, 5, 7, 6],
+        [3, 4, 6, 7],
+        [8, 9, 4, 1]
+    ])
 
-print(m.matrix_multiplication([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]]))
-print(m.null_matrix())
+    print(m.matrix_multiplication([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]]))
+    print(m.null_matrix())

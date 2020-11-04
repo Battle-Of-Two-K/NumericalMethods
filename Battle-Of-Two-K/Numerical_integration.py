@@ -16,10 +16,11 @@ class NumericalIntegration:
         self.b = b
 
 
-class TrapezoidalFormula(NumericalIntegration):
+class TrapezoidalFormula(NumericalIntegration):  # опять класс-метод (формула)
     def __init__(self, a, b, h):
         """
         Формула трапеций
+
         Args:
             a: нижний отрезок
             b: верхний отрезок
@@ -30,7 +31,7 @@ class TrapezoidalFormula(NumericalIntegration):
     def generator_lists(self):
         """
         Returns:
-        Возвращает список элементы которого все иксы x, с учётом шага h.
+            list: Возвращает список элементы которого все иксы x, с учётом шага h.
         """
         new_list = []
         i = self.a
@@ -42,7 +43,7 @@ class TrapezoidalFormula(NumericalIntegration):
     def list_values(self):
         """
         Returns:
-        Возвращает список, с элементами Y(x) без Y(a) и Y(b) с учётом шага
+            list: Возвращает список, с элементами Y(x) без Y(a) и Y(b) с учётом шага
         """
         n_list = []
         for i in self.generator_lists():
@@ -54,7 +55,7 @@ class TrapezoidalFormula(NumericalIntegration):
     def integral(self):
         """
         Returns:
-        Возвращает интеграл введённой функции
+            Возвращает интеграл введённой функции
         """
         x = Symbol('x')
         return integrate(func_sym(), (x, self.a, self.b))
@@ -62,7 +63,7 @@ class TrapezoidalFormula(NumericalIntegration):
     def n(self):
         """
         Returns:
-        Количество равных по длине отрезков
+            Количество равных по длине отрезков
         """
         return int((self.b - self.a) / self.h)
 
@@ -78,7 +79,7 @@ class TrapezoidalFormula(NumericalIntegration):
     def summa(self):
         """
         Returns:
-        Сумму значений Y(x), без элеметнов Y(a) и Y(b)
+            float: Сумму значений Y(x), без элеметнов Y(a) и Y(b)
         """
         s = 0
         for n in self.list_values():
@@ -88,12 +89,12 @@ class TrapezoidalFormula(NumericalIntegration):
     def t_n(self):
         """
         Returns:
-        Площадь криволинейной трапеции
+            float: Площадь криволинейной трапеции
         """
         return (self.h / 2) * (function(self.a) + 2 * self.summa() + function(self.b))
 
 
-class SimpsonFormula(NumericalIntegration):
+class SimpsonFormula(NumericalIntegration):  # опять класс-метод (формула)
     def __init__(self, a, b, h, p):
         """
         Args:
