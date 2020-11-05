@@ -59,11 +59,10 @@ class EulerMethod(FirstOrderODE):  # если это метод, то почем
             list: Возвращает список со значениями функции в узле x_i
         """
         s = self.y_0
-        new_list = [s]
+        new_list = []
         for i in self.x_i():
-            new_list.append(s + self.h * function(i, s))
+            new_list.append(s)
             s += self.h * function(i, s)
-        new_list.pop()
         return new_list
 
     def print_(self):
