@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy
 import numpy as np
 
-__author__ = 'Battle-Of-Two-K'
+__author__ = 'Battle_Of_Two_K'
 
 # /////////////////////////////////////////////
 # Аппроксимация  методом  наименьших  квадратов

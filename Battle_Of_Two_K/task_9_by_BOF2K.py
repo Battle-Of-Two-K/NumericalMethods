@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
-import numpy
 import numpy as np
 
-__author__ = 'Battle-Of-Two-K'
+__author__ = 'Battle_Of_Two_K'
 
 # /////////////////////////////////////////////
 # Аппроксимация  методом  наименьших  квадратов
@@ -10,8 +9,8 @@ __author__ = 'Battle-Of-Two-K'
 # /////////////////////////////////////////////
 
 
-x = [-4, -3, -2, -1, 0, 1, 2, 3, 4, 5]
-y = [2.4, 3.7, 4, 3.9, 4.8, 4.7, 4, 3.1, 2.4, 1.7]
+x = [-6, -5, -4, -2]
+y = [36, 27, 19, 7]
 
 # ///////////////////////////////////////////////////////////////////////////////////
 # Пугливым не смотреть! Ниже програмный код!
@@ -87,12 +86,12 @@ print(f'Сумма x**2 * y: {summa_xxy(x, y)}\n')
 
 print('---------------------------Решим систему---------------------------\n')
 
-Matrix = numpy.array([[summa_x4(x), summa_x3(x), summa_x2(x)],
+Matrix = np.array([[summa_x4(x), summa_x3(x), summa_x2(x)],
                       [summa_x3(x), summa_x2(x), sum(x)],
                       [summa_x2(x), sum(x), n]])  # Матрица (левая часть системы)
-Vector = numpy.array([summa_xxy(x, y), summa_xy(x, y), sum(y)])  # Вектор (правая часть системы)
+Vector = np.array([summa_xxy(x, y), summa_xy(x, y), sum(y)])  # Вектор (правая часть системы)
 
-otvet = numpy.linalg.solve(Matrix, Vector)
+otvet = np.linalg.solve(Matrix, Vector)
 
 print(f'a = {otvet[0]}')
 print(f'b = {otvet[1]}')

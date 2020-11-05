@@ -2,7 +2,7 @@ from tkinter import *
 
 from python_code.methods.equation import dichotomy, hords, tangent_newton, iterations
 
-__author__ = 'Battle-Of-Two-K'
+__author__ = 'Battle_Of_Two_K'
 
 all_font_size = 16
 
