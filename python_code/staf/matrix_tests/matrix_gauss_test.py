@@ -40,4 +40,3 @@ def test_gauss_method_3():
     for step in decision:
         solution = step.get('Решение')
     assert list(map(lambda x: round(x, 8), solution)) == [-0.5, 0, 1.5]
-
