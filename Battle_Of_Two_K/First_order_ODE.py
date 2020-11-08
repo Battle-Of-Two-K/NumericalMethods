@@ -1,3 +1,9 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+from sympy import *
+
+
 def function(x, y):  # это типа функция из задания?
     return 2 * y - 3 * x * x + 1
 
@@ -79,6 +85,15 @@ class EulerMethod(FirstOrderODE):  # если это метод, то почем
             z += self.h * function(i, z)
         print('\n')
 
+    def grafik(self):
+        figure, axes = plt.subplots()
+
+        axes.scatter(self.x_i(), self.y_i(), color='red')
+        axes.grid()
+        axes.set_title(f'Метод Эйлера. h = {self.h}')
+
+        plt.show()
+
 
 class RungeKuttaMethod(FirstOrderODE):  # еще один класс-метод, даже забавно
     def __init__(self, a, b, x_0, y_0, h):
@@ -151,3 +166,12 @@ class RungeKuttaMethod(FirstOrderODE):  # еще один класс-метод,
               '--------------------------------------------------------------------')
         output = (self.h / 6) * (k_1 + 2 * k_2 + 2 * k_3 + k_4)
         return output
+
+    def grafik(self):
+        figure, axes = plt.subplots()
+
+        axes.scatter(self.x_i(), self.y_i(), color='red')
+        axes.grid()
+        axes.set_title(f'Метод Рунге-Кутты. h = {self.h}')
+
+        plt.show()

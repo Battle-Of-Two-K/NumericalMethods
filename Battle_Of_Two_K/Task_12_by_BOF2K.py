@@ -1,6 +1,6 @@
 from sympy.abc import *
 from python_code.main import Matrix
-import numpy as np
+import matplotlib.pyplot as plt
 
 # Вариант 7
 function = 2 * z - y - 3 * x + 6
@@ -55,22 +55,50 @@ def index_generator():
     return output_list
 
 
-def decision_Euler(h):
+def decision_Euler_1(h):
     y_0_ = y_0
     z_0_ = z_0
     x_0_ = x_0
     a_ = a
+    list_1 = []
+    list_2 = []
     matrix = Matrix(0)
     matrix.columns = 4
     matrix.matrix[0] = ['i', 'x', 'y', 'z']
 
     for step in range(0, number_of_segments(h) + 1):
+        list_1.append(x_0_)
+        list_2.append(y_0_)
         matrix.append_row([step, x_0_, y_0_, z_0_])
         y_0_ += h * z_0_
         z_0_ += h * function.evalf(subs={x: x_0_, z: z_0_, y: y_0_})
         x_0_ += h
         a_ += h
-    print(matrix.to_pretty_string())
+    # print(matrix.to_pretty_string())
+    return list_1
+
+
+def decision_Euler_2(h):
+    y_0_ = y_0
+    z_0_ = z_0
+    x_0_ = x_0
+    a_ = a
+    list_1 = []
+    list_2 = []
+    matrix = Matrix(0)
+    matrix.columns = 4
+    matrix.matrix[0] = ['i', 'x', 'y', 'z']
+
+    for step in range(0, number_of_segments(h) + 1):
+        list_1.append(x_0_)
+        list_2.append(y_0_)
+        matrix.append_row([step, x_0_, y_0_, z_0_])
+        y_0_ += h * z_0_
+        z_0_ += h * function.evalf(subs={x: x_0_, z: z_0_, y: y_0_})
+        x_0_ += h
+        a_ += h
+    # print(matrix.to_pretty_string())
+    return list_2
 
 
 def decision_Runge_Kutta(h):
@@ -111,6 +139,16 @@ def decision_Runge_Kutta(h):
     print(matrix.T.to_pretty_string())
 
 
+def grafik(h):
+    figure, axes = plt.subplots()
+
+    axes.scatter(decision_Euler_1(h), decision_Euler_2(h), color='red')
+    axes.grid()
+    axes.set_title(f'Метод Рунге-Кутты. h = {h}')
+
+    plt.show()
+
+
 # Условие из методички
 # decision_Euler(0.9)
 # decision_Runge_Kutta(1.8)
@@ -147,8 +185,10 @@ print('______________________________________________________________')
 print('-------------Метод Рунге-Кутты для ОДУ второго порядка-------------')
 print('\nh = 1')
 decision_Runge_Kutta(1)
+grafik(1)
 print('\nh = 0.5')
 decision_Runge_Kutta(0.5)
+grafik(0.5)
 
 print('\n----------------Уточнение по формуле Рунге-Ромберга----------------')
 
@@ -157,5 +197,6 @@ R = .5
 Zpp = 48.6562500000000 + ((48.6562500000000 - 50.1638414636254) / (R ** 4 - 1))
 
 print(f'\nZpp = {Zpp}\n')
+
 
 input()

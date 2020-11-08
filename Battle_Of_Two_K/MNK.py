@@ -152,7 +152,7 @@ figure, axes = plt.subplots()
 
 axes.plot(x, y, color='Navy')  # Узнать про linewidth
 
-# axes.grid()
+axes.grid()
 
 
 axes.scatter(X, Y, color='red')
@@ -160,23 +160,23 @@ axes.scatter(X, Y, color='red')
 axes.set_title('Аппроксимация методом наименьших квадратов')
 # axes.set(xlabel='Ось абсцис, x', ylabel='Ось ординат, y')
 
-axes.xaxis.set_major_locator(ticker.MultipleLocator(2.5))
-axes.xaxis.set_minor_locator(ticker.MultipleLocator(1.25))
-
-axes.yaxis.set_major_locator(ticker.MultipleLocator(5))
-axes.yaxis.set_minor_locator(ticker.MultipleLocator(2.5))
-
-axes.grid(which='major')
-axes.grid(which='minor')
-
-figure.set_figwidth(10)
-figure.set_figheight(15)
-
-axes = plt.gca()
-axes.spines['left'].set_position('center')
-axes.spines['bottom'].set_position('center')
-axes.spines['top'].set_visible(False)
-axes.spines['right'].set_visible(False)
+# axes.xaxis.set_major_locator(ticker.MultipleLocator(2.5))
+# axes.xaxis.set_minor_locator(ticker.MultipleLocator(1.25))
+#
+# axes.yaxis.set_major_locator(ticker.MultipleLocator(5))
+# axes.yaxis.set_minor_locator(ticker.MultipleLocator(2.5))
+#
+# axes.grid(which='major')
+# axes.grid(which='minor')
+#
+# figure.set_figwidth(10)
+# figure.set_figheight(15)
+#
+# axes = plt.gca()
+# axes.spines['left'].set_position('center')
+# axes.spines['bottom'].set_position('center')
+# axes.spines['top'].set_visible(False)
+# axes.spines['right'].set_visible(False)
 
 plt.show()
 
