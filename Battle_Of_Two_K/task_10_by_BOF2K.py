@@ -9,6 +9,7 @@ try:
     print(f'Кол-во отрезков n = {my_variant_1.n()}\n')
     my_variant_1.table_Y()
     print(f'\nT_n = {my_variant_1.t_n()}')
+    my_variant_1.grafik()
 
     my_variant_2 = TrapezoidalFormula(-3, 1, 0.5)
 
@@ -16,6 +17,7 @@ try:
     print(f'Кол-во отрезков n = {my_variant_2.n()}\n')
     my_variant_2.table_Y()
     print(f'\nT_n = {my_variant_2.t_n()}\n')
+    my_variant_2.grafik()
 
     my_variant_3 = TrapezoidalFormula(-3, 1, 0.25)
 
@@ -23,6 +25,8 @@ try:
     print(f'Кол-во отрезков n = {my_variant_3.n()}\n')
     my_variant_3.table_Y()
     print(f'\nT_n = {my_variant_3.t_n()}\n')
+    my_variant_3.grafik()
+
     print('----------------Уточнение по формуле Рунге----------------\n')
     d_1 = np.array([[my_variant_1.t_n(), 1 ** 2, 1 ** 3], [my_variant_2.t_n(), .5 ** 2, .5 ** 3],
                     [my_variant_3.t_n(), .25 ** 2, .25 ** 3]])
@@ -64,6 +68,9 @@ try:
     Zpp = my_variant.S() + ((my_variant.S() - my_variant_0.S()) / (R ** my_variant.p - 1))
 
     print(f'\nZpp = {Zpp}\n')
+
+    my_variant.grafik()
+    my_variant_0.grafik()
 
 except Exception as error:
     print(error)

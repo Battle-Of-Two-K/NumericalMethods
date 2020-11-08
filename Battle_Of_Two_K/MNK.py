@@ -8,8 +8,8 @@ import matplotlib.ticker as ticker
 # /////////////////////////////////////////////
 
 # # Мой вариант
-# X = [-6, -5, -4, -2]
-# Y = [36, 27, 19, 7]
+X = [-6, -5, -4, -2]
+Y = [36, 27, 19, 7]
 
 
 # Вариант другой (Юра)
@@ -22,8 +22,8 @@ import matplotlib.ticker as ticker
 
 
 # Вариант из методички
-X = [-2, -1, 0, 1, 2]
-Y = [3, 4, 2, 1, 1]
+# X = [-2, -1, 0, 1, 2]
+# Y = [3, 4, 2, 1, 1]
 
 
 # Вариант 11 (Сергей)
@@ -145,28 +145,32 @@ print('/' * 41)
 # Красивый вывод графика
 # \\\\\\\\\\\\\\\\\\\\\\
 
-x = np.linspace(-10, 10, 100)
+x = np.linspace(-15, 15, 100)
 y = res[0] * x ** 2 + res[1] * x + res[2]
 
 figure, axes = plt.subplots()
 
 axes.plot(x, y, color='Navy')  # Узнать про linewidth
 
+# axes.grid()
+
+
 axes.scatter(X, Y, color='red')
+
 axes.set_title('Аппроксимация методом наименьших квадратов')
 # axes.set(xlabel='Ось абсцис, x', ylabel='Ось ординат, y')
 
-axes.xaxis.set_major_locator(ticker.MultipleLocator(1))
-axes.xaxis.set_minor_locator(ticker.MultipleLocator(1))
+axes.xaxis.set_major_locator(ticker.MultipleLocator(2.5))
+axes.xaxis.set_minor_locator(ticker.MultipleLocator(1.25))
 
-axes.yaxis.set_major_locator(ticker.MultipleLocator(1))
-axes.yaxis.set_minor_locator(ticker.MultipleLocator(1))
+axes.yaxis.set_major_locator(ticker.MultipleLocator(5))
+axes.yaxis.set_minor_locator(ticker.MultipleLocator(2.5))
 
 axes.grid(which='major')
 axes.grid(which='minor')
 
 figure.set_figwidth(10)
-figure.set_figheight(8)
+figure.set_figheight(15)
 
 axes = plt.gca()
 axes.spines['left'].set_position('center')

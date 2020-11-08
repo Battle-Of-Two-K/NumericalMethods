@@ -1,4 +1,6 @@
 from sympy import *
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def function(x):
@@ -52,6 +54,16 @@ class TrapezoidalFormula(NumericalIntegration):  # опять класс-мет�
         n_list.pop()
         return n_list
 
+    def list_values_a_b(self):
+        """
+        Returns:
+            list: Возвращает список, с элементами Y(x) без Y(a) и Y(b) с учётом шага
+        """
+        n_list = []
+        for i in self.generator_lists():
+            n_list.append(function(i))
+        return n_list
+
     def integral(self):
         """
         Returns:
@@ -92,6 +104,33 @@ class TrapezoidalFormula(NumericalIntegration):  # опять класс-мет�
             float: Площадь криволинейной трапеции
         """
         return (self.h / 2) * (function(self.a) + 2 * self.summa() + function(self.b))
+
+    def grafik(self):
+        new_h = self.h
+
+        z = np.linspace(-10, 10, 100)
+        y = function(z)
+
+        figure, axes = plt.subplots()
+
+        axes.plot(z, y, color='Navy')  # Узнать про linewidth
+        axes.scatter(self.generator_lists(), self.list_values_a_b(), color='red')
+
+        axes.grid()
+
+        # axes.scatter(X, Y, color='red')
+        axes.set_title(f'Формула трапеций. h = {self.h}')
+
+        figure.set_figwidth(9)
+        figure.set_figheight(7)
+
+        axes = plt.gca()
+        axes.spines['left'].set_position('center')
+        axes.spines['bottom'].set_position('center')
+        axes.spines['top'].set_visible(False)
+        axes.spines['right'].set_visible(False)
+
+        plt.show()
 
 
 class SimpsonFormula(NumericalIntegration):  # опять класс-метод (формула)
@@ -147,6 +186,16 @@ class SimpsonFormula(NumericalIntegration):  # опять класс-метод 
         n_list.pop()
         return n_list
 
+    def list_values_a_b(self):
+        """
+        Returns:
+        Возвращает список, с элементами Y(x) с учётом шага
+        """
+        n_list = []
+        for i in self.generator_lists():
+            n_list.append(function(i))
+        return n_list
+
     def summa_odd(self):
         """
         Returns:
@@ -183,3 +232,30 @@ class SimpsonFormula(NumericalIntegration):  # опять класс-метод 
 
     def S(self):
         return (self.h / 3) * (function(self.a) + 4 * self.summa_odd() + 2 * self.summa_even() + function(self.b))
+
+    def grafik(self):
+
+        z = np.linspace(-10, 10, 100)
+        y = function(z)
+
+        figure, axes = plt.subplots()
+
+        axes.plot(z, y, color='Navy')  # Узнать про linewidth
+        axes.scatter(self.generator_lists(), self.list_values_a_b(), color='red')
+
+        axes.grid()
+
+        # axes.scatter(X, Y, color='red')
+
+        axes.set_title(f'Формула Симпсона. h = {self.h}')
+
+        figure.set_figwidth(9)
+        figure.set_figheight(7)
+
+        axes = plt.gca()
+        axes.spines['left'].set_position('center')
+        axes.spines['bottom'].set_position('center')
+        axes.spines['top'].set_visible(False)
+        axes.spines['right'].set_visible(False)
+
+        plt.show()
