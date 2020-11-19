@@ -5,7 +5,8 @@ from python_code.methods.matrix.iterations import triple_diagonal
 from python_code.staf.sympy_init import *
 
 
-def final_difference_method(equation: str, boundaries_in: dict, boundary_x: tuple, num_of_sections: int,
+def final_difference_method(equation: str, boundaries_in: dict, boundary_x: tuple,
+                            num_of_sections: int = 4, section_step: float = None,
                             level_of_detail: int = 3):
     """
     Решение краевой задачи для ОДУ методом конечных разностей
@@ -15,6 +16,7 @@ def final_difference_method(equation: str, boundaries_in: dict, boundary_x: tupl
         boundaries_in (dict): краевые условия
         boundary_x (tuple): краевые иксы (2 значения)
         num_of_sections (int): количество отрезков
+        section_step (float): шаг (имеет приоритет над num_of_sections)
         level_of_detail (int): уровень детализации
 
     Yields:
@@ -56,8 +58,10 @@ def final_difference_method(equation: str, boundaries_in: dict, boundary_x: tupl
 
     def get_d_x(x_value):
         return boundaries['F'].evalf(subs={x: x_value})
-
-    section_x_len = (boundary_x[1] - boundary_x[0]) / num_of_sections  # h
+    if section_step is not None:
+        section_x_len = section_step
+    else:
+        section_x_len = (boundary_x[1] - boundary_x[0]) / num_of_sections  # h
     boundaries = get_boundaries(equation)
     boundaries.update({key: parse_expr(str(boundaries_in[key])) for key in boundaries_in})
 
