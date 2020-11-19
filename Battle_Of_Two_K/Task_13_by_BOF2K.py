@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 from python_code.main import *
 from sympy.abc import x
-import numpy as np
-import math
+
 
 try:
     # Ввод исходных данных:
@@ -48,19 +47,34 @@ try:
     # Z = 9
 
     # Мой вариант (вариант 7):
-    a = -3
-    b = -2
-    h = 0.2
-    K = 2
-    L = -1
-    M = 4
-    F = -(x ** 2) - 3 * x + 5
-    R = 0
-    S = -4
-    T = 1
-    V = 0
-    W = -4
-    Z = 5
+    # a = -3
+    # b = -2
+    # h = 0.2
+    # K = 2
+    # L = -1
+    # M = 4
+    # F = -(x ** 2) - 3 * x + 5
+    # R = 0
+    # S = -4
+    # T = 1
+    # V = 0
+    # W = -4
+    # Z = 5
+
+    # Мой вариант (вариант 7) Дз:
+    # a = -3
+    # b = -2
+    # h = 0.2
+    # K = 1
+    # L = -1
+    # M = 2
+    # F = -3 * x ** 2 + 3 * x - 4
+    # R = -2
+    # S = -7
+    # T = 6
+    # V = 2
+    # W = 6
+    # Z = -2
 
     # Вариант Паши
     # a = -2
@@ -84,13 +98,13 @@ try:
     # K = 2
     # L = -2
     # M = 2
-    # F = 4 * x * x - 2 * x + 4
-    # R = 0
-    # S = 2
-    # T = -2
-    # V = 0
-    # W = -2
-    # Z = -5
+    # F = -2 * x * x + 2 * x + 3
+    # R = 5
+    # S = -7
+    # T = -6
+    # V = 1
+    # W = -5
+    # Z = -2
 
     # Вариант Влада:
     # a = 1
@@ -123,19 +137,49 @@ try:
     # Z = 5
 
     # Вариант Саши (2):
-    # a = -1
-    # b = 0
+    a = -1
+    b = 0
+    h = 0.2
+    K = 2
+    L = -1
+    M = 2
+    F = 3 * x ** 2 + 5 * x - 1
+    R = -4
+    S = -3
+    T = -5
+    V = -4
+    W = -7
+    Z = -1
+
+    # Вариант Юры:
+    # a = -2
+    # b = -1
+    # h = 0.2
+    # K = 2
+    # L = -2
+    # M = -1
+    # F = 2 * x ** 2 + 3 * x + 5
+    # R = -5
+    # S = 8
+    # T = -3
+    # V = -2
+    # W = -4
+    # Z = -4
+
+    # Вариант Семёна:
+    # a = 1
+    # b = 2
     # h = 0.2
     # K = 2
     # L = -1
-    # M = 2
-    # F = 3 * x ** 2 + 5 * x - 1
-    # R = -4
-    # S = -3
-    # T = -5
-    # V = -4
-    # W = -7
-    # Z = -1
+    # M = 3
+    # F = -3 * x ** 2 + 3 * x - 2
+    # R = 3
+    # S = 8
+    # T = -2
+    # V = -5
+    # W = -4
+    # Z = -4
 
     # -------------------------------------------
     # Предупреждение!!! Ниже программный код!!!
@@ -181,7 +225,7 @@ try:
         """
         output = a
         list_x = []
-        while output <= b:
+        for step in range(1, number_of_segments() + 2):
             list_x.append(output)
             output += h
         return rounded_list(list_x)
@@ -283,7 +327,7 @@ try:
         )
 
         print(f'Столбец свободных членов {all_d()}')
-        print(matrix.to_pretty_string())
+        print(matrix.map(float).to_pretty_string())
 
         free_column = all_d()
         decision = iterations.triple_diagonal(matrix, free_column, level_of_detail=3)
@@ -293,9 +337,9 @@ try:
             print(f'y: {solution}')
         print(f'x: {all_x()}')
 
-        # \\\\\\\\\\\\\\\\\\\\\\
+        # \\\\\\\\\\\\\\\\\\\\\\\
         # Красивый вывод графика
-        # \\\\\\\\\\\\\\\\\\\\\\
+        # \\\\\\\\\\\\\\\\\\\\\\\
 
         figure, axes = plt.subplots()
         Y = solution
