@@ -6,8 +6,8 @@ import math
 
 try:
     # Ввод исходных данных:
-    print("\n                             ___Тема: решение краевой задачи для ОДУ___")
-    print("                             _________Метод конечных разностей_________\n")
+    print('\n' + "___Тема: решение краевой задачи для ОДУ___".center(100))
+    print("_________Метод конечных разностей_________".center(100) + '\n')
     print("-" * 100)
     print("*Примечание: дан отрезок [a, b], дано уравнение вида K(x)*y'' +L(x)*y' + M(x)*y = F(x), а также даны")
     print("краевые (граничные) условия 3-го рода на границах отрезка: R*y'(a) + S*y(a) = T и V*y'(b) + W*y(b) = Z")
@@ -154,44 +154,18 @@ try:
     b_n = -V / h - W
     d_n = -Z
 
-    def del_zero(value: any):
-        """
-        Удаление незначащих нулей после запятой + округление до 9 знака.
-
-        Args:
-            value: любое число (НО не str -> TypeError: must be real number, not str)
-
-        Returns:
-            число без лишних нулей (или же округлённое число)
-
-        Examples:
-            * def_zero(45.400000000000) -> 45.4
-            * def_zero(3.3999999999994) -> 3.4
-            * def_zero(2.4500000000004) -> 2.45
-            * def_zero(2.0000004) -> 2
-            * def_zero(2.000004) -> 2.000004
-
-        Из вышеприведённого примера, можно заметить, что округление происходит
-        после того, как кол-во знаков после плавающей точки становиться равным 7 и более,
-        при меньшем кол-ве округления не происходит.
-        """
-        return float(('%.9f' % value).rstrip('0').rstrip('.'))
-
-    def rounded_list(new_list: list):
+    def rounded_list(values: list, quantity: int = 9):
         """
         Округление элементов списка.
 
         Args:
-            new_list: любой список с числами
-
+            values (list): список значений
+            quantity (int): точность округления
         Returns:
-            Список с округлёнными элементами
+            list: список с округлёнными элементами
 
         """
-        output_list = []
-        for step in new_list:
-            output_list.append(del_zero(step))
-        return output_list
+        return [round(value, quantity) for value in values]
 
     def number_of_segments():
         """
@@ -293,11 +267,11 @@ try:
 
         for row_no, col_no in out_matrix:
             if row_no == col_no - 1:
-                out_matrix[row_no][col_no] = list_up[col_no - 1]
+                out_matrix[row_no][col_no] = list_up[row_no]
             if row_no == col_no:
                 out_matrix[row_no][col_no] = list_middle[row_no]
             if row_no - 1 == col_no:
-                out_matrix[row_no][col_no] = list_down[row_no - 1]
+                out_matrix[row_no][col_no] = list_down[col_no]
 
         return out_matrix
 
