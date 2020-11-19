@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from python_code.main import *
 from sympy.abc import x
 import numpy as np
+import math
 
 try:
     # Ввод исходных данных:
@@ -17,34 +18,49 @@ try:
     print()
 
     # Вариант из методички (работает, можно проверить)
-    a = 1
-    b = 10
-    h = 9 / 4
-    K = 2 * x ** 2
-    L = x
-    M = 1
-    F = 2 * x ** .5
-    R = 0
-    S = 1
-    T = 2
-    V = 0
-    W = 1
-    Z = 2 * 10 ** 0.5
+    # a = 1
+    # b = 10
+    # h = 9 / 4
+    # K = 2 * x ** 2
+    # L = x
+    # M = 1
+    # F = 2 * x ** .5
+    # R = 0
+    # S = 1
+    # T = 2
+    # V = 0
+    # W = 1
+    # Z = 2 * 10 ** 0.5
+
+    # Вариант из методички №2 (работает, можно проверить)
+    # a = 0
+    # b = 4
+    # h = 1
+    # K = 2
+    # L = 2
+    # M = -4
+    # F = 1 - 2 * x
+    # R = 0
+    # S = 1
+    # T = 1
+    # V = 2
+    # W = 4
+    # Z = 9
 
     # Мой вариант (вариант 7):
-    # a = -3
-    # b = -2
-    # h = 0.2
-    # K = 2
-    # L = -1
-    # M = 4
-    # F = -(x ** 2) - 3 * x + 5
-    # R = 0
-    # S = -4
-    # T = 1
-    # V = 0
-    # W = -4
-    # Z = 5
+    a = -3
+    b = -2
+    h = 0.2
+    K = 2
+    L = -1
+    M = 4
+    F = -(x ** 2) - 3 * x + 5
+    R = 0
+    S = -4
+    T = 1
+    V = 0
+    W = -4
+    Z = 5
 
     # Вариант Паши
     # a = -2
@@ -61,6 +77,21 @@ try:
     # W = 3
     # Z = -4
 
+    # Вариант Ромы
+    # a = -1
+    # b = 0
+    # h = 0.2
+    # K = 2
+    # L = -2
+    # M = 2
+    # F = 4 * x * x - 2 * x + 4
+    # R = 0
+    # S = 2
+    # T = -2
+    # V = 0
+    # W = -2
+    # Z = -5
+
     # Вариант Влада:
     # a = 1
     # b = 2
@@ -75,6 +106,36 @@ try:
     # V = 0
     # W = 2
     # Z = 5
+
+    # Вариант Саши:
+    # a = -1
+    # b = 0
+    # h = 0.2
+    # K = 1
+    # L = -1
+    # M = -1
+    # F = x ** 2 + x + 1
+    # R = 0
+    # S = -1
+    # T = -1
+    # V = 0
+    # W = 3
+    # Z = 5
+
+    # Вариант Саши (2):
+    # a = -1
+    # b = 0
+    # h = 0.2
+    # K = 2
+    # L = -1
+    # M = 2
+    # F = 3 * x ** 2 + 5 * x - 1
+    # R = -4
+    # S = -3
+    # T = -5
+    # V = -4
+    # W = -7
+    # Z = -1
 
     # -------------------------------------------
     # Предупреждение!!! Ниже программный код!!!
@@ -139,7 +200,6 @@ try:
         """
         return int((b - a) / h)
 
-
     def all_x():
         """
         Returns:
@@ -151,7 +211,6 @@ try:
             list_x.append(output)
             output += h
         return rounded_list(list_x)
-
 
     def all_a():
         """
@@ -168,7 +227,6 @@ try:
         list_a.pop(n)
         list_a.insert(n, a_n)
         return rounded_list(list_a)
-
 
     def all_b():
         """
@@ -187,7 +245,6 @@ try:
         list_b.insert(n, b_n)
         return rounded_list(list_b)
 
-
     def all_c():
         """
         Returns:
@@ -204,7 +261,6 @@ try:
         list_c.pop(n)
         return rounded_list(list_c)
 
-
     def all_d():
         """
         Returns:
@@ -220,7 +276,6 @@ try:
         list_d.pop(0)
         list_d.insert(0, d_1)
         return rounded_list(list_d)
-
 
     def fill_triple_from_lists(list_up: list, list_middle: list, list_down: list) -> Matrix:
         """
@@ -246,7 +301,6 @@ try:
 
         return out_matrix
 
-
     def main():
         matrix = fill_triple_from_lists(
             all_c(),
@@ -259,24 +313,23 @@ try:
 
         free_column = all_d()
         decision = iterations.triple_diagonal(matrix, free_column, level_of_detail=3)
-
         solution = None
         for step in decision:
             solution = step.get("Решение")
-            print(step)
+            print(f'y: {solution}')
+        print(f'x: {all_x()}')
 
         # \\\\\\\\\\\\\\\\\\\\\\
         # Красивый вывод графика
         # \\\\\\\\\\\\\\\\\\\\\\
 
-        # TODO: Допилить график!
-        # X = np.linspace(-10, 10, 100)
-        # Y = F
-        # figure, axes = plt.subplots()
-        # axes.plot(X, Y, color='Navy')
-        # axes.grid()
-        # axes.scatter(all_x(), [-0.25, -0.7430795371684206, -1.1084344330140712, -1.291747997221237, -1.25], color='red')
-        # axes.set_title('Метод конечных разностей')
+        figure, axes = plt.subplots()
+        Y = solution
+        X = all_x()
+        axes.grid()
+        axes.scatter(X, Y, color='red')
+        axes.set_title('Метод конечных разностей')
+        plt.show()
 
     main()
 
