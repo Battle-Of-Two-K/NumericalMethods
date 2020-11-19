@@ -74,7 +74,6 @@ def decision_Euler_1(h):
         z_0_ += h * function.evalf(subs={x: x_0_, z: z_0_, y: y_0_})
         x_0_ += h
         a_ += h
-    # print(matrix.to_pretty_string())
     return list_1
 
 
@@ -97,7 +96,6 @@ def decision_Euler_2(h):
         z_0_ += h * function.evalf(subs={x: x_0_, z: z_0_, y: y_0_})
         x_0_ += h
         a_ += h
-    # print(matrix.to_pretty_string())
     return list_2
 
 
@@ -127,13 +125,6 @@ def decision_Runge_Kutta(h):
 
         matrix.append_row([index, k1y, k1z, k2y, k2z, k3y, k3z, k4y, k4z, x_0_, y_0_, z_0_])
 
-        # print('i:{: ^20} | K1y:{: ^20} | K1z:{: ^20} | K2y:{: ^20} | K2z:{: ^20} | K3y:{: ^20} | K3z:{: ^20}'
-        #       ' |K4y:{: ^20} |K4z:{: ^20} |X:{: ^20} |Y:{: ^20}'
-        #       ' |Z:{: ^20} |'.format(index, str(k1y), str(k1z), str(k2y), str(k2z), str(k3y), str(k3z), str(k4y),
-        #                              str(k4z), str(x_0_), str(y_0_), str(z_0_)))
-        # print('------------------------------------------------------------------------------------------------------'
-        #       '-------------------------------------------------------------------------------------------------------'
-        #       '-------------------------------------------------------------------------------------------------------')
         index += 1
         a_ += h
     print(matrix.T.to_pretty_string())
@@ -181,8 +172,8 @@ def grafik(h):
 #
 # print(f'\nz_p = {D_1 / D_2}')
 
-print('______________________________________________________________')
-print('-------------Метод Рунге-Кутты для ОДУ второго порядка-------------')
+print('_' * 70)
+print(' Метод Рунге-Кутты для ОДУ второго порядка '.center(70, '-'))
 print('\nh = 1')
 decision_Runge_Kutta(1)
 grafik(1)
@@ -190,7 +181,7 @@ print('\nh = 0.5')
 decision_Runge_Kutta(0.5)
 grafik(0.5)
 
-print('\n----------------Уточнение по формуле Рунге-Ромберга----------------')
+print('\n' + ' Уточнение по формуле Рунге-Ромберга '.center(70, '-'))
 
 R = .5
 
