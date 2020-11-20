@@ -5,13 +5,15 @@ from python_code.methods.matrix.iterations import triple_diagonal
 from python_code.staf.sympy_init import *
 
 
-def final_difference_method(equation: str, boundaries_in: dict, boundary_x: tuple,
+def final_difference_method(equation: str, boundaries_conditions: list,
+                            boundaries_in: dict = None, boundary_x: tuple = None,
                             num_of_sections: int = 4, section_step: float = None,
                             level_of_detail: int = 3):
     """
     Решение краевой задачи для ОДУ методом конечных разностей
 
     Args:
+        boundaries_conditions (list): раевые условия (список строк)
         equation (str): уравнение
         boundaries_in (dict): краевые условия
         boundary_x (tuple): краевые иксы (2 значения)
@@ -24,25 +26,47 @@ def final_difference_method(equation: str, boundaries_in: dict, boundary_x: tupl
 
     """
 
-    def get_boundaries(expression):
-        klm_re = "(?:(?P<K>.*y'{2})|(?P<L>.*y'{1})|(?P<M>.*y))"
-        group_names = list('KLM')
+    if boundaries_in is None:
+        boundaries_in = dict()
+    if boundary_x is None:
+        boundary_x = [None, None]
 
-        out = dict()
+    def get_boundaries(expression, bound_conditions):
+        regexp = "(?:(?P<K>.*y'{2})|(?P<L>.*y'{1})|(?P<M>.*y))"
+        group_names = list('KLM')
         left, right = expression.split('=')
-        re.findall(klm_re, left)
-        print()
-        for match in re.finditer(klm_re, left):
+        out = {'F': parse_expr(right)}
+        for match in re.finditer(regexp, left):
             for name in group_names:
                 if match.group(name):
                     out.update({name: parse_expr(match.group(name).replace("'", '')).subs({y: 1})})
-        out.update({'F': parse_expr(right)})
-        out.update({
-            'W': boundary_x[0],
-            'Z': out['F'].evalf(subs={x: boundary_x[1]})
-        })
 
-        return out
+        section = [None, None]
+        regexp = r"(?P<S>[a-zA-Z0-9 \+\-\*\/]*y(?!\'))|(?P<R>[a-zA-Z0-9 \+\-\*\/]*y(?=\'))|(?P<I>(?<=\().+?(?=\)))"
+        group_names = list('SRI')
+        left, right = bound_conditions[0].split('=')
+        out.update({'T': parse_expr(right)})
+        for match in re.finditer(regexp, left):
+            for name in group_names:
+                if match.group(name):
+                    if name == 'I':
+                        section[0] = parse_expr(match.group(name))
+                    else:
+                        out.update({name: parse_expr(match.group(name)).subs({y: 1})})
+
+        regexp = r"(?P<W>[a-zA-Z0-9 \+\-\*\/]*y(?!\'))|(?P<V>[a-zA-Z0-9 \+\-\*\/]*y(?=\'))|(?P<I>(?<=\().+?(?=\)))"
+        group_names = list('WVI')
+        left, right = bound_conditions[1].split('=')
+        out.update({'Z': parse_expr(right)})
+        for match in re.finditer(regexp, left):
+            for name in group_names:
+                if match.group(name):
+                    if name == 'I':
+                        section[1] = parse_expr(match.group(name))
+                    else:
+                        out.update({name: parse_expr(match.group(name)).subs({y: 1})})
+
+        return out, min(section), max(section)
 
     def get_a_x(x_value):
         return boundaries['K'].evalf(subs={x: x_value}) / section_x_len ** 2 - \
@@ -58,12 +82,14 @@ def final_difference_method(equation: str, boundaries_in: dict, boundary_x: tupl
 
     def get_d_x(x_value):
         return boundaries['F'].evalf(subs={x: x_value})
+
+    boundaries, boundary_x[0], boundary_x[1] = get_boundaries(equation, boundaries_conditions)
+    boundaries.update({key: parse_expr(str(boundaries_in[key])) for key in boundaries_in})
     if section_step is not None:
         section_x_len = section_step
+        num_of_sections = int((boundary_x[1] - boundary_x[0]) / section_x_len)
     else:
         section_x_len = (boundary_x[1] - boundary_x[0]) / num_of_sections  # h
-    boundaries = get_boundaries(equation)
-    boundaries.update({key: parse_expr(str(boundaries_in[key])) for key in boundaries_in})
 
     if level_of_detail < 3:
         yield {

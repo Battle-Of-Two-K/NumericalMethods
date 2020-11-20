@@ -9,24 +9,23 @@ from python_code.staf.sympy_init import *
 
 try:
     # задание
-    expression = "2 * x ** 2 * y'' + x * y' + y= 2 * sqrt(x)"
+    expression = "2 * y'' - y' + 3 * y= -3 * x * x + 3 * x - 2"
 
-    # отрезок
-    section_corners = (1, 10)
+    # отрезок. Оставить None для автоматического определения
+    section_corners = None
 
     # количество отрезков
     number_of_sections = 4
     # шаг (имеет приоритет над количеством отрезков) None чтобы отключить
-    step = None
+    step = .2
 
     # граничные условия
+    boundaries_condition = [
+        "-7 * y(-3) - 2 * y'(-3) = 6",
+        "6 * y(-2) + 2 * y'(-2) = -2"
+    ]
     # по необходимости можно дописать букву и соответствующее значение (ручной ввод приоритетней автоматического)
-    boundaries = {
-        'S': 1,
-        'T': 2,
-        'R': 0,
-        'V': 0,
-    }
+    boundaries = {}
 
     # ============================================================
     # ВНИМАНИЕ! Пугливым ниже не смотреть! Дальше программный код!
@@ -34,6 +33,7 @@ try:
     # ============================================================
     print('\n' + ' Решение краевой задачи для ОДУ методом конечных разностей '.center(100, '='))
     decision = final_difference_method(expression,
+                                       boundaries_condition,
                                        boundaries,
                                        section_corners,
                                        number_of_sections,
