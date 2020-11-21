@@ -1,42 +1,48 @@
-from Numerical_integration import *
+from First_order_ODE import *
 import numpy as np
 
 try:
-    my_variant_1 = TrapezoidalFormula(-3, 1, 1)
+    print('_' * 70)
+    print('Решение задачи Коши методом Эйлера'.center(70, '-'))
 
-    print('---------------------------ФОРМУЛА ТРАПЕЦИЙ---------------------------')
-    print(f'--------------------------------h1 = {my_variant_1.h}--------------------------------')
-    print(f'Кол-во отрезков n = {my_variant_1.n()}\n')
-    my_variant_1.table_Y()
-    print(f'\nT_n = {my_variant_1.t_n()}')
-    my_variant_1.grafik()
+    eg1 = EulerMethod(2, 6, 2, -2, 1)
 
-    my_variant_2 = TrapezoidalFormula(-3, 1, 0.5)
+    print(f'Введённые данные:\na = {eg1.a}; b = {eg1.b}; x0 = {eg1.x_0}; y0 = {eg1.y_0}; h = {eg1.h}\n')
+    print(f'-----------Для h1 = {eg1.h}-----------\n')
+    eg1.print_()
+    z1 = eg1.y_i().pop()
+    print(f'Нужно уточнить = {z1}\n')
+    eg1.grafik()
 
-    print(f'--------------------------------h2 = {my_variant_2.h}--------------------------------')
-    print(f'Кол-во отрезков n = {my_variant_2.n()}\n')
-    my_variant_2.table_Y()
-    print(f'\nT_n = {my_variant_2.t_n()}\n')
-    my_variant_2.grafik()
+    print('+' * 100, '\n')
 
-    my_variant_3 = TrapezoidalFormula(-3, 1, 0.25)
+    eg2 = EulerMethod(2, 6, 2, -2, .5)
+    print(f'Введённые данные:\na = {eg2.a}; b = {eg2.b}; x0 = {eg2.x_0}; y0 = {eg2.y_0}; h = {eg2.h}\n')
+    print(f'-----------Для h2 = {eg2.h}-----------\n')
+    eg2.print_()
+    z2 = eg2.y_i().pop()
+    print(f'Нужно уточнить = {z2}\n')
+    eg2.grafik()
 
-    print(f'--------------------------------h3 = {my_variant_3.h}--------------------------------')
-    print(f'Кол-во отрезков n = {my_variant_3.n()}\n')
-    my_variant_3.table_Y()
-    print(f'\nT_n = {my_variant_3.t_n()}\n')
-    my_variant_3.grafik()
+    print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n')
 
-    print('----------------Уточнение по формуле Рунге----------------\n')
-    d_1 = np.array([[my_variant_1.t_n(), 1 ** 2, 1 ** 3], [my_variant_2.t_n(), .5 ** 2, .5 ** 3],
-                    [my_variant_3.t_n(), .25 ** 2, .25 ** 3]])
+    eg3 = EulerMethod(2, 6, 2, -2, .4)
+    print(f'Введённые данные:\na = {eg3.a}; b = {eg3.b}; x0 = {eg3.x_0}; y0 = {eg3.y_0}; h = {eg3.h}\n')
+    print(f'-----------Для h3 = {eg3.h}-----------\n')
+    eg3.print_()
+    z3 = eg3.y_i().pop()
+    print(f'Нужно уточнить = {z3}\n')
+    eg3.grafik()
 
-    d_2 = np.array([[1, 1 ** 2, 1 ** 3], [1, .5 ** 2, .5 ** 3], [1, .25 ** 2, .25 ** 3]])
+    print('_______________Уточнение по формуле Рунге_______________\n')
+
+    d_1 = np.array([[z1, 1 ** 1, 1 ** 2], [z2, .5 ** 1, .5 ** 2], [z3, .4 ** 1, .4 ** 2]])
+    d_2 = np.array([[1, 1 ** 1, 1 ** 2], [1, .5 ** 1, .5 ** 2], [1, .4 ** 1, .4 ** 2]])
 
     print(d_1)
     print('----------------------------------------- = Zp')
     print(d_2)
-    print(' \n')
+    print('\nВыислим определители:\n')
 
     D_1 = np.linalg.det(d_1)
     D_2 = np.linalg.det(d_2)
@@ -47,30 +53,31 @@ try:
 
     print(f'\nz_p = {D_1 / D_2}')
 
-    my_variant = SimpsonFormula(-3, 1, 1, 4)
+    print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n')
+    print('_____________________________________________________________________')
+    print('_______________Решение задачи Коши методом Рунге-Кутты_______________\n')
 
-    print('\n----------------------ФОРМУЛА СИМПСОНА----------------------')
-    print(f'---------------------------h1 = {my_variant.h}---------------------------')
-    print(f'Кол-во отрезков n = {my_variant.n()}\n')
-    my_variant.table_Y()
+    eg4 = RungeKuttaMethod(2, 6, 2, -2, 1)
+    print('\n-------------------------------------------------------------------------------------------------'
+          '--------------------------------------------------------------------')
+    eg4.y_i_print()
+    eg4.grafik()
 
-    print(f'\nT_n = {my_variant.S()}\n')
+    eg5 = RungeKuttaMethod(2, 6, 2, -2, .5)
+    print('\n-------------------------------------------------------------------------------------------------'
+          '--------------------------------------------------------------------')
+    eg5.y_i_print()
+    eg5.grafik()
 
-    my_variant_0 = SimpsonFormula(-3, 1, 0.5, 4)
-    print(f'---------------------------h2 = {my_variant_0.h}---------------------------')
-    print(f'Кол-во отрезков n = {my_variant_0.n()}\n')
-    my_variant_0.table_Y()
-    print(f'\nT_n = {my_variant_0.S()}\n')
-    print('\n----------------Уточнение по формуле Рунге-Ромберга----------------')
+    print('\n_______________Уточнение по формуле Рунге-Ромберга_______________\n')
 
-    R = my_variant_0.h / my_variant.h
+    R = eg5.h / eg4.h
 
-    Zpp = my_variant.S() + ((my_variant.S() - my_variant_0.S()) / (R ** my_variant.p - 1))
+    z1 = eg4.y_i().pop()
+    z2 = eg5.y_i().pop()
 
-    print(f'\nZpp = {Zpp}\n')
-
-    my_variant.grafik()
-    my_variant_0.grafik()
+    Zpp = z1 + ((z1 - z2) / (R ** 4 - 1))
+    print(f'Zpp = {Zpp}\n')
 
 except Exception as error:
     print(error)

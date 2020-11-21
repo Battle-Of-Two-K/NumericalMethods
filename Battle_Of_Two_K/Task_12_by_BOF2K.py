@@ -1,193 +1,265 @@
-from sympy.abc import *
-from python_code.main import Matrix
 import matplotlib.pyplot as plt
-
-# Вариант 7
-function = 2 * z - y - 3 * x + 6
-a = -4
-b = -2
-x_0 = -4
-y_0 = 6
-z_0 = -3
-
-# Вариант 1
-# function = 2 * z + 2 * y + 4 * x - 5
-# a = -2
-# b = 0
-# x_0 = -2
-# y_0 = -4
-# z_0 = -1
-
-# Вариант 18
-# function = 2 * z - 2 * y + 2 * x + 2
-# a = 3
-# b = 5
-# x_0 = 3
-# y_0 = 5
-# z_0 = -6
+from python_code.main import *
+from sympy.abc import x
 
 
-# Условие задачи из методички
-# function = -z / (2 * x)
-# a = 1
-# b = 10
-# x_0 = 1
-# y_0 = 2
-# z_0 = 1
+try:
+    # Ввод исходных данных:
+    print('\n' + "___Тема: решение краевой задачи для ОДУ___".center(100))
+    print("_________Метод конечных разностей_________".center(100) + '\n')
+    print("-" * 100)
+    print("*Примечание: дан отрезок [a, b], дано уравнение вида K(x)*y'' +L(x)*y' + M(x)*y = F(x), а также даны")
+    print("краевые (граничные) условия 3-го рода на границах отрезка: R*y'(a) + S*y(a) = T и V*y'(b) + W*y(b) = Z")
+    print("-" * 100)
+    print("* - умножение")
+    print("** - возведение в степень")
+    print("-" * 100)
+    print()
 
+    # Вариант из методички (работает, можно проверить)
+    # a = 1
+    # b = 10
+    # h = 9 / 4
+    # K = 2 * x ** 2
+    # L = x
+    # M = 1
+    # F = 2 * x ** .5
+    # R = 0
+    # S = 1
+    # T = 2
+    # V = 0
+    # W = 1
+    # Z = 2 * 10 ** 0.5
 
-def number_of_segments(h):
-    """
-    Returns:
-        int: количество отрезков одинаковой длины
-    """
-    return int((b - a) / h)
+    # Вариант из методички №2 (работает, можно проверить)
+    # a = 0
+    # b = 4
+    # h = 1
+    # K = 2
+    # L = 2
+    # M = -4
+    # F = 1 - 2 * x
+    # R = 0
+    # S = 1
+    # T = 1
+    # V = 2
+    # W = 4
+    # Z = 9
 
+    # Мой вариант (вариант 7):
+    # a = -3
+    # b = -2
+    # h = 0.2
+    # K = 2
+    # L = -1
+    # M = 4
+    # F = -(x ** 2) - 3 * x + 5
+    # R = 0
+    # S = -4
+    # T = 1
+    # V = 0
+    # W = -4
+    # Z = 5
 
-def index_generator():
-    """
-    Returns:
-        list: список индексов i
-    """
-    output_list = []
-    for index in range(0, number_of_segments(h) + 1):
-        output_list.append(index)
-    return output_list
+    # Мой вариант (вариант 7) Дз:
+    # a = -3
+    # b = -2
+    # h = 0.2
+    # K = 1
+    # L = -1
+    # M = 2
+    # F = -3 * x ** 2 + 3 * x - 4
+    # R = -2
+    # S = -7
+    # T = 6
+    # V = 2
+    # W = 6
+    # Z = -2
 
+    # Вариант Семёна:
+    a = 1
+    b = 2
+    h = 0.2
+    K = 2
+    L = -1
+    M = 3
+    F = -3 * x ** 2 + 3 * x - 2
+    R = 3
+    S = 8
+    T = -2
+    V = -5
+    W = -4
+    Z = -4
 
-def decision_Euler_1(h):
-    y_0_ = y_0
-    z_0_ = z_0
-    x_0_ = x_0
-    a_ = a
-    list_1 = []
-    list_2 = []
-    matrix = Matrix(0)
-    matrix.columns = 4
-    matrix.matrix[0] = ['i', 'x', 'y', 'z']
+    # -----------------------
+    # Ниже программный код!!!
+    # -----------------------
 
-    for step in range(0, number_of_segments(h) + 1):
-        list_1.append(x_0_)
-        list_2.append(y_0_)
-        matrix.append_row([step, x_0_, y_0_, z_0_])
-        y_0_ += h * z_0_
-        z_0_ += h * function.evalf(subs={x: x_0_, z: z_0_, y: y_0_})
-        x_0_ += h
-        a_ += h
-    return list_1
+    y_a = T / S
+    y_b = Z / W
 
+    # Первая итерация
+    b_1 = -R / h + S
+    c_1 = R / h
+    d_1 = T
 
-def decision_Euler_2(h):
-    y_0_ = y_0
-    z_0_ = z_0
-    x_0_ = x_0
-    a_ = a
-    list_1 = []
-    list_2 = []
-    matrix = Matrix(0)
-    matrix.columns = 4
-    matrix.matrix[0] = ['i', 'x', 'y', 'z']
+    # Последняя итерация
+    a_n = V / h
+    b_n = -V / h - W
+    d_n = -Z
 
-    for step in range(0, number_of_segments(h) + 1):
-        list_1.append(x_0_)
-        list_2.append(y_0_)
-        matrix.append_row([step, x_0_, y_0_, z_0_])
-        y_0_ += h * z_0_
-        z_0_ += h * function.evalf(subs={x: x_0_, z: z_0_, y: y_0_})
-        x_0_ += h
-        a_ += h
-    return list_2
+    def rounded_list(values: list, quantity: int = 9):
+        """
+        Округление элементов списка.
 
+        Args:
+            values (list): список значений
+            quantity (int): точность округления
+        Returns:
+            list: список с округлёнными элементами
 
-def decision_Runge_Kutta(h):
-    y_0_ = y_0
-    z_0_ = z_0
-    x_0_ = x_0
-    a_ = a
-    index = 1
-    matrix = Matrix(0)
-    matrix.columns = 12
-    matrix.matrix[0] = ['i', 'K1y', 'K1z', 'K2y', 'K2z', 'K3y', 'K3z', 'K4y', 'K4z', 'X', 'Y', 'Z']
+        """
+        return [round(value, quantity) for value in values]
 
-    while a_ < b:
-        k1y = z_0_
-        k1z = function.evalf(subs={x: x_0_, y: y_0_, z: z_0_})
-        k2y = z_0_ + (h / 2) * k1z
-        k2z = function.evalf(subs={x: x_0_ + (h / 2), y: y_0_ + (h / 2) * k1y, z: z_0_ + (h / 2) * k1z})
-        k3y = z_0_ + (h / 2) * k2z
-        k3z = function.evalf(subs={x: x_0_ + (h / 2), y: y_0_ + (h / 2) * k2y, z: z_0_ + (h / 2) * k2z})
-        k4y = z_0_ + h * k3z
-        k4z = function.evalf(subs={x: x_0_ + h, y: y_0_ + h * k3y, z: z_0_ + h * k3z})
+    def number_of_segments():
+        """
+        Returns:
+            int: возвращает количество отрезков одинаковой длины
+        """
+        return int((b - a) / h)
 
-        x_0_ += h
-        y_0_ += (h / 6) * (k1y + 2 * k2y + 2 * k3y + k4y)
-        z_0_ += (h / 6) * (k1z + 2 * k2z + 2 * k3z + k4z)
+    def all_x():
+        """
+        Returns:
+            list: возвращает список всех значений x от a до b
+        """
+        output = a
+        list_x = []
+        for step in range(1, number_of_segments() + 2):
+            list_x.append(output)
+            output += h
+        return rounded_list(list_x)
 
-        matrix.append_row([index, k1y, k1z, k2y, k2z, k3y, k3z, k4y, k4z, x_0_, y_0_, z_0_])
+    def all_a():
+        """
+        Returns:
+            list: возвращет список всех значений a_i
+        """
+        list_a = []
+        for step in all_x():
+            new_a = parse_expr(str(K)).evalf(subs={x: step}) / (h ** 2) -\
+                    parse_expr(str(L)).evalf(subs={x: step}) / (2 * h)
+            list_a.append(new_a)
+        list_a.pop(0)
+        n = len(list_a) - 1
+        list_a.pop(n)
+        list_a.insert(n, a_n)
+        return rounded_list(list_a)
 
-        index += 1
-        a_ += h
-    print(matrix.T.to_pretty_string())
+    def all_b():
+        """
+        Returns:
+            list: возвращает спсиок всех значений b_i
+        """
+        list_b = []
+        for step in all_x():
+            new_a = -2 * parse_expr(str(K)).evalf(subs={x: step}) /\
+                    (h ** 2) + parse_expr(str(M)).evalf(subs={x: step})
+            list_b.append(new_a)
+        list_b.pop(0)
+        list_b.insert(0, b_1)
+        n = len(list_b) - 1
+        list_b.pop(n)
+        list_b.insert(n, b_n)
+        return rounded_list(list_b)
 
+    def all_c():
+        """
+        Returns:
+            list: возвращет список всех значений с_i
+        """
+        list_c = []
+        for step in all_x():
+            new_a = parse_expr(str(K)).evalf(subs={x: step}) / (h ** 2) +\
+                    parse_expr(str(L)).evalf(subs={x: step}) / (2 * h)
+            list_c.append(new_a)
+        list_c.pop(0)
+        list_c.insert(0, c_1)
+        list_c.pop()
+        return rounded_list(list_c)
 
-def grafik(h):
-    figure, axes = plt.subplots()
+    def all_d():
+        """
+        Returns:
+            list: возвращет список всех значений d_i
+                  (он же столбец свободных членов)
+        """
+        list_d = []
+        for step in all_x():
+            new_a = parse_expr(str(F)).evalf(subs={x: step})
+            list_d.append(new_a)
+        list_d.pop()
+        list_d.insert(len(list_d), d_n)
+        list_d.pop(0)
+        list_d.insert(0, d_1)
+        return rounded_list(list_d)
 
-    axes.scatter(decision_Euler_1(h), decision_Euler_2(h), color='red')
-    axes.grid()
-    axes.set_title(f'Метод Рунге-Кутты. h = {h}')
+    def fill_triple_from_lists(list_up: list, list_middle: list, list_down: list) -> Matrix:
+        """
+        Заполняет трехдиагональную матрицу, используя 3 списка
 
-    plt.show()
+        Args:
+            list_up (list): список над главной диагональю
+            list_middle (list): список главной диагонали
+            list_down (list): список под главной диагональю
 
+        Returns:
+            Matrix: заполненная трехдиагональная матрица
+        """
+        out_matrix = Matrix(len(list_middle))
 
-# Условие из методички
-# decision_Euler(0.9)
-# decision_Runge_Kutta(1.8)
+        for row_no, col_no in out_matrix:
+            if row_no == col_no - 1:
+                out_matrix[row_no][col_no] = list_up[row_no]
+            if row_no == col_no:
+                out_matrix[row_no][col_no] = list_middle[row_no]
+            if row_no - 1 == col_no:
+                out_matrix[row_no][col_no] = list_down[col_no]
 
-# print('______________________________________________________________')
-# print('-------------Метод Эйлера для ОДУ второго порядка-------------')
-# print('\nh = 0.5')
-# decision_Euler(0.5)
-# print('\nh = 0.25')
-# decision_Euler(0.25)
-# print('\nh = 0.2')
-# decision_Euler(0.2)
-#
-# print('----------------Уточнение по формуле Рунге----------------\n')
-#
-# d_1 = np.array([[9, 1 ** 1, 1 ** 2], [17.4609375000000, .5 ** 1, .5 ** 2], [26.6972070587799, .25 ** 1, .25 ** 2]])
-# d_2 = np.array([[1, 1 ** 1, 1 ** 2], [1, .5 ** 1, .5 ** 2], [1, .25 ** 1, .25 ** 2]])
-#
-# print(d_1)
-# print('----------------------------------------- = Zp')
-# print(d_2)
-# print('\nВыислим определители:\n')
-#
-# D_1 = np.linalg.det(d_1)
-# D_2 = np.linalg.det(d_2)
-#
-# print(D_1)
-# print('-------------------- = Zp')
-# print(D_2)
-#
-# print(f'\nz_p = {D_1 / D_2}')
+        return out_matrix
 
-print('_' * 70)
-print(' Метод Рунге-Кутты для ОДУ второго порядка '.center(70, '-'))
-print('\nh = 1')
-decision_Runge_Kutta(1)
-grafik(1)
-print('\nh = 0.5')
-decision_Runge_Kutta(0.5)
-grafik(0.5)
+    def main():
+        matrix = fill_triple_from_lists(
+            all_c(),
+            all_b(),
+            all_a(),
+        )
 
-print('\n' + ' Уточнение по формуле Рунге-Ромберга '.center(70, '-'))
+        print(f'Столбец свободных членов {all_d()}')
+        print(matrix.map(float).to_pretty_string())
 
-R = .5
+        free_column = all_d()
+        decision = iterations.triple_diagonal(matrix, free_column, level_of_detail=2)
+        solution = None
+        for step in decision:
+            solution = step.get("Решение")
+            print(f'y: {step}')
+        print(f'x: {all_x()}')
 
-Zpp = 48.6562500000000 + ((48.6562500000000 - 50.1638414636254) / (R ** 4 - 1))
+        # \\\\\\\\\\\\\\\\\\\\\\\
+        # Красивый вывод графика
+        # \\\\\\\\\\\\\\\\\\\\\\\
 
-print(f'\nZpp = {Zpp}\n')
+        figure, axes = plt.subplots()
+        Y = solution
+        X = all_x()
+        axes.grid()
+        axes.scatter(X, Y, color='red')
+        axes.set_title('Метод конечных разностей')
+        plt.show()
 
+    main()
 
-input()
+except Exception as error:
+    print(error)
+input('\nНажмите "Enter" чтобы выйти...')

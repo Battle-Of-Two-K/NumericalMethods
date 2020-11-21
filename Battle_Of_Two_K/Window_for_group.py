@@ -83,6 +83,7 @@ second_value_4.grid(row=10, column=3, pady=10)
 
 # \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+
 def knopka():
     def print_data(data):
         step_info = ''
@@ -99,7 +100,6 @@ def knopka():
         elif 'Номер итерации' in data.keys():
           print(('-' * 23 + '+') * len(data.keys()))
         print(step_info)
-
 
     print(' Решение методом дихотомии '.center(100, '='))
     decision = dichotomy(input_box_1.get(), 
@@ -132,8 +132,6 @@ def knopka():
                           level_of_details=2, iterations=5, accuracy_order=3)
     for step in decision:
         print_data(step)
-     
-    
     
 calculation_button = Button(text="Посчитать", font=('Arial', all_font_size))
 calculation_button.grid(row=11, column=1, columnspan=3, pady=20)

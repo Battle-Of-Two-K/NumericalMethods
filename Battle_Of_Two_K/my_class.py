@@ -15,6 +15,7 @@ class My_matrix:
         return [[0 for i in self.range_row()] for j in self.range_col()]
 
     def matrix_multiplication(self, new_matrix):
+        # TODO: В разработке...
         output = self.null_matrix
         for row_ in self.range_row():
             for col_ in self.range_col():
@@ -119,6 +120,3 @@ if __name__ == '__main__':
         [3, 4, 6, 7],
         [8, 9, 4, 1]
     ])
-
-    print(m.matrix_multiplication([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]]))
-    print(m.null_matrix())

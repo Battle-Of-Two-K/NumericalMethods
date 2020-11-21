@@ -1,124 +1,77 @@
-import matplotlib.pyplot as plt
+from Numerical_integration import *
 import numpy as np
 
-__author__ = 'Battle_Of_Two_K'
+try:
+    my_variant_1 = TrapezoidalFormula(-3, 1, 1)
 
-# /////////////////////////////////////////////
-# Аппроксимация  методом  наименьших  квадратов
-# Требуется установка модулей numpy, matplotlib
-# /////////////////////////////////////////////
+    print('---------------------------ФОРМУЛА ТРАПЕЦИЙ---------------------------')
+    print(f'--------------------------------h1 = {my_variant_1.h}--------------------------------')
+    print(f'Кол-во отрезков n = {my_variant_1.n()}\n')
+    my_variant_1.table_Y()
+    print(f'\nT_n = {my_variant_1.t_n()}')
+    my_variant_1.grafik()
 
+    my_variant_2 = TrapezoidalFormula(-3, 1, 0.5)
 
-x = [-6, -5, -4, -2]
-y = [36, 27, 19, 7]
+    print(f'--------------------------------h2 = {my_variant_2.h}--------------------------------')
+    print(f'Кол-во отрезков n = {my_variant_2.n()}\n')
+    my_variant_2.table_Y()
+    print(f'\nT_n = {my_variant_2.t_n()}\n')
+    my_variant_2.grafik()
 
-# ///////////////////////////////////////////////////////////////////////////////////
-# Пугливым не смотреть! Ниже програмный код!
-# ///////////////////////////////////////////////////////////////////////////////////
+    my_variant_3 = TrapezoidalFormula(-3, 1, 0.25)
 
-n = len(x)
-m = len(y)
+    print(f'--------------------------------h3 = {my_variant_3.h}--------------------------------')
+    print(f'Кол-во отрезков n = {my_variant_3.n()}\n')
+    my_variant_3.table_Y()
+    print(f'\nT_n = {my_variant_3.t_n()}\n')
+    my_variant_3.grafik()
 
-print(f'n = {n}')
-print('--------------------Вычислим коэффициенты системы--------------------\n')
+    print('----------------Уточнение по формуле Рунге----------------\n')
+    d_1 = np.array([[my_variant_1.t_n(), 1 ** 2, 1 ** 3], [my_variant_2.t_n(), .5 ** 2, .5 ** 3],
+                    [my_variant_3.t_n(), .25 ** 2, .25 ** 3]])
 
-print(f'Сумма чисел списка x: {sum(x)}')
+    d_2 = np.array([[1, 1 ** 2, 1 ** 3], [1, .5 ** 2, .5 ** 3], [1, .25 ** 2, .25 ** 3]])
 
+    print(d_1)
+    print('----------------------------------------- = Zp')
+    print(d_2)
+    print(' \n')
 
-def summa_xn(x_list, n_power):
-    """Функция, которая считает сумму элементов в указанной степени"""
-    return sum((elem ** n_power for elem in x_list))
+    D_1 = np.linalg.det(d_1)
+    D_2 = np.linalg.det(d_2)
 
+    print(D_1)
+    print('-------------------- = Zp')
+    print(D_2)
 
-def summa_x2(x):
-    """Функция, которая считает сумму квадратов"""
-    s = 0
-    for i in x:
-        s += i * i
-    return s
+    print(f'\nz_p = {D_1 / D_2}')
 
+    my_variant = SimpsonFormula(-3, 1, 1, 4)
 
-print(f'Сумма квадратов чисел списка x: {summa_x2(x)}')
+    print('\n----------------------ФОРМУЛА СИМПСОНА----------------------')
+    print(f'---------------------------h1 = {my_variant.h}---------------------------')
+    print(f'Кол-во отрезков n = {my_variant.n()}\n')
+    my_variant.table_Y()
 
+    print(f'\nT_n = {my_variant.S()}\n')
 
-def summa_x3(x):
-    """Функция, которая считает сумму кубов"""
-    s = 0
-    for i in x:
-        s += i * i * i
-    return s
+    my_variant_0 = SimpsonFormula(-3, 1, 0.5, 4)
+    print(f'---------------------------h2 = {my_variant_0.h}---------------------------')
+    print(f'Кол-во отрезков n = {my_variant_0.n()}\n')
+    my_variant_0.table_Y()
+    print(f'\nT_n = {my_variant_0.S()}\n')
+    print('\n----------------Уточнение по формуле Рунге-Ромберга----------------')
 
+    R = my_variant_0.h / my_variant.h
 
-print(f'Сумма кубов чисел списка x: {summa_x3(x)}')
+    Zpp = my_variant.S() + ((my_variant.S() - my_variant_0.S()) / (R ** my_variant.p - 1))
 
+    print(f'\nZpp = {Zpp}\n')
 
-def summa_x4(x):
-    """Функция, которая считает сумму чисел в 4-й степени"""
-    s = 0
-    for i in x:
-        s += i * i * i * i
-    return s
+    my_variant.grafik()
+    my_variant_0.grafik()
 
-
-print(f'Сумма чисел в 4-й степени списка x: {summa_x4(x)}\n')
-
-print(f'Сумма чисел списка y: {sum(y)}')
-
-
-def summa_xy(x, y):
-    """Функция, которая находит сумму перемноженных элементов списков x и y"""
-    s = list(map(lambda i, j: i * j, x, y))
-    k = sum(s)
-    return k
-
-
-print(f'Сумма перемноженных чисел списков x и y: {summa_xy(x, y)}')
-
-
-def summa_xxy(x, y):
-    """Функция, которая считает сумму x**2 * y"""
-    s = list(map(lambda i, j: (i ** 2) * j, x, y))
-    k = sum(s)
-    return k
-
-
-print(f'Сумма x**2 * y: {summa_xxy(x, y)}\n')
-
-print('---------------------------Решим систему---------------------------\n')
-
-Matrix = np.array([[summa_x4(x), summa_x3(x), summa_x2(x)],
-                      [summa_x3(x), summa_x2(x), sum(x)],
-                      [summa_x2(x), sum(x), n]])  # Матрица (левая часть системы)
-Vector = np.array([summa_xxy(x, y), summa_xy(x, y), sum(y)])  # Вектор (правая часть системы)
-
-otvet = np.linalg.solve(Matrix, Vector)
-
-print(f'a = {otvet[0]}')
-print(f'b = {otvet[1]}')
-print(f'c = {otvet[2]}\n')
-
-
-def function_P(x):
-    P = otvet[0] * x * x + otvet[1] * x + otvet[2]
-    return P
-
-
-def square_residual(x, y):
-    s = list(map(lambda i, j: ((function_P(i) - j) ** 2), x, y))
-    k = sum(s)
-    return k
-
-
-print(f'Квадратическая невязка = {square_residual(x, y)}')
-
-x = np.linspace(-5, 2, 100)  # от -5 до 2 сделать 100 точек
-y = otvet[0] * x * x + otvet[1] * x + otvet[2]  # y1 - тоже много точек
-
-fig, ax = plt.subplots()  # будет 1 график, на нем:
-ax.plot(x, y, color="blue", label="y(x)")  # функция y1(x), синий, надпись y(x)
-ax.set_xlabel("x")  # подпись у горизонтальной оси х
-ax.set_ylabel("y")  # подпись у вертикальной оси y
-ax.legend()  # показывать условные обозначения
-
-plt.show()  # показать рисунок
-fig.savefig('1.png')  # сохранить в файл 1.png
+except Exception as error:
+    print(error)
+input('Нажмите "Enter" чтобы выйти...')
