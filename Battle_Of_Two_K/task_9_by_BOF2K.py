@@ -1,77 +1,67 @@
-from Numerical_integration import *
-import numpy as np
-
 try:
-    my_variant_1 = TrapezoidalFormula(-3, 1, 1)
+	x = [2, 3, 4, 5]
+	y = [-2, 2, 0, 3]
 
-    print('---------------------------ФОРМУЛА ТРАПЕЦИЙ---------------------------')
-    print(f'--------------------------------h1 = {my_variant_1.h}--------------------------------')
-    print(f'Кол-во отрезков n = {my_variant_1.n()}\n')
-    my_variant_1.table_Y()
-    print(f'\nT_n = {my_variant_1.t_n()}')
-    my_variant_1.grafik()
+	print('\n//////////////////////////////////////')
+	print('Вычислим длины отрезков')
+	print('//////////////////////////////////////\n')
 
-    my_variant_2 = TrapezoidalFormula(-3, 1, 0.5)
+	h2 = x[1] - x[0]
+	h3 = x[2] - x[1]
+	h4 = x[3] - x[2]
 
-    print(f'--------------------------------h2 = {my_variant_2.h}--------------------------------')
-    print(f'Кол-во отрезков n = {my_variant_2.n()}\n')
-    my_variant_2.table_Y()
-    print(f'\nT_n = {my_variant_2.t_n()}\n')
-    my_variant_2.grafik()
+	print(f'h2 = {h2}')
+	print(f'h3 = {h3}')
+	print(f'h4 = {h4}')
 
-    my_variant_3 = TrapezoidalFormula(-3, 1, 0.25)
+	print('////////////////////////////////////////////')
+	print('Вычислим правые части Yi и запишем систему ')
+	print('////////////////////////////////////////////\n')
 
-    print(f'--------------------------------h3 = {my_variant_3.h}--------------------------------')
-    print(f'Кол-во отрезков n = {my_variant_3.n()}\n')
-    my_variant_3.table_Y()
-    print(f'\nT_n = {my_variant_3.t_n()}\n')
-    my_variant_3.grafik()
+	Y2 = (y[2] - y[1]) / h3 - (y[1] - y[0]) / h2
+	Y3 = (y[3] - y[2]) / h4 - (y[2] - y[1]) / h3
 
-    print('----------------Уточнение по формуле Рунге----------------\n')
-    d_1 = np.array([[my_variant_1.t_n(), 1 ** 2, 1 ** 3], [my_variant_2.t_n(), .5 ** 2, .5 ** 3],
-                    [my_variant_3.t_n(), .25 ** 2, .25 ** 3]])
+	print('/')
+	print(f'| {h2 / 6}*m1 + {(h2 + h3) / 3}*m2 + {h3 / 6}*m3 = {Y2}')
+	print(f'| {h3 / 6 }*m2 + {(h3 + h4) / 3}*m3 + {h4 / 6}*m4 = {Y3}')
+	print('|\n')
 
-    d_2 = np.array([[1, 1 ** 2, 1 ** 3], [1, .5 ** 2, .5 ** 3], [1, .25 ** 2, .25 ** 3]])
+	print('Так как m1 = m5 = 0, перепишем систему как:\n')
+	print('/')
+	print(f'| {(h2 + h3) / 3}*m2 + {h3 / 6}*m3 = {Y2}')
+	print(f'| {h3 / 6}*m2 + {(h3 + h4) / 3}*m3 + {h4 / 6}*m4 = {Y3}')
+	print('|\n')
 
-    print(d_1)
-    print('----------------------------------------- = Zp')
-    print(d_2)
-    print(' \n')
+	print('//////////////////////////////////////')
+	print('Вычислим прогоночные коэффициенты:')
+	print('//////////////////////////////////////\n')
 
-    D_1 = np.linalg.det(d_1)
-    D_2 = np.linalg.det(d_2)
+	P2 = 0
+	Q2 = 0
+	P3 = (-h3) / (2 * (h2 + h3) + P2 * h2)
+	Q3 = (6 * Y2 - h2 * Q2) / (2 * (h3 + h2) + P2 * h2)
+	P4 = (-h4) / (2 * (h3 + h4) + P3 * h3)
+	Q4 = (6 * Y3 - h3 * Q3) / (2 * (h4 + h3) + P3 * h3)
 
-    print(D_1)
-    print('-------------------- = Zp')
-    print(D_2)
+	print(f'P2 = {P2}')
+	print(f'Q2 = {Q2}')
+	print('------------------------------')
+	print(f'P3 = {P3}')
+	print(f'Q3 = {Q3}')
+	print('------------------------------')
+	print(f'P4 = {P4}')
+	print(f'Q4 = {Q4}')
 
-    print(f'\nz_p = {D_1 / D_2}')
+	print('//////////////////////////////////////')
+	print('Вычислим mi:')
+	print('//////////////////////////////////////\n')
 
-    my_variant = SimpsonFormula(-3, 1, 1, 4)
+	m3 = P4 * m4 + Q4
+	m2 = P3 * m3 + P3
 
-    print('\n----------------------ФОРМУЛА СИМПСОНА----------------------')
-    print(f'---------------------------h1 = {my_variant.h}---------------------------')
-    print(f'Кол-во отрезков n = {my_variant.n()}\n')
-    my_variant.table_Y()
-
-    print(f'\nT_n = {my_variant.S()}\n')
-
-    my_variant_0 = SimpsonFormula(-3, 1, 0.5, 4)
-    print(f'---------------------------h2 = {my_variant_0.h}---------------------------')
-    print(f'Кол-во отрезков n = {my_variant_0.n()}\n')
-    my_variant_0.table_Y()
-    print(f'\nT_n = {my_variant_0.S()}\n')
-    print('\n----------------Уточнение по формуле Рунге-Ромберга----------------')
-
-    R = my_variant_0.h / my_variant.h
-
-    Zpp = my_variant.S() + ((my_variant.S() - my_variant_0.S()) / (R ** my_variant.p - 1))
-
-    print(f'\nZpp = {Zpp}\n')
-
-    my_variant.grafik()
-    my_variant_0.grafik()
+	print(f'm3 = {m3}')
+	print(f'm2 = {m2}')
 
 except Exception as error:
-    print(error)
-input('Нажмите "Enter" чтобы выйти...')
+	print(error)
+input('\nНажмите "Enter" чтобы выйти...')
