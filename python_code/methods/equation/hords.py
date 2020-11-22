@@ -2,6 +2,19 @@ from python_code.staf.sympy_init import *
 
 
 def hords(function, section, accuracy_order=None, iterations=None, level_of_details=3):
+    """
+    Решение трансцендентного уравнения методом хорд
+
+    Args:
+        function (str): уравнение в виде строки
+        section (tuple): отрезок, на котором будет произведен поиск
+        accuracy_order (int): необходимая точность
+        iterations (int): необходимое количество итераций
+        level_of_details (int): необходимы уровень детализации решения
+
+    Yields:
+        dict: информация о текущем шаге решения
+    """
     def draw_secant():
         return (left_edge * function(right_edge) - right_edge * function(left_edge)) / \
                (function(right_edge) - function(left_edge))

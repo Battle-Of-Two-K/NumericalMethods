@@ -32,6 +32,7 @@ def final_difference_method(equation: str, boundaries_conditions: list,
         boundary_x = [None, None]
 
     def get_boundaries(expression, bound_conditions):
+        # поиск краевых условий через регулярные выражения (K и L и M)
         regexp = "(?:(?P<K>.*y'{2})|(?P<L>.*y'{1})|(?P<M>.*y))"
         group_names = list('KLM')
         left, right = expression.split('=')
@@ -42,6 +43,7 @@ def final_difference_method(equation: str, boundaries_conditions: list,
                     out.update({name: parse_expr(match.group(name).replace("'", '')).subs({y: 1})})
 
         section = [None, None]
+        # поиск краевых условий через регулярные выражения (S и R) I - край отрезка
         regexp = r"(?P<S>[a-zA-Z0-9 \+\-\*\/]*y(?!\'))|(?P<R>[a-zA-Z0-9 \+\-\*\/]*y(?=\'))|(?P<I>(?<=\().+?(?=\)))"
         group_names = list('SRI')
         left, right = bound_conditions[0].split('=')
@@ -53,7 +55,7 @@ def final_difference_method(equation: str, boundaries_conditions: list,
                         section[0] = parse_expr(match.group(name))
                     else:
                         out.update({name: parse_expr(match.group(name)).subs({y: 1})})
-
+        # поиск краевых условий через регулярные выражения (W и V) I - край отрезка
         regexp = r"(?P<W>[a-zA-Z0-9 \+\-\*\/]*y(?!\'))|(?P<V>[a-zA-Z0-9 \+\-\*\/]*y(?=\'))|(?P<I>(?<=\().+?(?=\)))"
         group_names = list('WVI')
         left, right = bound_conditions[1].split('=')

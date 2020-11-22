@@ -7,6 +7,15 @@ def cspline(x_list, y_list, level_of_detail=3):
     def function(x_value):
 
         def find_section(value):
+            """
+            Поиск номера отрезка по значению точки
+
+            Args:
+                value: значение точки
+
+            Returns:
+                int: номер отрезка
+            """
             if value < x_list[0]:
                 return 1
             elif value > x_list[-1]:
@@ -17,6 +26,7 @@ def cspline(x_list, y_list, level_of_detail=3):
                         return no
 
         i = find_section(x_value)
+        # формула из методички (8.6 на странице 64)
         polynomial = m_list[i] * (x - x_list[i - 1]) ** 3 / (6 * h_list[i]) + \
                      m_list[i - 1] * (x_list[i] - x) ** 3 / (6 * h_list[i]) + \
                      (y_list[i] - m_list[i] * h_list[i] ** 2 / 6) * (x - x_list[1]) / h_list[i] + \
@@ -29,6 +39,7 @@ def cspline(x_list, y_list, level_of_detail=3):
     h_list = [x_list[no + 1] - x_list[no] for no in range(len(x_list) - 1)]
     matrix = [[0 for i in range(len(x_list) - 2)] for j in range(len(x_list) - 2)]
     free_column = []
+    # генерация трехдиагональной матрицы (страница 65)
     for row_no in range(len(matrix)):
         for col_no in range(len(matrix[0])):
             if row_no - 1 == col_no:
@@ -61,6 +72,7 @@ def cspline(x_list, y_list, level_of_detail=3):
 
     pol_list = []
     for i in range(1, len(m_list)):
+        # формула из методички (8.6 на странице 64)
         pol_list.append(simplify(m_list[i] * (x - x_list[i - 1]) ** 3 / (6 * h_list[i]) +
                                  m_list[i - 1] * (x_list[i] - x) ** 3 / (6 * h_list[i]) +
                                  (y_list[i] - m_list[i] * h_list[i] ** 2 / 6) * (x - x_list[1]) / h_list[i] +

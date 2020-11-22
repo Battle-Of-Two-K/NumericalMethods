@@ -1,4 +1,3 @@
-import copy
 import pickle
 import random as rnd
 
@@ -19,21 +18,21 @@ class Matrix:
     __matrix = []
 
     def __init__(self, *args, **kwargs):
-        if len(args) == 1:
-            if isinstance(args[0], int):
+        if len(args) == 1:  # случай, когда при инициализации передан один аргумент
+            if isinstance(args[0], int):  # если этот агрумент - число, создается квадратная матрица
                 self.matrix = [[0 for j in range(args[0])] for i in range(args[0])]
-            elif isinstance(args[0], list):
-                if isinstance(args[0][0], list):
-                    self.matrix = args[0]
+            elif isinstance(args[0], list):  # если этот аргумент - список, проверяестя наличие в нем списков
+                if isinstance(args[0][0], list):  # если двумерный - оставить как есть, иначе - считать его строкой
+                    self.matrix = args[0]         # матрицы (полезно для векторов)
                 else:
                     self.matrix = [args[0]]
             elif isinstance(args[0][0], Matrix):
-                self.matrix = args[0][0].matrix
+                self.matrix = args[0][0].copy().matrix  # на случай если этот аргумент - матрица
             else:
                 raise TypeError("Неизвестный тип данных, используйте list, или int, или int, int")
         elif len(args) == 2:
-            if isinstance(args[0], int) and isinstance(args[1], int):
-                self.matrix = [[0 for j in range(args[1])] for i in range(args[0])]
+            if isinstance(args[0], int) and isinstance(args[1], int):  # если аргументов два - создается прямоугольная
+                self.matrix = [[0 for j in range(args[1])] for i in range(args[0])]  # прямоугольная матрица
         else:
             raise ValueError("Слишком много аргументов")
 
@@ -52,12 +51,12 @@ class Matrix:
         return out
 
     def __add__(self, other):
-        if isinstance(other, (float, int)):
+        if isinstance(other, (float, int)):  # сложение матрицы с числом
             matrix = self.copy()
             for row_no, col_no in self:
                 matrix[row_no][col_no] += other
             return matrix
-        elif isinstance(other, Matrix):
+        elif isinstance(other, Matrix):  # сложение матрицы с матрицей
             if self.size != other.size:
                 raise ArithmeticError("Нельзя сложить матрицы разного размера")
             matrix = self.copy()
@@ -66,7 +65,7 @@ class Matrix:
             return matrix
 
     def __mul__(self, other):
-        if isinstance(other, Matrix):
+        if isinstance(other, Matrix):  # умножение матрицы на число или на вектор
             if self.columns != other.rows:
                 if not self.is_vector and not other.is_vector:
                     raise IndexError("Количество столбцов первой матрицы не совпадает с количеством строк второй")
@@ -85,7 +84,7 @@ class Matrix:
                             matrix[i][j] += self[s] * other[s][j]
             return matrix
         else:
-            matrix = self.copy()
+            matrix = self.copy()  # умножение матрицы на число
             for row_no, col_no in self:
                 matrix[row_no][col_no] *= other
             return matrix
@@ -101,7 +100,7 @@ class Matrix:
 
     def __eq__(self, other):
         if isinstance(other, Matrix):
-            return self.matrix == other.matrix
+            return self.matrix == other.matrix  # при сравнении матриц сравниваются их списки
         else:
             return False
 
@@ -121,7 +120,7 @@ class Matrix:
     def __pow__(self, power, modulo=None):
         new_matrix = self.copy()
         if power == 0:
-            new_matrix.fill_diagonal_ones()
+            new_matrix.fill_diagonal_ones()  # любая матрица в степени 0 - единичная матрица
             return new_matrix
         elif power == 1:
             return new_matrix
@@ -129,13 +128,12 @@ class Matrix:
             if det(new_matrix) == 0:
                 raise ArithmeticError("Невозможно найти обратную матрицу так как определитель равен нулю")
             else:
-                return new_matrix.complements.T / det(new_matrix)
+                return new_matrix.complements.T / det(new_matrix)  # нахождение обратной матрицы
         elif power > 1:
-            return new_matrix * new_matrix ** (power - 1)
+            return new_matrix * new_matrix ** (power - 1)  # поиск степени матрицы через рекурсию
         else:
             new_matrix = new_matrix ** (-1)
             return new_matrix ** (-power)
-
 
     def map(self, func: callable, *args, **kwargs):
         """
@@ -321,7 +319,8 @@ class Matrix:
                 for col_no_inner in new_matrix.r_cols:
                     if col_no_inner != col_no:
                         container += abs(new_matrix[row_no][col_no_inner])
-                # Гарантия доминации диагонали
+                # Гарантия доминации диагонали - значения в диагонали по модулю больше суммы модулей соостветствующих
+                # соостветствующих строк на случайную величину
                 new_matrix[row_no][col_no] = container + abs(random(start, stop))
                 # Добавление отрицательных значений
                 new_matrix[row_no][col_no] *= 1 if rnd.random() < 1 / self.rows else -1
@@ -385,6 +384,7 @@ class Matrix:
     def minor(self, row: int, column: int):
         """
         Удаляет из матрицы указанную строку и столбец
+        (минор элемента это определитель результата работы этого метода)
 
         Examples:
             >>>matrix = Matrix(3)
@@ -784,7 +784,7 @@ class Matrix:
             Matrix: новая матрица
 
         """
-        return Matrix(list(map(list, self.matrix)))
+        return Matrix(list(map(list, self.matrix)))  # модуль copy и функция deepcopy сильно замедляли работу
 
     def triangulate(self):
         """
@@ -811,7 +811,7 @@ class Matrix:
                                               triangulated_matrix[row_no][col_no] /
                                               triangulated_matrix[row_no - 1][col_no])
                     triangulated_matrix[row_no] = subtract_rows(triangulated_matrix[row_no], multiplexed_row)
-                except ZeroDivisionError:
+                except ZeroDivisionError:  # на случай, если в процессе триангуляции в главной диагонали окажется ноль
                     continue
         return triangulated_matrix
 
@@ -833,7 +833,7 @@ class Matrix:
             if row_no == col_no:
                 try:
                     matrix.matrix[row_no] = mul_row(matrix[row_no], 1 / matrix[row_no][col_no])
-                except ZeroDivisionError:
+                except ZeroDivisionError:  # на случай, если в процессе триангуляции в главной диагонали окажется ноль
                     continue
         return matrix
 
@@ -909,6 +909,7 @@ class Matrix:
             new_value = list(new_value)
         if len(new_value) == 0:
             new_value.append([])
+        # проверка корректности новой матрицы
         for row_no in range(len(new_value)):
             if len(new_value[0]) != len(new_value[row_no]):
                 raise IndexError("Длины строк матрицы не равны")
@@ -974,7 +975,7 @@ class Matrix:
             float: первая норма матрицы
 
         """
-        return max((sum(map(lambda x: abs(x), row)) for row in self.matrix))
+        return max((sum(map(lambda value: abs(value), row)) for row in self.matrix))
 
     @property
     def norma_2(self) -> float:

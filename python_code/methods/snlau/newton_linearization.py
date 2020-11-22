@@ -3,6 +3,20 @@ from python_code.staf.sympy_init import *
 
 
 def newton_linearization(system, variables, approximation, accuracy_order=8, level_of_details=3, iterations=None):
+    """
+    Решение СНЛАУ методом линеаризации (Ньютона)
+
+    Args:
+        system (list): список строк СНЛАУ
+        variables (list): используемые пременные
+        approximation (tuple): начальное приближение
+        accuracy_order (int): необходимая точность
+        level_of_details (int): необходимый уровень детализации
+        iterations (int): неоюходимое количество итераций
+
+    Yields:
+        dict: информация о текущем шаге решения
+    """
     def get_subs(vars_, approx):
         out = {}
         approx = approx.vector_to_list

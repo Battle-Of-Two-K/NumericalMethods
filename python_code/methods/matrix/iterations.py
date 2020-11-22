@@ -250,6 +250,7 @@ def triple_diagonal(matrix, free_column, level_of_detail=3):
         else:
             return 0
 
+    # в этом методе используется устаревший метод возврата промежуточных значений (чререз update и pop)
     answer = {}
     matrix = matrix.copy()
 
