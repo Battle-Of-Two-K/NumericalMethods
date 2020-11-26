@@ -14,6 +14,35 @@ class My_matrix:
     def null_matrix(self):
         return [[0 for i in self.range_row()] for j in self.range_col()]
 
+    def determinant(self, mul):
+        # TODO: В разработке...
+        """
+        Вычисление определителя квадратной матрицы
+
+        Args:
+            mul(int): расчётный коэффициент (при вызове функции = 1)
+
+        Returns: определитель матрицы
+
+        """
+        width = len(self.list_)
+        if width == 1:
+            return mul * self.list_[0][0]
+        else:
+            sign = -1
+            summa = 0
+            for row in range(width):
+                new_list = []
+                for col in range(1, width):
+                    buffer = []
+                    for k in range(width):
+                        if k != row:
+                            buffer.append(self.list_[col][k])
+                    new_list.append(buffer)
+                sign *= -1
+                summa += mul * self.determinant(sign * self.list_[0][row])
+            return
+
     def matrix_multiplication(self, new_matrix):
         # TODO: В разработке...
         output = self.null_matrix
