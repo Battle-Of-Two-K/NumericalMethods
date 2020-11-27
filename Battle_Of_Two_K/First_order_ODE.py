@@ -4,7 +4,7 @@ import matplotlib.ticker as ticker
 from sympy import *
 
 
-def function(x, y):  # это типа функция из задания?
+def function(x, y):
     return 2 * y - 3 * x * x + 1
 
 
@@ -14,7 +14,7 @@ class FirstOrderODE:
         self.b = b
 
 
-class EulerMethod(FirstOrderODE):  # если это метод, то почему он класс? лепишь классы по поводу и без повода
+class EulerMethod(FirstOrderODE):
     def __init__(self, a, b, x_0, y_0, h):
         """
         Args:
@@ -160,10 +160,9 @@ class RungeKuttaMethod(FirstOrderODE):  # еще один класс-метод,
         k_2 = function((x + self.h / 2), (y + (self.h / 2) * k_1))
         k_3 = function((x + self.h / 2), (y + (self.h / 2) * k_2))
         k_4 = function((x + self.h), (y + self.h * k_3))
-        print('x = {: ^20} | y = {: ^20} | K1 = {: ^20} | K2 = {: ^20} | K3 = {: ^20} | K4 = {: ^20} '
-              '|'.format(x, y, k_1, k_2, k_3, k_4))  # динозавры звонили, старое форматировние вернуть просили
-        print('-------------------------------------------------------------------------------------------------'
-              '--------------------------------------------------------------------')
+        print('x = {: ^5} | y = {: ^5} | K1 = {: ^5} | K2 = {: ^5} | K3 = {: ^5} | K4 = {: ^5} '
+              '|'.format(x, y, k_1, k_2, k_3, k_4))
+        print('-' * 180)
         output = (self.h / 6) * (k_1 + 2 * k_2 + 2 * k_3 + k_4)
         return output
 

@@ -1,4 +1,4 @@
-from Numerical_integration import *
+from Battle_Of_Two_K.Numerical_integration import *
 import numpy as np
 
 try:

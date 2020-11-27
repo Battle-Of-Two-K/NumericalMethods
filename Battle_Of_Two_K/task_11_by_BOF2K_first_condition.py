@@ -1,4 +1,4 @@
-from First_order_ODE import *
+from Battle_Of_Two_K.First_order_ODE import *
 import numpy as np
 
 try:

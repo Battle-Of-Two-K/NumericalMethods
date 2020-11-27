@@ -234,7 +234,9 @@ class SimpsonFormula(NumericalIntegration):  # опять класс-метод 
         return (self.h / 3) * (function(self.a) + 4 * self.summa_odd() + 2 * self.summa_even() + function(self.b))
 
     def grafik(self):
-
+        """
+        Красиво выводит график
+        """
         z = np.linspace(-10, 10, 100)
         y = function(z)
 
