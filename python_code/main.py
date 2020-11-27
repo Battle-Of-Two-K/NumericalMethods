@@ -786,6 +786,22 @@ class Matrix:
         """
         return Matrix(list(map(list, self.matrix)))  # модуль copy и функция deepcopy сильно замедляли работу
 
+    def _create_zero_column(self, column_no: int = 0, row_limit: int = 0, full_column = False):
+
+        def mul_row(row, num):
+            return [elem * num for elem in row]
+
+        def sub_rows(no_to, row):
+            matrix[no_to] = [elem1 - elem2 for elem1, elem2 in zip(matrix[no_to], row)]
+
+        matrix = self
+        for row_no in range(matrix.rows - 1, row_limit, -1):
+            try:
+                new_row = mul_row(matrix[row_no - 1], matrix[row_no][column_no] / matrix[row_no - 1][column_no])
+                sub_rows(row_no, new_row)
+            except ZeroDivisionError:
+                continue
+
     def triangulate(self):
         """
         Триангулирует матрицу
@@ -795,24 +811,9 @@ class Matrix:
 
         """
 
-        def mul_row(row, n):
-            return [val * n for val in row]
-
-        def subtract_rows(row1, row2):
-            return [val1 - val2 for val1, val2 in zip(row1, row2)]
-
         triangulated_matrix = self.copy()
-        for col_no in range(min(triangulated_matrix.columns, triangulated_matrix.rows)):
-            for row_no in range(triangulated_matrix.rows - 1, 0, -1):
-                if col_no == row_no:
-                    break
-                try:
-                    multiplexed_row = mul_row(triangulated_matrix[row_no - 1],
-                                              triangulated_matrix[row_no][col_no] /
-                                              triangulated_matrix[row_no - 1][col_no])
-                    triangulated_matrix[row_no] = subtract_rows(triangulated_matrix[row_no], multiplexed_row)
-                except ZeroDivisionError:  # на случай, если в процессе триангуляции в главной диагонали окажется ноль
-                    continue
+        for col_no in self.r_cols:
+            triangulated_matrix._create_zero_column(col_no, col_no)
         return triangulated_matrix
 
     def triangulate_to_ones(self):
