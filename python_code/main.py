@@ -788,18 +788,17 @@ class Matrix:
         """
         return Matrix(list(map(list, self.matrix)))  # модуль copy и функция deepcopy сильно замедляли работу
 
-    def _create_zero_column(self, column_no: int = 0, row_limit: int = 0, full_column = False):
+    def _create_zero_column(self, column_no: int = 0, row_limit: int = 0):
 
         def mul_row(row, num):
             return [elem * num for elem in row]
 
         def sub_rows(no_to, row):
-            matrix[no_to] = [elem1 - elem2 for elem1, elem2 in zip(matrix[no_to], row)]
+            self[no_to] = [elem1 - elem2 for elem1, elem2 in zip(self[no_to], row)]
 
-        matrix = self
-        for row_no in range(matrix.rows - 1, row_limit, -1):
+        for row_no in range(self.rows - 1, row_limit, -1):
             try:
-                new_row = mul_row(matrix[row_no - 1], matrix[row_no][column_no] / matrix[row_no - 1][column_no])
+                new_row = mul_row(self[row_no - 1], self[row_no][column_no] / self[row_no - 1][column_no])
                 sub_rows(row_no, new_row)
             except ZeroDivisionError:
                 continue
