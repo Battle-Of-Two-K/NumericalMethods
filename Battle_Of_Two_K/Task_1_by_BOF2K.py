@@ -8,7 +8,7 @@ my_matrix = [[-11, 7, -1, 6],
 matrix_ = My_matrix(my_matrix)
 
 
-def determinant(matrix: list, mul: int):
+def determinant(matrix: list):
     """
     Вычисление определителя квадратной матрицы
 
@@ -21,7 +21,7 @@ def determinant(matrix: list, mul: int):
     """
     width = len(matrix)
     if width == 1:
-        return mul * matrix[0][0]
+        return matrix[0][0]
     else:
         sign = -1
         summa = 0
@@ -34,7 +34,7 @@ def determinant(matrix: list, mul: int):
                         buffer.append(matrix[col][k])
                 new_list.append(buffer)
             sign *= -1
-            summa += mul * determinant(new_list, sign * matrix[0][row])
+            summa += sign * matrix[0][row] * determinant(new_list)
         return
 
 
