@@ -766,13 +766,15 @@ class Matrix:
         """
         max_len_num = self.max_len_num
         pretty_string = ' ' + '_' * (self.columns * (max_len_num + 3) - 1) + ' \n'
+        string_format = f':^{max_len_num + 2}.{round_to}f'
+        string_format = '{' + string_format + '}'
         for row_no in self.r_rows:
             for col_no in self.r_cols:
-                if isinstance(self[row_no][col_no], (int, float)):
-                    pretty_string += f'|' \
-                                     f'{str(round(self[row_no][col_no], round_to)).center(max_len_num + 2)}'
+                elem = self[row_no][col_no]
+                if isinstance(elem, float):
+                    pretty_string += '|' + string_format.format(elem)
                 else:
-                    pretty_string += f'|{str(self[row_no][col_no]).center(max_len_num + 2)}'
+                    pretty_string += f'|{str(elem).center(max_len_num + 2)}'
             pretty_string += "|\n" + ("|" + "_" * (max_len_num + 2)) * self.columns + "|\n"
         return pretty_string
 
@@ -1038,10 +1040,11 @@ class Matrix:
             int: длина максимального строкового представления элемента матрицы
         """
         container = 0
+        format_string = '{' + f':.{round_to}f' + '}'
         for row in self.matrix:
             for element in row:
-                if isinstance(element, (int, float)):
-                    container = max(len(str(round(element, round_to))), container)
+                if isinstance(element, float):
+                    container = max(len(format_string.format(element)), container)
                 else:
                     container = max(len(str(element)), container)
         return container
