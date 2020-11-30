@@ -4,7 +4,8 @@ from python_code.main import *
 # Решение СЛАУ методом простых итераций и методом Зейделя
 # =======================================================
 
-try:
+
+def main():
     # Матрица из задания
     matrix = Matrix([
         [42, 6, 1],
@@ -55,6 +56,13 @@ try:
                                      f'{step[info] if not isinstance(step[info], float) else round(step[info], 8)}\n'
             print(step_info)
 
-except Exception as error:
-    print(error)
-input('Нажмите "Enter" чтобы выйти...')
+
+if __name__ == '__main__':
+    # Файлы task_%.py сделаны для людей, для которых установка интерпретатора может стать испытанием.
+    # Запускают эти люди двойными кликом. А если перед ними консоль будет мгновенно закрываться в случае ошибки,
+    # это будет жуткий стресс, а я даже помочь быстро не смогу, а так хоть print ошибки есть.
+    try:
+        main()
+    except Exception as error:
+        print(error)
+    input('Нажмите "Enter" чтобы выйти...')

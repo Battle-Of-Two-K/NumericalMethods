@@ -59,7 +59,7 @@ def print_data(data):
     print(step_info)
 
 
-try:
+def main():
     print(' Решение методом дихотомии '.center(100, '='))
     decision = dichotomy(task['Функция для метода дихотоми'], task['Отрезок для метода дихотомии'],
                          iterations=5, accuracy_order=3, level_of_details=2)
@@ -86,7 +86,14 @@ try:
             step.update({"g'(x)": None})
         print_data(step)
 
-except Exception as error:
-    print(error)
 
-input('\nНажмите "Enter" чтобы выйти...')
+if __name__ == '__main__':
+    # Файлы task_%.py сделаны для людей, для которых установка интерпретатора может стать испытанием.
+    # Запускают эти люди двойными кликом. А если перед ними консоль будет мгновенно закрываться в случае ошибки,
+    # это будет жуткий стресс, а я даже помочь быстро не смогу, а так хоть print ошибки есть.
+    try:
+        main()
+    except Exception as error:
+        print(error)
+    input('Нажмите "Enter" чтобы выйти...')
+
