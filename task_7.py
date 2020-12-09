@@ -12,12 +12,12 @@ try:
 
     # Система уравнений
     system = [
-        '4 * x*x*x - 2 * y*y*y + 5',
-        '2 * x*y - 2 * y - 16'
+        '3* x*x*x - 2* y*y*y + 5',
+        '3* x*y - 2* y - 16'
     ]
 
     # Начальное приближение
-    init_approx = (-3, -4)
+    init_approx = (2, 2)
     # init_approx = (4, 6)
 
     transformed_system = None

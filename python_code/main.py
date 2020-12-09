@@ -1275,3 +1275,9 @@ def solve(matrix: (list, Matrix), free_column: (list, Matrix)) -> list:
     for step in decision:
         solution = step.get('Решение')
     return solution
+
+
+if __name__ == '__main__':
+    matrix = Matrix(3)
+    matrix.triangulate()
+    matrix.console_display()
