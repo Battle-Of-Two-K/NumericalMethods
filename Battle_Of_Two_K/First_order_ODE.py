@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-
+# Проверка...
 
 def function(x, y):
     return 2 * y - 3 * x * x + 1
