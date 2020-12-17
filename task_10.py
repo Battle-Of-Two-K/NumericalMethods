@@ -16,7 +16,7 @@ y_list = [-2, 2, 0, 3]  # значения строки y
 # ============================================================
 
 
-try:
+def main():
     decision = cspline(x_list, y_list, level_of_detail=2)
     for step in decision:
         step_info = ''
@@ -46,7 +46,13 @@ try:
     # for center in section_centers:
     #     print(f'S({center}) = {function(center)}')
 
-except Exception as error:
-    print(error)
 
-input('\nНажмите "Enter" чтобы выйти...')
+if __name__ == '__main__':
+    # Файлы task_%.py сделаны для людей, для которых установка интерпретатора может стать испытанием.
+    # Запускают эти люди двойными кликом. А если перед ними консоль будет мгновенно закрываться в случае ошибки,
+    # это будет жуткий стресс, а я даже помочь быстро не смогу, а так хоть print ошибки есть.
+    try:
+        main()
+    except Exception as error:
+        print(error)
+    input('Нажмите "Enter" чтобы выйти...')

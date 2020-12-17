@@ -2,8 +2,23 @@ from python_code.staf.sympy_init import *
 
 
 def iterations(function, section, g_function=None, accuracy_order=8, iterations=None, level_of_details=3):
+    """
+    Решение трансцендентного уравнения методом итераций
 
+    Args:
+        g_function (str): преобразованное уравнение к виду x=g(x)
+        function (str): уравнение в виде строки
+        section (tuple): отрезок, на котором будет произведен поиск
+        accuracy_order (int): необходимая точность
+        iterations (int): необходимое количество итераций
+        level_of_details (int): необходимы уровень детализации решения
+
+    Yields:
+        dict: информация о текущем шаге решения
+    """
     def calc_any(func, number):
+        # extract_complex_root облявлена в sympy_init и должна заменять корни нечетной степени
+        # в случае, если подкоренное выражение отрицательное, на минус корень из модуля этого выражения
         new_function = extract_complex_root(func, {x: number})
         return new_function.evalf(subs={x: number})
 
@@ -35,11 +50,14 @@ def iterations(function, section, g_function=None, accuracy_order=8, iterations=
     right_edge = section[1]
     function = simplify(parse_expr(function))
     if g_function is None:
+        # если пользователь не преобразовал к нужному виду, совершение попытки автоматического преобразования
         solving = map(simplify, solve(function.subs(x ** 3, y ** 3), y))
         try:
             g_function = solve(function.subs(x**3, y**3), y)[0]
             min_len = len(str(g_function))
             for new_g_function in solving:
+                # экспериментально было выявлено, что наилучшее преобразование самое короткое и не содержит комплексных
+                # чисел (без 'I')
                 if len(str(new_g_function)) < min_len and 'I' not in str(new_g_function):
                     min_len = len(str(new_g_function))
                     g_function = new_g_function

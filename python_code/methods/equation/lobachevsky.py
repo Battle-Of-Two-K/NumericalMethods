@@ -1,4 +1,15 @@
 def lobachevsky_solve(odds: list, await_delta_order=8, level_of_details=3):
+    """
+    Решение трансцендентного уравнения методом Лобачевского
+
+    Args:
+        level_of_details (int): уровень детализации
+        await_delta_order (int): ожидаемый порядок точности (8 означает 10 ** (-8))
+        odds (list): коэффициенты при x
+
+    Yields:
+        dict: информация о текущем шаге решения
+    """
     def line_power(line, power):
         return [elem ** power for elem in line]
 

@@ -12,6 +12,7 @@ def canonical_pol(x_list_of_values, y_list_of_values):
         row.append(1)
         matrix.append(row)
     matrix = Matrix(matrix)
+    # решение СЛАУ относительно сгененрированной матрицы и столбца свободных членов
     koefs = solve(matrix, y_list_of_values)
     polynomial = 0
     for koef_no in range(len(koefs)):

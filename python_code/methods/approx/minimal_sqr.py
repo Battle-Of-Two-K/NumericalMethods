@@ -3,6 +3,16 @@ from python_code.staf.sympy_init import *
 
 
 def minimal_sqr(table, level_of_details=3):
+    """
+    Аппроксимация методом наименьших квадратов (квадратичная)
+
+    Args:
+        table (list): таблица значений (список из двух списков - x и y)
+        level_of_details (int): необходимый уровень детализации
+
+    Yields:
+        dict: информация о текущем шаге решения
+    """
 
     def sum_xny(target_list, _power, second_list=None):
         if second_list is None:

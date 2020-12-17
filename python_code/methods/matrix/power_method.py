@@ -1,5 +1,3 @@
-
-
 def power_method(matrix,
                  await_d: (int, float) = None,
                  iterations: int = None,

@@ -16,7 +16,10 @@ class MultiString:
 
     def __add__(self, other):
         if not isinstance(other, MultiString):
-            raise TypeError('Невозможно выполнить конкатенацию')
+            try:
+                return self + other.multistring
+            except AttributeError:
+                return self + MultiString(str(other))
         original = self.copy()
         other = other.copy()
         while original.rows_num < other.rows_num:
@@ -66,7 +69,7 @@ class MultiString:
         Сложение мультистрок с автоматическим выбором разделителя.
 
         Args:
-            other (MultiString): вторая мультистрока
+            other: вторая мультистрока
             separator_border (str): символ-разделитель
             separator_width (int): ширина разделителя
             separator_fillchar (str): заполнение строки-разделителя
@@ -75,6 +78,11 @@ class MultiString:
             MultiString: сумма строк с разделителем
 
         """
+        if not isinstance(other, MultiString):
+            try:
+                other = other.multistring
+            except AttributeError:
+                other = MultiString(str(other))
         left = self.copy()
         right = other.copy()
         if left.rows_num > right.rows_num:
