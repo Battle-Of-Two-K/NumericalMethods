@@ -1,9 +1,8 @@
 from python_code.staf.sympy_init import *
 
 
-def trapezoid_integral(function, section, number_of_steps, level_of_details=3):
+def simpson_integral(function, section, number_of_steps, level_of_details=3):
     function = parse_expr(function)
-    print(function, section)
     step = (section[1] - section[0]) / number_of_steps
     if level_of_details < 3:
         yield {
@@ -28,12 +27,13 @@ def trapezoid_integral(function, section, number_of_steps, level_of_details=3):
         }
     if level_of_details < 2:
         yield {
-            'Этап': 'Рассчет формулы 10.1.1',
-            'Формула': f'{step / 2} * ({round(float(y_values[0]))} + 2 * '
-                       f'({" + ".join(map(lambda val: str(round(float(val), 8)), y_values[1:-1]))})'
+            'Этап': 'Рассчет формулы 10.2.1',
+            'Формула': f'{step / 3} * ({round(float(y_values[0]))} + 4 * '
+                       f'({" + ".join(map(lambda val: str(round(float(val), 8)), y_values[1:-1:2]))})'
+                       f'+ 2 * ({" + ".join(map(lambda val: str(round(float(val), 8)), y_values[2:-2:2]))})'
                        f' + {round(float(y_values[-1]), 8)})'
         }
-    result = (step / 2) * (y_values[0] + 2 * sum(y_values[1:-1]) + y_values[-1])
+    result = (step / 3) * (y_values[0] + 4 * sum(y_values[1:-1:2]) + 2 * sum(y_values[2:-2:2]) + y_values[-1])
     if level_of_details < 4:
         yield {
             'Решение': float(result)

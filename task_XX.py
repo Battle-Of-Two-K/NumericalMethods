@@ -1,4 +1,5 @@
 from python_code.methods.integrate.trapezoid import trapezoid_integral
+from python_code.methods.integrate.simpson import simpson_integral
 from python_code.staf.sympy_init import *
 
 
@@ -17,20 +18,25 @@ def main():
     # ATTENTION!  Not for timid people! Below is the program code!
     # ============================================================
 
-    decision = trapezoid_integral(function, section, number_of_steps, level_of_details=1)
+    def print_data(data):
+        step_info = ''
+        for info in data:
+            if isinstance(data[info], (tuple, list)):
+                step_info += f'{info}: {list(map(lambda val: round(float(val), 8), step[info]))}\n'
+            elif isinstance(data[info], float):
+                step_info += f'{info}: {round(data[info], 8)}\n'
+            else:
+                step_info += f'{info}: {data[info]}\n'
+        print(step_info)
 
     print(' Численное интегрирование по формуле трапеций '.center(75, '='))
-
+    decision = trapezoid_integral(function, section, number_of_steps, level_of_details=1)
     for step in decision:
-        step_info = ''
-        for info in step:
-            if isinstance(step[info], (tuple, list)):
-                step_info += f'{info}: {list(map(lambda val: round(float(val), 8), step[info]))}\n'
-            elif isinstance(step[info], float):
-                step_info += f'{info}: {round(step[info], 8)}\n'
-            else:
-                step_info += f'{info}: {step[info]}\n'
-        print(step_info)
+        print_data(step)
+
+    decision = simpson_integral(function, section, number_of_steps, level_of_details=1)
+    for step in decision:
+        print_data(step)
 
 
 if __name__ == '__main__':
