@@ -110,7 +110,14 @@ def decision_Runge_Kutta(h):
 
         index += 1
         a_ += h
-    print(matrix.T.to_pretty_string())
+
+    def try_round(val):
+        try:
+            return round(float(val), 8)
+        except ValueError:
+            return val
+
+    print(matrix.T.map(try_round).to_pretty_string())
 
 
 def grafik(h):
