@@ -1,4 +1,4 @@
-from python_code.main import Matrix
+from NumericalMethods import Matrix
 
 
 def runge_refinement(results, steps, level_of_details=3):

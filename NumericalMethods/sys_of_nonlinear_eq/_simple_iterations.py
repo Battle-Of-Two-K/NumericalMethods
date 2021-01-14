@@ -1,5 +1,5 @@
-from python_code.main import Matrix
-from python_code.staf.sympy_init import *
+from NumericalMethods import Matrix
+from NumericalMethods.util.sympy_init import *
 
 
 def simple_iterations(system, variables, approximation, transformed_system=None,

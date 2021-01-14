@@ -1,4 +1,5 @@
-from python_code import *
+from NumericalMethods import Matrix
+from NumericalMethods.second_problem import yakobi_rotation
 
 # ==============================================================
 # Нахождение собственных чисел и векторов методом вращения Якоби
@@ -25,7 +26,7 @@ def main():
     matrix.console_display()
 
     print("Нахождение собственных чисел и векторов методом вращения Якоби:\n")
-    decision = method_rot_yakobi(matrix, level_of_detail=2, iterations=number_of_iterations)
+    decision = yakobi_rotation(matrix, level_of_detail=2, iterations=number_of_iterations)
     for step in decision:
         for info in step:
             if 'матрица' in info.lower():
@@ -53,4 +54,3 @@ if __name__ == '__main__':
     except Exception as error:
         print(error)
     input('Нажмите "Enter" чтобы выйти...')
-

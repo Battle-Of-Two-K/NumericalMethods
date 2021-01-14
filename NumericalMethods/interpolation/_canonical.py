@@ -1,4 +1,5 @@
-from python_code.main import *
+from NumericalMethods import Matrix
+from NumericalMethods.util.sympy_init import *
 
 
 def canonical_polynomial(x_list_of_values, y_list_of_values):
@@ -13,7 +14,7 @@ def canonical_polynomial(x_list_of_values, y_list_of_values):
         matrix.append(row)
     matrix = Matrix(matrix)
     # решение СЛАУ относительно сгененрированной матрицы и столбца свободных членов
-    koefs = solve(matrix, y_list_of_values)
+    koefs = matrix.slau_solve(y_list_of_values)
     polynomial = 0
     for koef_no in range(len(koefs)):
         polynomial += koefs[::-1][koef_no] * x ** koef_no

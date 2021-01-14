@@ -1,5 +1,5 @@
-from python_code.main import *
-
+from NumericalMethods.first_problem_direct import triple
+from NumericalMethods import Matrix
 # =============================
 # Решение СЛАУ методом прогонки
 # =============================
@@ -28,7 +28,7 @@ def main():
     matrix.console_display()
 
     print("Решение методом прогонки:\n")
-    solution = iterations.triple_diagonal(matrix, free_column, level_of_detail=2)
+    solution = triple(matrix, free_column, level_of_detail=2)
     for step in solution:
         step_info = ''
         for info in step:
@@ -51,4 +51,3 @@ if __name__ == '__main__':
     except Exception as error:
         print(error)
     input('Нажмите "Enter" чтобы выйти...')
-

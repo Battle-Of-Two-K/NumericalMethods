@@ -1,5 +1,5 @@
-from python_code.main import Matrix
-from python_code.staf.sympy_init import *
+from NumericalMethods import Matrix
+from NumericalMethods.util.sympy_init import *
 
 
 def linearization(system, variables, approximation, accuracy_order=8, level_of_details=3, iterations=None):

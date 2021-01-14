@@ -1,8 +1,6 @@
-from python_code.main import Matrix
-from python_code.methods.integrate.runge_check import runge_check
-from python_code.methods.integrate.simpson import simpson_integral
-from python_code.methods.integrate.trapezoid import trapezoid_integral
-from python_code.staf.sympy_init import *
+from NumericalMethods.util.sympy_init import *
+from NumericalMethods.integration import runge_refinement, simpson, trapezoid
+from NumericalMethods import Matrix
 
 
 # ====================================================
@@ -40,7 +38,7 @@ def main():
     for_check_steps = []
     for_check_results = []
     for steps_num in numbers_of_steps:
-        decision = trapezoid_integral(function, section, steps_num, level_of_details=1)
+        decision = trapezoid(function, section, steps_num, level_of_details=1)
         for step in decision:
             if 'Величина шага (h)' in step:
                 for_check_steps.append(step['Величина шага (h)'])
@@ -48,7 +46,7 @@ def main():
                 for_check_results.append(step['Решение'])
             print_data(step)
     print(' Уточнение полученных результатов по формуле Рунге-Роберта '.center(75, '='))
-    decision = runge_check(for_check_results, for_check_steps, level_of_details=2)
+    decision = runge_refinement(for_check_results, for_check_steps, level_of_details=2)
     for step in decision:
         print_data(step)
 
@@ -56,7 +54,7 @@ def main():
     for_check_steps = []
     for_check_results = []
     for steps_num in numbers_of_steps:
-        decision = simpson_integral(function, section, steps_num, level_of_details=1)
+        decision = simpson(function, section, steps_num, level_of_details=1)
         for step in decision:
             if 'Величина шага (h)' in step:
                 for_check_steps.append(step['Величина шага (h)'])
@@ -64,7 +62,7 @@ def main():
                 for_check_results.append(step['Решение'])
             print_data(step)
     print(' Уточнение полученных результатов по формуле Рунге-Роберта '.center(75, '='))
-    decision = runge_check(for_check_results, for_check_steps, level_of_details=2)
+    decision = runge_refinement(for_check_results, for_check_steps, level_of_details=2)
     for step in decision:
         print_data(step)
 

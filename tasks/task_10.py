@@ -1,4 +1,4 @@
-from python_code.methods.interpol.cspline import cspline
+from NumericalMethods.interpolation import c_spline
 
 
 # ===============================
@@ -17,7 +17,7 @@ y_list = [2, 4, 6, 7,  3]  # значения строки y
 
 
 def main():
-    decision = cspline(x_list, y_list, level_of_detail=2)
+    decision = c_spline(x_list, y_list, level_of_detail=2)
     for step in decision:
         step_info = ''
         for info in step:

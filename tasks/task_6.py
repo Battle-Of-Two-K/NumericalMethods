@@ -1,5 +1,5 @@
-from python_code.methods.equation import dichotomy, hords, tangent_newton, iterations
-from python_code.staf.sympy_init import Float
+from NumericalMethods.util.sympy_init import Float
+from NumericalMethods.transcendental import dichotomy, tangent, secant, iterations
 
 # ==========================================================================
 # Нахождение корней уравнения методом дихотомии, хорд, касательных, итераций
@@ -67,19 +67,20 @@ def main():
         print_data(step)
 
     print(' Решение методом хорд '.center(100, '='))
-    decision = hords(task['Функция для метода хорд'], task['Отрезок для метода хорд'],
-                     iterations=5, accuracy_order=3, level_of_details=2)
+    decision = secant(task['Функция для метода хорд'], task['Отрезок для метода хорд'],
+                      iterations=5, accuracy_order=3, level_of_details=2)
     for step in decision:
         print_data(step)
 
     print(' Решение методом касательных '.center(100, '='))
-    decision = tangent_newton(task['Функция для метода касательных'], task['Отрезок для метода касательных'],
-                              iterations=5, accuracy_order=3, level_of_details=2)
+    decision = tangent(task['Функция для метода касательных'], task['Отрезок для метода касательных'],
+                       iterations=5, accuracy_order=3, level_of_details=2)
     for step in decision:
         print_data(step)
 
     print(' Решение методом итераций '.center(100, '='))
-    decision = iterations(task['Функция для метода итераций'], task['Отрезок для метода итераций'], task.get('x = g(x)'),
+    decision = iterations(task['Функция для метода итераций'], task['Отрезок для метода итераций'],
+                          task.get('x = g(x)'),
                           level_of_details=2, iterations=5, accuracy_order=3)
     for step in decision:
         if "g'(x)" in step.keys():

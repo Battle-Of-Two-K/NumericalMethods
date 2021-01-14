@@ -1,10 +1,10 @@
 import pickle
 import random as rnd
 
-from python_code.methods.matrix import *
-import python_code.methods.equation as equation
-from python_code.staf.sympy_init import *
-from python_code.staf.multistring import MultiString
+from NumericalMethods.util.sympy_init import *
+from NumericalMethods.util import MultiString
+import NumericalMethods._determinant as determinant
+from NumericalMethods.first_problem_direct import kramer, triple
 
 
 def det(*args, **kwargs) -> (int, float):
@@ -1270,12 +1270,12 @@ def solve(matrix: (list, Matrix), free_column: (list, Matrix)) -> list:
     if isinstance(free_column, Matrix):
         free_column = free_column.vector_to_list
     solution = None
-    if matrix.is_dominant or matrix.is_triple_diagonal:
-        decision = iterations.auto_iterate(matrix, free_column)
+    if matrix.is_triple_diagonal:
+        decision = triple(matrix, free_column)
     else:
         # TODO: разобраться в причине неработоспособности метода Гаусса
         # decision = gauss.gauss_method(matrix, free_column)
-        decision = kramer_method(matrix, free_column)
+        decision = kramer(matrix, free_column)
     for step in decision:
         solution = step.get('Решение')
     return solution

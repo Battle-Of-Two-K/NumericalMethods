@@ -1,8 +1,8 @@
 import re
 
-from examples.triplediagonal import fill_triple_from_lists
-from python_code.methods.matrix.iterations import triple_diagonal
-from python_code.staf.sympy_init import *
+from NumericalMethods.util.filling_triple import fill_triple_from_lists
+from NumericalMethods.first_problem_direct import triple
+from NumericalMethods.util.sympy_init import *
 
 
 def final_difference(equation: str, boundaries_conditions: list,
@@ -137,7 +137,7 @@ def final_difference(equation: str, boundaries_conditions: list,
             'Матрица': drop_matrix
         }
 
-    decision = triple_diagonal(matrix, free_col_d, level_of_detail=level_of_detail)
+    decision = triple(matrix, free_col_d, level_of_detail=level_of_detail)
     solution = None
     for step in decision:
         if level_of_detail < 3 and not 'Решение' in step:

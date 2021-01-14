@@ -1,4 +1,4 @@
-from python_code.staf.sympy_init import *
+from NumericalMethods.util.sympy_init import *
 
 
 def tangent(function, section, accuracy_order=8, iterations=None, level_of_details=3):

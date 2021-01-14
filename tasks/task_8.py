@@ -1,6 +1,4 @@
-from python_code.methods.interpol.lagrange import lagrange_pol
-from python_code.methods.interpol.newton import newton_pol
-from python_code.methods.interpol.canonical import canonical_pol
+from NumericalMethods.interpolation import lagrange_polynomial, canonical_polynomial
 
 # =================================================================================
 # Нахождение интерполяция методами Лагранжа, Ньютона и через канонический многочлен
@@ -38,7 +36,7 @@ def main():
 
     print(' Многочлен Лагранжа '.center(100, '='))
 
-    lagrange_result = lagrange_pol(table_for_lagrange['x'], table_for_lagrange['y'])
+    lagrange_result = lagrange_polynomial(table_for_lagrange['x'], table_for_lagrange['y'])
     print(f'Полный многочлен: {lagrange_result["Полный многочлен"]}\n'
           f'Упрощенный многочлен: {lagrange_result["Упрощенный многочлен"]}')
     function = lagrange_result['Функция python']
@@ -57,7 +55,7 @@ def main():
 
     print(' Канонический многочлен '.center(100, '='))
 
-    canonical_result = canonical_pol(table_for_canonical['x'], table_for_canonical['y'])
+    canonical_result = canonical_polynomial(table_for_canonical['x'], table_for_canonical['y'])
     print('Матрица:')
     canonical_result['Матрица'].console_display()
     print(f'Столбец свободных членов: {canonical_result["Столбец свободных членов"]}\n')
@@ -79,4 +77,3 @@ if __name__ == '__main__':
     except Exception as error:
         print(error)
     input('Нажмите "Enter" чтобы выйти...')
-

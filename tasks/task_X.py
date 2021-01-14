@@ -1,5 +1,5 @@
-from python_code.methods.boundary_problem.final_diff import final_difference_method
-from python_code.staf.sympy_init import *
+from NumericalMethods.boundary_problem import final_difference
+from NumericalMethods.util.sympy_init import *
 
 
 # =========================================================
@@ -32,13 +32,13 @@ def main():
     # ATTENTION!  Not for timid people! Below is the program code!
     # ============================================================
     print('\n' + ' Решение краевой задачи для ОДУ методом конечных разностей '.center(100, '='))
-    decision = final_difference_method(expression,
-                                       boundaries_condition,
-                                       boundaries,
-                                       section_corners,
-                                       number_of_sections,
-                                       step,
-                                       level_of_detail=2)
+    decision = final_difference(expression,
+                                boundaries_condition,
+                                boundaries,
+                                section_corners,
+                                number_of_sections,
+                                step,
+                                level_of_detail=2)
     for step in decision:
         for key in step:
             if 'Матрица' in key:

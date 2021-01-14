@@ -1,4 +1,5 @@
-from python_code.main import *
+from NumericalMethods.first_problem_iteration import zeidel, simple
+from NumericalMethods import Matrix
 
 # =======================================================
 # Решение СЛАУ методом простых итераций и методом Зейделя
@@ -31,7 +32,7 @@ def main():
         exit()
     else:
         print(f"\n{' Решение методом простых итераций '.center(50, '=')}\n")
-        solution = iterations.simple_iterations(matrix, free_column, iterations=10, level_of_detail=2)
+        solution = simple(matrix, free_column, iterations=10, level_of_detail=2)
         for step in solution:
             step_info = ''
             for info in step:
@@ -44,7 +45,7 @@ def main():
             print(step_info)
 
         print(f"\n{' Решение методом Зейделя '.center(50, '=')}\n")
-        solution = iterations.zeidel_method(matrix, free_column, iterations=5, level_of_detail=2)
+        solution = zeidel(matrix, free_column, iterations=5, level_of_detail=2)
         for step in solution:
             step_info = ''
             for info in step:

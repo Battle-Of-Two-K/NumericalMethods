@@ -1,5 +1,5 @@
-from python_code import *
-from python_code.staf.sympy_init import *
+from NumericalMethods.util.sympy_init import *
+from NumericalMethods import Matrix
 
 
 def minimal_sqr(table, level_of_details=3):
@@ -52,7 +52,7 @@ def minimal_sqr(table, level_of_details=3):
             'Матрица': Matrix(system),
             'Столбец свободных членов': free_column
         }
-    koefs = slau_solve(system, free_column)
+    koefs = Matrix(system).slau_solve(free_column)
     polynomial = 0
     for koef_power in range(len(koefs)):
         polynomial += x ** koef_power * koefs[::-1][koef_power]

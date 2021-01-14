@@ -1,6 +1,5 @@
-from python_code.methods.snlau.newton_linearization import newton_linearization
-from python_code.methods.snlau.simple_iterations import simple_iterations, zeidel_method
-from python_code import *
+from NumericalMethods.sys_of_nonlinear_eq import linearization, simple_iterations
+from NumericalMethods import Matrix
 
 # ==========================================================================================================
 # Нахождение решения системы нелинейных уравнений методом Ньютона (линеаризации), Зейделя и простых итераций
@@ -34,8 +33,8 @@ def main():
     # ============================================================
 
     print(' Решение методом Ньютона (линеаризации) '.center(100, '='))
-    decision = newton_linearization(system, variables, init_approx,
-                                    accuracy_order=8, level_of_details=2, iterations=5)
+    decision = linearization(system, variables, init_approx,
+                             accuracy_order=8, level_of_details=2, iterations=5)
     for step in decision:
         for info in step:
             if isinstance(step[info], Matrix):
@@ -52,22 +51,6 @@ def main():
     print(' Решение методом простых итераций '.center(100, '='))
     decision = simple_iterations(system, variables, init_approx, transformed_system=transformed_system,
                                  level_of_details=2, accuracy_order=8, iterations=5)
-    for step in decision:
-        step_info = ''
-        for info in step:
-            if isinstance(step[info], Matrix):
-                print(info, ':')
-                step[info].console_display()
-            else:
-                try:
-                    step_info += f'{info}: {round(step[info], 8)}'.center(25) + '|'
-                except TypeError:
-                    step_info += f'{info}: {step[info]}\n'
-        print(step_info)
-
-    print(' Решение методом Зейделя '.center(100, '='))
-    decision = zeidel_method(system, variables, init_approx, transformed_system=transformed_system,
-                             level_of_details=2, accuracy_order=8, iterations=5)
     for step in decision:
         step_info = ''
         for info in step:

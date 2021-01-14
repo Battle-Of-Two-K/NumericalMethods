@@ -1,42 +1,43 @@
-from python_code import *
+from NumericalMethods.first_problem_direct import gauss
+from NumericalMethods import Matrix
 
-# ==================================================
-# Нахождение спектрального радиуса степенным методом
-# ==================================================
+# =============================================================
+# Метод Гаусса для решения СЛАУ, обратная матрица и оределитель
+# =============================================================
 
 
 def main():
     # Матрица из задания
     matrix = Matrix([
-                     [19, 5, 8],
-                     [5, -1, -6],
-                     [8, -6, -3]
+        [-11, 7, -1, 6],
+        [-11, -9, 2, -7],
+        [9, -3, 1, -2],
+        [-5, 4, -1, -11]
     ])
-
-    # Количество итераций
-    number_of_iterations = 21
+    # Столбец свободных членов
+    free_column = [74, 60, -54, -66]
 
     # ============================================================
     # ВНИМАНИЕ! Пугливым ниже не смотреть! Дальше программный код!
     # ATTENTION!  Not for timid people! Below is the program code!
     # ============================================================
 
-    print("Введенная матрица:\n")
+    print("Введенная матрица:")
     matrix.console_display()
 
-    print("Нахождение спектрального радиуса степенным методом:\n")
-    decision = spectral_rad_power_method(matrix, level_of_detail=2, iterations=number_of_iterations)
+    print(f'Определитель данной матрицы равен {matrix.det}\n')
+
+    print("Матрица, обратная данной:")
+    (matrix ** (-1)).console_display()
+
+    print('\n' + " Решение методом Гаусса для данной СЛАУ: ".center(75, '='))
+    decision = gauss(matrix.copy(), free_column, level_of_details=2)
     for step in decision:
-        step_info = ''
         for info in step:
-            if info not in ['Матрица']:
-                if isinstance(step[info], (tuple, list)):
-                    step_info += f'{info}: {list(map(lambda x: round(x, 8), step[info]))}\n'
-                elif isinstance(step[info], float):
-                    step_info += f'{info}: {round(step[info], 8)}\n'
-                else:
-                    step_info += f'{info}: {step[info]}\n'
-        print(step_info)
+            if 'Матрица' in info:
+                step[info].console_display()
+            else:
+                print(f"{info}: {step[info]}")
 
 
 if __name__ == '__main__':

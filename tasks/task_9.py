@@ -1,6 +1,5 @@
-from python_code.methods.approx.minimal_sqr import minimal_sqr
-from python_code.methods.approx.linear_approx import linear_approx
-from python_code.staf.sympy_init import *
+from NumericalMethods.interpolation import minimal_sqr
+from NumericalMethods.util.sympy_init import *
 
 __author__ = 'simens_green'
 

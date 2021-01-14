@@ -1,5 +1,6 @@
-from python_code.main import *
-from python_code.staf.sympy_init import *
+from NumericalMethods import Matrix
+from NumericalMethods.first_problem_direct import triple
+from NumericalMethods.util.sympy_init import *
 
 
 def c_spline(x_list, y_list, level_of_detail=3):
@@ -58,7 +59,7 @@ def c_spline(x_list, y_list, level_of_detail=3):
             'Матрица системы (8.7)': matrix
         }
         matrix.pop_column(matrix.columns - 1)
-    decision = iterations.triple_diagonal(matrix, free_column, level_of_detail=level_of_detail)
+    decision = triple(matrix, free_column, level_of_detail=level_of_detail)
     m_list = None
     for step in decision:
         if 'Решение' not in step.keys():

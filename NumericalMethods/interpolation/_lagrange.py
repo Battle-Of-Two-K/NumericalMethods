@@ -1,4 +1,4 @@
-from python_code.staf.sympy_init import *
+from NumericalMethods.util.sympy_init import *
 
 
 def lagrange_polynomial(x_list_of_values, y_list_of_values):

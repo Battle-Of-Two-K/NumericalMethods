@@ -1,4 +1,4 @@
-from python_code.staf.sympy_init import *
+from NumericalMethods.util.sympy_init import *
 
 
 def simpson(function, section, number_of_steps, level_of_details=3):
