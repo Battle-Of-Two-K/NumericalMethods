@@ -1,6 +1,5 @@
-def get_solution(method, *args, **kwargs):
+def get_solution(decision):
     solution = None
-    decision = method(*args, **kwargs)
     for step in decision:
         solution = step.get('Решение')
     return solution
