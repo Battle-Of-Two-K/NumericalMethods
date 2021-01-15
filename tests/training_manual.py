@@ -1,14 +1,17 @@
 import pytest
 
 import NumericalMethods.first_problem_iteration as first_problem_iteration
+import NumericalMethods.interpolation as interpolation
 import NumericalMethods.second_problem as second_problem
+import NumericalMethods.sys_of_nonlinear_eq as nonlinear
+import NumericalMethods.transcendental as transcendental
 from NumericalMethods import Matrix
 from NumericalMethods.first_problem_direct import gauss, triple
 from NumericalMethods.util import get_solution
 
 
 def list_round(list_, accuracy=8):
-    return list(map(lambda value: round(value, accuracy), list_))
+    return list(map(lambda value: round(float(value), accuracy), list_))
 
 
 # =======================================================
@@ -16,7 +19,7 @@ def list_round(list_, accuracy=8):
 # =======================================================
 
 
-@pytest.mark.skip
+@pytest.mark.xfail
 def test_gauss():
     matrix = Matrix([
         [2, 5, 1],
@@ -45,7 +48,7 @@ def test_reverse_matrix():
 
     solution = matrix ** -1
 
-    assert solution.map(round, 8) == true_solution.map(round, 8)
+    assert solution.map(lambda value: round(float(value), 8)) == true_solution.map(lambda value: round(float(value), 8))
 
 
 def test_triple_solve():
@@ -96,6 +99,11 @@ def test_first_problem_iteration_zeidel():
     assert list_round(solution, 7) == list_round(true_solution, 7)
 
 
+# ================================
+# Вторая проблема линейной алгебры
+# ================================
+
+
 def test_second_problem_power_method():
     matrix = Matrix([
         [-12, 4, 8],
@@ -106,7 +114,7 @@ def test_second_problem_power_method():
 
     solution = get_solution(second_problem.power_method(matrix))
 
-    assert round(solution) == true_solution
+    assert round(float(solution)) == true_solution
 
 
 def test_second_problem_yakobi_rotation():
@@ -120,3 +128,86 @@ def test_second_problem_yakobi_rotation():
     solution = get_solution(second_problem.yakobi_rotation(matrix))['Собственные числа']
 
     assert list_round(solution, 4) == list_round(true_solution, 4)
+
+
+# ========================================
+# Методы решения трансцендентных уравнений
+# ========================================
+
+
+def test_transcendental_dichotomy():
+    task = 'x ** 2 - 2'
+    task_section = (0, 8)
+    true_solution = 2 ** .5
+
+    solution = get_solution(transcendental.dichotomy(task, task_section, level_of_details=2))
+
+    assert round(float(solution), 8) == round(float(true_solution), 8)
+
+
+def test_transcendental_secant():
+    task = 'x ** 2 - 2'
+    task_section = (0, 8)
+    true_solution = 2 ** .5
+
+    solution = get_solution(transcendental.secant(task, task_section))
+
+    assert round(float(solution), 8) == round(float(true_solution), 8)
+
+
+def test_transcendental_tangent():
+    task = 'x ** 2 - 2'
+    task_section = (0, 8)
+    true_solution = 2 ** .5
+
+    solution = get_solution(transcendental.tangent(task, task_section))
+
+    assert round(float(solution), 8) == round(float(true_solution), 8)
+
+
+def test_transcendental_iterations():
+    task = 'x ** 3 - x ** 2 + x - 5'
+    task_section = (8, 8)
+    true_solution = 1.8814850755
+
+    solution = get_solution(transcendental.iterations(task, task_section,
+                                                      level_of_details=2, iterations=8, accuracy_order=1))
+
+    assert round(float(solution), 8) == round(float(true_solution), 8)
+
+
+# ===================================
+# Решение систем нелинейных уравнений
+# ===================================
+
+
+@pytest.mark.xfail
+def test_sys_of_nonlinear_eq_linearization():
+    variables = ['x', 'y']
+    system = [
+        'x ** 2 + y ** 2 - 4',
+        'x ** 2 - y'
+    ]
+    init_approx = (2, 2)
+    true_solution = [1.2490080305, 1.5663342918]
+
+    solution = get_solution(nonlinear.linearization(system, variables, init_approx, iterations=11))
+    solution = list(solution.values())
+
+    assert list_round(solution, 8) == list_round(true_solution, 8)
+
+
+# ============
+# Интерполяция
+# ============
+
+
+@pytest.mark.xfail
+def test_interpolation_canonical_polynomial():
+    x_values = [-1, 1, 5]
+    y_values = [4, -2, 10]
+    true_solution = []
+
+    solution = get_solution(interpolation.canonical_polynomial(x_values, y_values))
+
+    assert true_solution == solution

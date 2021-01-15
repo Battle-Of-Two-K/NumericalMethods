@@ -1,5 +1,6 @@
 def get_solution(decision):
     solution = None
     for step in decision:
-        solution = step.get('Решение')
+        if 'Решение' in step:
+            solution = step.get('Решение')
     return solution
