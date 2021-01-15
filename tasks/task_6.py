@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.pardir)
+
 from NumericalMethods.util.sympy_init import Float
 from NumericalMethods.transcendental import dichotomy, tangent, secant, iterations
 

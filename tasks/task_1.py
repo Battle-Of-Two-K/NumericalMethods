@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.pardir)
+
 from NumericalMethods.first_problem_direct import gauss
 from NumericalMethods import Matrix
 

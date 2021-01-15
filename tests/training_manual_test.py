@@ -1,4 +1,7 @@
 import pytest
+import sys
+import os
+sys.path.append(os.path.pardir)
 
 import NumericalMethods.first_problem_iteration as first_problem_iteration
 import NumericalMethods.interpolation as interpolation

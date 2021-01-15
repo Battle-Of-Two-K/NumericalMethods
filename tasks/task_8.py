@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.pardir)
+
 from NumericalMethods.interpolation import lagrange_polynomial, canonical_polynomial
 
 # =================================================================================

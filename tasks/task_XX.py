@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.pardir)
+
 from NumericalMethods.util.sympy_init import *
 from NumericalMethods.integration import runge_refinement, simpson, trapezoid
 from NumericalMethods import Matrix

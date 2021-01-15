@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.pardir)
+
 from NumericalMethods.boundary_problem import final_difference
 from NumericalMethods.util.sympy_init import *
 

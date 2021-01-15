@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.pardir)
+
 from NumericalMethods.sys_of_nonlinear_eq import linearization, simple_iterations
 from NumericalMethods import Matrix
 

@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.pardir)
+
 from NumericalMethods.first_problem_iteration import zeidel, simple
 from NumericalMethods import Matrix
 
