@@ -13,9 +13,9 @@ from NumericalMethods.second_problem import yakobi_rotation
 def main():
     # Матрица из задания
     matrix = Matrix([
-                     [-6, -8, -12],
-                     [-8, 14, -2],
-                     [-12, -2, -11]
+                     [-4, 4, -4],
+                     [4, 2, -8],
+                     [-4, -8, 15]
     ])
 
     # Количество итераций

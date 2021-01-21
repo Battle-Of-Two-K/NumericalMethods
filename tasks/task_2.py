@@ -13,12 +13,12 @@ from NumericalMethods import Matrix
 def main():
     # Матрица из задания
     matrix = Matrix([
-        [42, 6, 1],
-        [-8, -37, 10],
-        [-3, -5, -39],
+        [38, -10, -1],
+        [2, -36, 9],
+        [6, -1, -37],
     ])
     # Столбец свободных членов
-    free_column = [307, -23, -299]
+    free_column = [-293, -23, -303]
 
     print("Введенная матрица:")
     matrix.console_display()
